@@ -36,7 +36,7 @@ export default function HomeScreen() {
           {/* <TouchableOpacity onPress={() => navigation.navigate("")}>
             <Text style={styles.linkText}>Sign In</Text>
           </TouchableOpacity> */}
-          <Link href="/(auth)/sing-in">
+          <Link href="/(auth)/sign-in">
             <Text style={styles.linkText}>Sign In</Text>
           </Link>
         </ThemedText>
