@@ -1,11 +1,20 @@
-import { Image, StyleSheet, Platform } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 
 import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { useNavigation } from "@react-navigation/native";
+import { Link, Redirect } from "expo-router";
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -23,17 +32,13 @@ export default function HomeScreen() {
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
-          Edit{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          to see changes. Press{" "}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: "cmd + d",
-              android: "cmd + m",
-              web: "F12",
-            })}
-          </ThemedText>{" "}
-          to open developer tools.
+          SING IN{" "}
+          {/* <TouchableOpacity onPress={() => navigation.navigate("")}>
+            <Text style={styles.linkText}>Sign In</Text>
+          </TouchableOpacity> */}
+          <Link href="/(auth)/sing-in">
+            <Text style={styles.linkText}>Sign In</Text>
+          </Link>
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
@@ -74,5 +79,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: "absolute",
+  },
+  linkText: {
+    color: "#007BFF",
+    textDecorationLine: "underline",
   },
 });
