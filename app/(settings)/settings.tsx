@@ -81,7 +81,7 @@ export default function SettingsScreen() {
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
                                         <MaterialIcons name={item.icon as any} size={24} color="#588157" />
                                         <Text style={{ marginLeft: 10 }}>{item.title}</Text>
-                                        </View>
+                                    </View>
                                     <MaterialIcons name="chevron-right" size={24} color="#588157" />
                                 </View>
                             ))}
