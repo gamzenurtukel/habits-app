@@ -1,0 +1,13 @@
+import { useAppSelector } from "@/redux/app/hooks";
+import { selectIsAuthenticated } from "@/redux/reducers/auth-reducer";
+import { Link, Redirect } from "expo-router";
+import React from "react";
+
+const StartScreen = () => {
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
+  if (!isAuthenticated) return <Redirect href="/(tabs)" />;
+  return <Redirect href="/sign-in" />;
+};
+
+export default StartScreen;
