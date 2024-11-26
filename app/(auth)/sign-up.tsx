@@ -12,9 +12,10 @@ import { Link, Stack } from "expo-router";
 import { signUpDataSchema } from "@/lib/validations/sign-up-validation";
 
 const SignUpScreen = () => {
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 
   const handleSingUp = () => {
@@ -57,12 +58,23 @@ const SignUpScreen = () => {
           <Text style={styles.title}>Habits App</Text>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Ad-Soyad</Text>
+            <Text style={styles.label}>Ad</Text>
             <TextInput
               style={styles.input}
               placeholder="Adınızı girin"
               value={name}
               onChangeText={setName}
+              secureTextEntry
+              placeholderTextColor="#B0B0B0"
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Soyad</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Soyadınız girin"
+              value={surname}
+              onChangeText={setSurname}
               secureTextEntry
               placeholderTextColor="#B0B0B0"
             />
@@ -134,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#588157",
     borderBottomLeftRadius: 100,
     borderBottomRightRadius: 100,
-    height: "66%",
+    height: "75%",
   },
   content: {
     flex: 1,
