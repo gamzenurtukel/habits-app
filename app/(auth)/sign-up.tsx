@@ -10,6 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { Link, Stack } from "expo-router";
 import { signUpDataSchema } from "@/lib/validations/sign-up-validation";
+import { useRegisterMutation } from "@/redux/services/auth";
 
 const SignUpScreen = () => {
   const [name, setName] = useState("");
@@ -18,13 +19,16 @@ const SignUpScreen = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
 
-  const handleSingUp = () => {
-    const formData = { email, password, name, phone };
+  const [register] = useRegisterMutation();
 
-    const result = signUpDataSchema.safeParse(formData);
+  const handleSingUp = async() => {
+    try {
+      const formData = { email, password, name, phone, surname };
 
-    if (!result.success) {
-      result.error.issues.forEach((issue) => {
+    const resultValidation = signUpDataSchema.safeParse(formData);
+
+    if (!resultValidation.success) {
+      resultValidation.error.issues.forEach((issue) => {
         console.log("issue", issue.message);
         Toast.show({
           type: "error",
@@ -37,8 +41,16 @@ const SignUpScreen = () => {
       });
       return;
     }
-
-    Toast.show({
+      const result = await register({
+        email,
+        password,
+        name,
+        phone,
+        surname,
+        countryId: 1,
+      });
+      console.log("Kayıt başarılı:", result);
+      Toast.show({
       type: "success",
       position: "top",
       text1: "Üyelik başarılı!",
@@ -46,6 +58,17 @@ const SignUpScreen = () => {
       autoHide: true,
       bottomOffset: 50,
     });
+    } catch (error) {
+      console.error("Kayıt sırasında hata oluştu:", error);
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Kayıt sırasında hata oluştu",
+        visibilityTime: 3000,
+        autoHide: true,
+        bottomOffset: 50,
+      });
+    }
   };
 
   return (
