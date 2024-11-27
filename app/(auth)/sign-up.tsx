@@ -45,7 +45,7 @@ const SignUpScreen = () => {
         email,
         password,
         name,
-        phone,
+        phoneNumber: phone,
         surname,
         countryId: 1,
       });
