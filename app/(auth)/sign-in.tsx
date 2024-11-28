@@ -13,12 +13,14 @@ import Toast from "react-native-toast-message";
 import { Link, Stack } from "expo-router";
 import { useLoginMutation } from "@/redux/services/auth";
 import { Ionicons } from '@expo/vector-icons';
-
+import { useRouter } from "expo-router";
 
 const SignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+
+  const router = useRouter();
 
   const [login] = useLoginMutation();
 
@@ -60,7 +62,9 @@ const SignInScreen = () => {
         bottomOffset: 50,
       });
 
-
+      setTimeout(() => {
+        router.push("/(tabs)");
+      }, 2000);
 
     } catch (error) {
       console.log("giriş başarısız", error);
@@ -109,7 +113,7 @@ const SignInScreen = () => {
             />
           </View>
           <View style={styles.checkboxContainer}>
-          <Pressable
+            <Pressable
               role="checkbox"
               aria-checked={rememberMe}
               style={[styles.checkboxBase, rememberMe && styles.checkboxChecked]}
@@ -241,7 +245,7 @@ const styles = StyleSheet.create({
   checkboxLabel: {
     fontSize: 16,
     color: "#1B5E20",
-    
+
   },
 });
 
