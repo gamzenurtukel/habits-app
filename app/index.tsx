@@ -6,7 +6,8 @@ import React from "react";
 const StartScreen = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
-  if (isAuthenticated) return <Redirect href="/sign-in" />;
+  if (!isAuthenticated) return <Redirect href="/(auth)/sign-in" />;
+
   return <Redirect href="/(tabs)" />;
 
 };
