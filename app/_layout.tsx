@@ -13,11 +13,11 @@ import Toast from "react-native-toast-message";
 import i18nextConfig from "@/i18n/i18nextConfig";
 import { I18nextProvider } from "react-i18next";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { Text } from "react-native";
 import { Provider } from "react-redux";
 import { persistor, store } from "@/redux/app/store";
 import { PersistGate } from "redux-persist/integration/react";
-
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -40,11 +40,23 @@ export default function RootLayout() {
     return null;
   }
 
+  const loadingScreen = () => {
+    return (
+      <LinearGradient
+        colors={['#4CAF50', '#A5D6A7']}
+        style={styles.container}
+      >
+        <ActivityIndicator size="large" color="#FFFFFF" />
+        <Text style={styles.text}>Habits App</Text>
+      </LinearGradient>
+    );
+  };
+
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Provider store={store}>
         <PersistGate
-          loading={<Text>Yükleniyor...</Text>}
+          loading={loadingScreen()}
           persistor={persistor}
         >
           <I18nextProvider i18n={i18n}>
@@ -64,3 +76,21 @@ export default function RootLayout() {
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 36,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#FFFFFF",
+    marginBottom: 30,
+    textShadowColor: "gray",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 10,
+  },
+});
