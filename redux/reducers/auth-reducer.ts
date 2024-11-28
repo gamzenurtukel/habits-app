@@ -5,7 +5,7 @@ import { RootState } from "../app/store";
 const initialState: any = {
   user: "",
   token: "",
-  isAuthenticated: true,
+  isAuthenticated: false,
   onBoarding: false,
 };
 
@@ -32,7 +32,12 @@ export const authSlice = createSlice({
 
   extraReducers: (builder) => {
     builder.addMatcher(login.matchFulfilled, (state, action) => {
-      console.log({ payload: action.payload });
+      console.log("login extra reducer gamzeee", action.payload);
+      state.token = action.payload.data.accessToken;
+      state.isAuthenticated = true;
+      state.user = action.payload.data.refreshToken;
+      state.turmobToken = true;
+
     });
     builder.addMatcher(logout.matchFulfilled, (state, action) => {
       state.user = "";
