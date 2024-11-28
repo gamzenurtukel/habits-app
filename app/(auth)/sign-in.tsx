@@ -24,7 +24,7 @@ const SignInScreen = () => {
 
   const handleSingIn = async () => {
     try {
-      const formData = { email, password };
+      const formData = { email, password, rememberMe };
       const resultValidation = signInDataSchema.safeParse(formData);
 
       if (!resultValidation.success) {
@@ -33,7 +33,7 @@ const SignInScreen = () => {
           console.log("issue", issue.message);
           Toast.show({
             type: "error",
-            position: "top",
+            position: "bottom",
             text1: issue.message,
             visibilityTime: 3000,
             autoHide: true,
@@ -48,21 +48,25 @@ const SignInScreen = () => {
         password: password,
         rememberMe: rememberMe,
       });
+      console.log("result", result);
       console.log("Giriş başarılı:", result);
+      
       Toast.show({
         type: "success",
-        position: "top",
+        position: "bottom",
         text1: "Giriş başarılı!",
         visibilityTime: 3000,
         autoHide: true,
         bottomOffset: 50,
       });
 
+
+
     } catch (error) {
-      console.log("error", error);
+      console.log("giriş başarısız", error);
       Toast.show({
         type: "error",
-        position: "top",
+        position: "bottom",
         text1: "Giriş sırasında hata oluştu",
         visibilityTime: 3000,
         autoHide: true,
