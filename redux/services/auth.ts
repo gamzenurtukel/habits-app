@@ -30,7 +30,7 @@ const authApi = api.injectEndpoints({
       query: (body) => ({
         method: "POST",
         url: "/Nexus/User/Logout",
-        body: body,
+        // body: body,
       }),
     }),
     register: build.mutation<
