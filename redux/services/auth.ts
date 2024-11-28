@@ -16,10 +16,7 @@ const authApi = api.injectEndpoints({
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: new URLSearchParams({
-          ...body,
-          rememberMe: body.rememberMe.toString(),
-        }),
+        body:body,
       }),
     }),
     forgotPassword: build.mutation<any, any>({
