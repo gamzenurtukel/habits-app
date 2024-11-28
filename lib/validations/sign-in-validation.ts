@@ -6,6 +6,7 @@ export const signInDataSchema = z.object({
     .string()
     .min(6, "Şifre en az 6 karakter olmalıdır.")
     .max(20, "Şifre en fazla 20 karakter olabilir."),
+  rememberMe: z.boolean(),
 });
 
 export type SignInFormValues = z.infer<typeof signInDataSchema>;
