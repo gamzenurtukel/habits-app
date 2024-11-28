@@ -6,48 +6,69 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
+  Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { Link, Stack } from "expo-router";
+import { useLoginMutation } from "@/redux/services/auth";
+import { Ionicons } from '@expo/vector-icons';
+
 
 const SignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSingIn = () => {
-    const formData = { email, password };
+  const [login] = useLoginMutation();
 
-    
-    const result = signInDataSchema.safeParse(formData);
+  const handleSingIn = async () => {
+    try {
+      const formData = { email, password };
+      const resultValidation = signInDataSchema.safeParse(formData);
 
-    
-    if (!result.success) {
-     
-      result.error.issues.forEach((issue) => {
-        console.log("issue", issue.message);
-        Toast.show({
-          type: "error",
-          position: "top",
-          text1: issue.message,
-          visibilityTime: 3000,
-          autoHide: true,
-          bottomOffset: 50,
+      if (!resultValidation.success) {
+
+        resultValidation.error.issues.forEach((issue) => {
+          console.log("issue", issue.message);
+          Toast.show({
+            type: "error",
+            position: "top",
+            text1: issue.message,
+            visibilityTime: 3000,
+            autoHide: true,
+            bottomOffset: 50,
+          });
         });
-      });
-      return;
-    }
+        return;
+      }
 
-   
-    Toast.show({
-      type: "success",
-      position: "top",
-      text1: "Giriş başarılı!",
-      visibilityTime: 3000,
-      autoHide: true,
-      bottomOffset: 50,
-    });
+      const result = await login({
+        username: email,
+        password: password,
+        rememberMe: rememberMe,
+      });
+      console.log("Giriş başarılı:", result);
+      Toast.show({
+        type: "success",
+        position: "top",
+        text1: "Giriş başarılı!",
+        visibilityTime: 3000,
+        autoHide: true,
+        bottomOffset: 50,
+      });
+
+    } catch (error) {
+      console.log("error", error);
+      Toast.show({
+        type: "error",
+        position: "top",
+        text1: "Giriş sırasında hata oluştu",
+        visibilityTime: 3000,
+        autoHide: true,
+        bottomOffset: 50,
+      });
+    }
   };
 
   return (
@@ -83,6 +104,16 @@ const SignInScreen = () => {
               placeholderTextColor="#B0B0B0"
             />
           </View>
+          <View style={styles.checkboxContainer}>
+          <Pressable
+              role="checkbox"
+              aria-checked={rememberMe}
+              style={[styles.checkboxBase, rememberMe && styles.checkboxChecked]}
+              onPress={() => setRememberMe(!rememberMe)}>
+              {rememberMe && <Ionicons name="checkmark" size={24} color="white" />}
+            </Pressable>
+            <Text style={styles.checkboxLabel}>{`Remember Me`}</Text>
+          </View>
 
           <TouchableOpacity onPress={handleSingIn} style={styles.button}>
             <Text style={styles.buttonText}>Giriş Yap</Text>
@@ -95,9 +126,9 @@ const SignInScreen = () => {
           <TouchableOpacity style={styles.linkContainer}>
             <Text style={styles.text}>
               Henüz hesabınız yok mu?{" "}
-             <Link href="/(auth)/sign-up">
-              <Text style={styles.boldText}>Kayıt Ol</Text>
-            </Link>
+              <Link href="/(auth)/sign-up">
+                <Text style={styles.boldText}>Kayıt Ol</Text>
+              </Link>
             </Text>
           </TouchableOpacity>
         </View>
@@ -183,6 +214,30 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: "bold",
     color: "#1B5E20",
+  },
+  checkboxBase: {
+    width: 20,
+    height: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: "#1B5E20",
+    backgroundColor: 'transparent',
+  },
+  checkboxChecked: {
+    backgroundColor: "#1B5E20",
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+
+  },
+  checkboxLabel: {
+    fontSize: 16,
+    color: "#1B5E20",
+    
   },
 });
 
