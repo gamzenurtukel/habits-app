@@ -50,7 +50,7 @@ const SignInScreen = () => {
       });
       console.log("result", result);
       console.log("Giriş başarılı:", result);
-      
+
       Toast.show({
         type: "success",
         position: "bottom",
@@ -114,7 +114,7 @@ const SignInScreen = () => {
               aria-checked={rememberMe}
               style={[styles.checkboxBase, rememberMe && styles.checkboxChecked]}
               onPress={() => setRememberMe(!rememberMe)}>
-              {rememberMe && <Ionicons name="checkmark" size={24} color="white" />}
+              {rememberMe && <Ionicons name="checkmark" size={20} color="white" />}
             </Pressable>
             <Text style={styles.checkboxLabel}>{`Remember Me`}</Text>
           </View>
