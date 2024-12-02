@@ -1,5 +1,12 @@
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { router } from "expo-router";
 
 export default function Modal() {
   return (
@@ -141,7 +148,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 5,
     padding: 10,
-    backgroundColor: "#D0DCD1",
+    // backgroundColor: "#D0DCD1",
+    backgroundColor: "#FFFFFF",
     borderRadius: 5,
     margin: 5,
   },
