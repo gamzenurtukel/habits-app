@@ -16,8 +16,8 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import { persistor, store } from "@/redux/app/store";
 import { PersistGate } from "redux-persist/integration/react";
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -42,10 +42,7 @@ export default function RootLayout() {
 
   const loadingScreen = () => {
     return (
-      <LinearGradient
-        colors={['#4CAF50', '#A5D6A7']}
-        style={styles.container}
-      >
+      <LinearGradient colors={["#4CAF50", "#A5D6A7"]} style={styles.container}>
         <ActivityIndicator size="large" color="#FFFFFF" />
         <Text style={styles.text}>Habits App</Text>
       </LinearGradient>
@@ -55,17 +52,31 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Provider store={store}>
-        <PersistGate
-          loading={loadingScreen()}
-          persistor={persistor}
-        >
+        <PersistGate loading={loadingScreen()} persistor={persistor}>
           <I18nextProvider i18n={i18n}>
             <GestureHandlerRootView>
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="(settings)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(settings)"
+                  options={{ headerShown: false }}
+                />
                 <Stack.Screen name="+not-found" />
+                <Stack.Screen
+                  name="modal"
+                  options={{
+                    presentation: "modal",
+                    // headerStyle: {
+                    //   backgroundColor: "#E8F5E9",
+                    // },
+                    // headerTintColor: "#588157",
+                    // headerTitleStyle: {
+                    //   fontWeight: "bold",
+                    // },
+                    headerShown: false,
+                  }}
+                />
               </Stack>
               <StatusBar style="auto" />
               <Toast />
@@ -80,8 +91,8 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
     fontSize: 36,
