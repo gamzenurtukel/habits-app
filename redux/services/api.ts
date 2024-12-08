@@ -4,7 +4,7 @@ import { RootState } from "../app/store";
 
 // Create our baseQuery instance
 export const baseQuery = fetchBaseQuery({
-  baseUrl: "http://165.227.192.233/Development/Api",
+  baseUrl: "https://development.habitz.pro",
   prepareHeaders: (headers, { getState }) => {
     // By default, if we have a token in the store, let's use that for authenticated requests
     const token = (getState() as RootState).auth.token;
