@@ -12,7 +12,7 @@ const authApi = api.injectEndpoints({
     >({
       query: (body) => ({
         method: "POST",
-        url: "/Nexus/User/Login",
+        url: "/Nexus/Api/User/Login",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
@@ -22,14 +22,14 @@ const authApi = api.injectEndpoints({
     forgotPassword: build.mutation<any, any>({
       query: (body) => ({
         method: "POST",
-        url: "/Nexus/User/ForgotPassword",
+        url: "/Nexus/Api/User/ForgotPassword",
         body: body,
       }),
     }),
     logout: build.mutation<any, any>({
       query: (body) => ({
         method: "POST",
-        url: "/Nexus/User/Logout",
+        url: "/Nexus/Api/User/Logout",
         // body: body,
       }),
     }),
@@ -38,17 +38,21 @@ const authApi = api.injectEndpoints({
       {
         name: string;
         surname: string;
-        phoneNumber: string;
         email: string;
-        password: string;
+        phoneNumber: string;
         countryId: number;
+        password: string;
       }
     >({
       query: (body) => ({
         method: "POST",
-        url: "/Nexus/User/Register",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        url: "/Nexus/Api/User/Register",
         body: body,
       }),
+      
     }),
   }),
 });
