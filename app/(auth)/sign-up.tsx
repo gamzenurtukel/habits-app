@@ -11,6 +11,7 @@ import Toast from "react-native-toast-message";
 import { Link, Stack } from "expo-router";
 import { signUpDataSchema } from "@/lib/validations/sign-up-validation";
 import { useRegisterMutation } from "@/redux/services/auth";
+import { useRouter } from "expo-router";
 
 const SignUpScreen = () => {
   const [name, setName] = useState("");
@@ -21,26 +22,28 @@ const SignUpScreen = () => {
 
   const [register] = useRegisterMutation();
 
-  const handleSingUp = async() => {
+  const router = useRouter();
+
+  const handleSingUp = async () => {
     try {
       const formData = { email, password, name, phone, surname };
 
-    const resultValidation = signUpDataSchema.safeParse(formData);
+      const resultValidation = signUpDataSchema.safeParse(formData);
 
-    if (!resultValidation.success) {
-      resultValidation.error.issues.forEach((issue) => {
-        console.log("issue", issue.message);
-        Toast.show({
-          type: "error",
-          position: "top",
-          text1: issue.message,
-          visibilityTime: 3000,
-          autoHide: true,
-          bottomOffset: 50,
+      if (!resultValidation.success) {
+        resultValidation.error.issues.forEach((issue) => {
+          console.log("issue", issue.message);
+          Toast.show({
+            type: "error",
+            position: "top",
+            text1: issue.message,
+            visibilityTime: 3000,
+            autoHide: true,
+            bottomOffset: 50,
+          });
         });
-      });
-      return;
-    }
+        return;
+      }
       const result = await register({
         email,
         password,
@@ -48,21 +51,40 @@ const SignUpScreen = () => {
         phoneNumber: phone,
         surname,
         countryId: 1,
-      });
-      console.log("Kayıt başarılı:", result);
-      Toast.show({
-      type: "success",
-      position: "top",
-      text1: "Üyelik başarılı!",
-      visibilityTime: 3000,
-      autoHide: true,
-      bottomOffset: 50,
-    });
+      }).then((res) => {
+        console.log("result", result);
+        console.log("Kayıt başarılı:", res);
+
+        Toast.show({
+          type: "success",
+          position: "top",
+          text1: "Kayıt başarılı!",
+          visibilityTime: 3000,
+          autoHide: true,
+          bottomOffset: 50,
+        });
+        setTimeout(() => {
+          router.push("/(auth)/sign-in");
+        }, 2000);
+
+      }
+      ).catch((error) => {
+        console.error("Kayıt sırasında hata oluştu:", error);
+        Toast.show({
+          type: "error",
+          position: "bottom",
+          text1: "Kayıt sırasında hata oluştu",
+          visibilityTime: 3000,
+          autoHide: true,
+          bottomOffset: 50,
+        });
+      }
+      );
     } catch (error) {
       console.error("Kayıt sırasında hata oluştu:", error);
       Toast.show({
         type: "error",
-        position: "top",
+        position: "bottom",
         text1: "Kayıt sırasında hata oluştu",
         visibilityTime: 3000,
         autoHide: true,
