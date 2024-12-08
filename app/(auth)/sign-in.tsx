@@ -49,23 +49,35 @@ const SignInScreen = () => {
         username: email,
         password: password,
         rememberMe: rememberMe,
-      });
-      console.log("result", result);
-      console.log("Giriş başarılı:", result);
+      }).then((res) => {
+        console.log("result", result);
+        console.log("Giriş başarılı:", res);
 
-      Toast.show({
-        type: "success",
-        position: "bottom",
-        text1: "Giriş başarılı!",
-        visibilityTime: 3000,
-        autoHide: true,
-        bottomOffset: 50,
-      });
+        Toast.show({
+          type: "success",
+          position: "bottom",
+          text1: "Giriş başarılı!",
+          visibilityTime: 3000,
+          autoHide: true,
+          bottomOffset: 50,
+        });
 
-      setTimeout(() => {
-        router.push("/(tabs)");
-      }, 2000);
-
+        setTimeout(() => {
+          router.push("/(tabs)");
+        }, 2000);
+      }
+      ).catch((error) => {
+        console.log("giriş başarısız", error);
+        Toast.show({
+          type: "error",
+          position: "bottom",
+          text1: "Giriş sırasında hata oluştu",
+          visibilityTime: 3000,
+          autoHide: true,
+          bottomOffset: 50,
+        });
+      }
+      );
     } catch (error) {
       console.log("giriş başarısız", error);
       Toast.show({
