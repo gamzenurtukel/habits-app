@@ -16,7 +16,7 @@ import {
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { useCreateHabitMutation } from "@/redux/services/habit-create";
+import { useCreateHabitMutation } from "@/redux/services/create-habit";
 
 const { width } = Dimensions.get("screen");
 
