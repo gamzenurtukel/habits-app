@@ -633,14 +633,25 @@
 //   },
 // ];
 
-
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView, Switch, Button } from 'react-native';
-import { GestureHandlerRootView, PanGestureHandler } from 'react-native-gesture-handler';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  Switch,
+  Button,
+} from "react-native";
+import {
+  GestureHandlerRootView,
+  PanGestureHandler,
+} from "react-native-gesture-handler";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("screen");
 
 const CustomModal = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -649,18 +660,24 @@ const CustomModal = () => {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [reminder, setReminder] = useState(false);
 
-  const colors = ['#FF6B6B', '#FFA93A', '#FFD93A', '#2DC26B', '#3B9CFF', '#D28CFF'];
+  const colors = [
+    "#FF6B6B",
+    "#FFA93A",
+    "#FFD93A",
+    "#2DC26B",
+    "#3B9CFF",
+    "#D28CFF",
+  ];
 
   const handleSaveChanges = () => {
     // Değişiklikleri kaydet işlemi burada yapılacak
-    console.log('Değişiklikler kaydedildi!');
+    console.log("Değişiklikler kaydedildi!");
   };
 
-
-  const handleSwipe = (direction: 'left' | 'right') => {
-    if (direction === 'left' && currentPage === 0) {
+  const handleSwipe = (direction: "left" | "right") => {
+    if (direction === "left" && currentPage === 0) {
       setCurrentPage(1);
-    } else if (direction === 'right' && currentPage === 1) {
+    } else if (direction === "right" && currentPage === 1) {
       setCurrentPage(0);
     }
   };
@@ -668,17 +685,21 @@ const CustomModal = () => {
   return (
     <GestureHandlerRootView>
       <View style={styles.header}>
-
         <Text style={styles.headerText}>Create a new habit</Text>
         <MaterialIcons name="close" size={24} color="#588157" />
       </View>
       <PanGestureHandler
         onGestureEvent={({ nativeEvent }) => {
-          if (nativeEvent.translationX < -50) handleSwipe('left');
-          if (nativeEvent.translationX > 50) handleSwipe('right');
+          if (nativeEvent.translationX < -50) handleSwipe("left");
+          if (nativeEvent.translationX > 50) handleSwipe("right");
         }}
       >
-        <View style={[styles.container, { transform: [{ translateX: -currentPage * width }] }]}>
+        <View
+          style={[
+            styles.container,
+            { transform: [{ translateX: -currentPage * width }] },
+          ]}
+        >
           {/* Ekran 1 */}
           <View style={[styles.screen]}>
             <ScrollView
@@ -730,7 +751,9 @@ const CustomModal = () => {
                 </View>
                 {defaultHabitsCreate.map((category) => (
                   <View key={category.category}>
-                    <Text style={styles.categoryTitle}>{category.category}</Text>
+                    <Text style={styles.categoryTitle}>
+                      {category.category}
+                    </Text>
                     <View
                       style={{
                         flexDirection: "row",
@@ -756,7 +779,10 @@ const CustomModal = () => {
                 ))}
               </View>
             </ScrollView>
-            <TouchableOpacity onPress={() => setCurrentPage(1)} style={styles.button}>
+            <TouchableOpacity
+              onPress={() => setCurrentPage(1)}
+              style={styles.button}
+            >
               <Text>Devam Et</Text>
             </TouchableOpacity>
           </View>
@@ -767,50 +793,59 @@ const CustomModal = () => {
               <Text>Seçimi Tamamla</Text>
             </TouchableOpacity> */}
             <ScrollView
-              contentContainerStyle={{
-                flexGrow: 1,
-                padding: 16,
-                backgroundColor: '#F5F5F5',
-              }}
+              contentContainerStyle={{ paddingTop: 20 }}
+              showsVerticalScrollIndicator={false}
             >
               {/* Üst Kısım */}
-              <View
+              {/* <View
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
                   marginBottom: 16,
                 }}
               >
                 <TouchableOpacity onPress={() => router.back()}>
                   <Text style={{ fontSize: 16 }}>◀ Geri</Text>
                 </TouchableOpacity>
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Alışkanlık Ekle</Text>
+                <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                  Alışkanlık Ekle
+                </Text>
                 <TouchableOpacity>
-                  <Text style={{ fontSize: 16, color: 'red' }}>İptal</Text>
+                  <Text style={{ fontSize: 16, color: "red" }}>İptal</Text>
                 </TouchableOpacity>
-              </View>
+              </View> */}
 
               {/* Kart */}
               <View
                 style={{
-                  backgroundColor: selectedColor || '#FF6B6B',
+                  backgroundColor: selectedColor || "#FF6B6B",
                   borderRadius: 12,
                   padding: 16,
                   marginBottom: 16,
-                  shadowColor: '#000',
+                  shadowColor: "#000",
                   shadowOpacity: 0.1,
                   shadowRadius: 4,
                   elevation: 5,
                 }}
               >
-                <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFF' }}>💆‍♀️ Saç bakımı yap</Text>
-                <Text style={{ color: '#FFF', marginTop: 8 }}>Yeni alışkanlık</Text>
+                <Text
+                  style={{ fontSize: 20, fontWeight: "bold", color: "#FFF" }}
+                >
+                  💆‍♀️ Saç bakımı yap
+                </Text>
+                <Text style={{ color: "#FFF", marginTop: 8 }}>
+                  Yeni alışkanlık
+                </Text>
               </View>
 
               {/* Renk Seçimi */}
-              <Text style={{ fontSize: 16, fontWeight: '600', marginBottom: 8 }}>Bu alışkanlığı rutinin için kişiselleştirelim</Text>
-              <View style={{ flexDirection: 'row', marginBottom: 16 }}>
+              <Text
+                style={{ fontSize: 16, fontWeight: "600", marginBottom: 8 }}
+              >
+                Bu alışkanlığı rutinin için kişiselleştirelim
+              </Text>
+              <View style={{ flexDirection: "row", marginBottom: 16 }}>
                 {colors.map((color) => (
                   <TouchableOpacity
                     key={color}
@@ -822,32 +857,32 @@ const CustomModal = () => {
                       backgroundColor: color,
                       marginHorizontal: 4,
                       borderWidth: selectedColor === color ? 2 : 0,
-                      borderColor: '#FFF',
+                      borderColor: "#FFF",
                     }}
                   />
                 ))}
               </View>
 
               {/* Seçenekler */}
-              {['Hedef', 'Tekrar', 'Süre'].map((item, index) => (
+              {["Hedef", "Tekrar", "Süre"].map((item, index) => (
                 <TouchableOpacity
                   key={index}
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                     paddingVertical: 12,
                     borderBottomWidth: 1,
-                    borderBottomColor: '#EEE',
+                    borderBottomColor: "#EEE",
                   }}
                 >
                   <Text style={{ fontSize: 16 }}>{item}</Text>
-                  <Text style={{ fontSize: 16, color: '#888' }}>
-                    {item === 'Hedef'
-                      ? 'Belirlenmemiş'
-                      : item === 'Tekrar'
-                        ? 'Günlük'
-                        : 'Herhangi bir zaman'}
+                  <Text style={{ fontSize: 16, color: "#888" }}>
+                    {item === "Hedef"
+                      ? "Belirlenmemiş"
+                      : item === "Tekrar"
+                      ? "Günlük"
+                      : "Herhangi bir zaman"}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -855,9 +890,9 @@ const CustomModal = () => {
               {/* Hatırlatıcı */}
               <View
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                   marginVertical: 16,
                 }}
               >
@@ -866,9 +901,12 @@ const CustomModal = () => {
               </View>
 
               {/* Kaydet Butonu */}
-              <Button title="Değişiklikleri Kaydet" color="#4B0082" onPress={handleSaveChanges} />
+              <Button
+                title="Değişiklikleri Kaydet"
+                color="#4B0082"
+                onPress={handleSaveChanges}
+              />
             </ScrollView>
-
           </View>
         </View>
       </PanGestureHandler>
@@ -878,24 +916,24 @@ const CustomModal = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     width: width * 2,
     backgroundColor: "#E8F5E9",
-    height: '100%',
+    height: "100%",
   },
   screen: {
     width,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   button: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: '#007BFF',
+    backgroundColor: "#007BFF",
     borderRadius: 8,
   },
   header: {
@@ -1434,6 +1472,4 @@ const defaultHabitsCreate = [
   },
 ];
 
-
 export default CustomModal;
-
