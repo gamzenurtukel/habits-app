@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../app/store";
 
-
 // Create our baseQuery instance
 export const baseQuery = fetchBaseQuery({
   baseUrl: "https://development.habitz.pro",
   prepareHeaders: (headers, { getState }) => {
     // By default, if we have a token in the store, let's use that for authenticated requests
     const token = (getState() as RootState).auth.token;
+    console.log({ token });
 
     headers.set("Content-Type", "application/json");
 
