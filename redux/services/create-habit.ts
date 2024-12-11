@@ -20,6 +20,9 @@ const createHabitApi = api.injectEndpoints({
     >({
       query: (body) => ({
         method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
         url: "/Habit/Api/Habit/Create",
         body: body,
       }),
