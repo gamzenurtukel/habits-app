@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useMemo, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,15 +8,33 @@ import {
   ScrollView,
   Switch,
   Button,
+  Animated,
+  FlatList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  Platform,
 } from "react-native";
-import {
-  GestureHandlerRootView,
-  PanGestureHandler,
-} from "react-native-gesture-handler";
+import "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { useCreateHabitMutation } from "@/redux/services/create-habit";
+import { selectToken } from "@/redux/reducers/auth-reducer";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/app/store";
+import { set } from "zod";
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import moment from "moment";
+import { Overlay } from "@rneui/themed";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 const { width } = Dimensions.get("screen");
 
@@ -29,8 +47,17 @@ const CustomModal = () => {
   const [name, setName] = useState("");
   const [icon, setIcon] = useState("");
   const [description, setDescription] = useState("");
+  const flatListRef = useRef<FlatList<{ key: string }>>(null);
+  const [activeTab, setActiveTab] = useState(0);
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   const [createHabit] = useCreateHabitMutation();
+
+  const token = useSelector((state: RootState) => selectToken(state));
+
+  const { width, height } = Dimensions.get("screen");
+
+  const tabs = ["stageOne", "stageTwo"];
 
   const colors = [
     "#FF6B6B",
@@ -41,81 +68,295 @@ const CustomModal = () => {
     "#D28CFF",
   ];
 
-  const handleSaveChanges = async () => {
-    try {
-      const result = await createHabit({
-        name: name,
-        description: description,
-        isReminder: false,
-        details: {
-          color: selectedColor || "#FF6B6B",
-          icon: icon,
-          periodType: 1,
-          periodCount: 1,
-          startTime: "2021-09-01T00:00:00",
-          endTime: "2021-09-01T00:00:00",
-        },
-      })
-        .then((res) => {
-          console.log("result then", result);
-          console.log("Alışkanlık başarıyla oluşturuldu!", res);
-
-          Toast.show({
-            type: "success",
-            position: "bottom",
-            text1: "Alışkanlık başarıyla oluşturuldu!",
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
-
-          setTimeout(() => {
-            router.back();
-          }, 2000);
-        })
-        .catch((error) => {
-          console.log("alışkanlık oluşturma başarısız", error);
-          Toast.show({
-            type: "error",
-            position: "bottom",
-            text1: "Alışkanlık oluşturulurken hata oluştu",
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
-        });
-    } catch (error) {
-      console.log("Alışkanlık oluşturulurken hata oluştu", error);
-      Toast.show({
-        type: "error",
-        position: "bottom",
-        text1: "Alışkanlık oluşturulurken hata oluştu",
-        visibilityTime: 3000,
-        autoHide: true,
-        bottomOffset: 50,
-      });
-    }
+  const handleTabPress = (index: number) => {
+    flatListRef.current?.scrollToOffset({ offset: index * width });
+    setActiveTab(index);
   };
 
-  const handleSwipe = (direction: "left" | "right") => {
-    if (direction === "left" && currentPage === 0) {
-      setCurrentPage(1);
-    } else if (direction === "right" && currentPage === 1) {
-      setCurrentPage(0);
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (event.nativeEvent.contentOffset.x === 0) {
+      setActiveTab(0);
       setName("");
       setIcon("");
       setDescription("");
     }
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / width);
+    setActiveTab(index);
+  };
+
+  const handleSaveChanges = async () => {
+    console.log("token", token);
+    const habitData = {
+      name: "jsjsjsjjsjjs",
+      description: "jsjsjsjjsjs açıklaması",
+      isReminder: true,
+      details: {
+        color: "#FF5733",
+        icon: "📘",
+        periodType: 1,
+        periodCount: 1,
+        startTime: null,
+        endTime: null,
+      },
+    };
+
+    createHabit(habitData)
+      .then((response) => console.log("Başarılı:", response))
+      .catch((error) => console.error("Hata:", error));
+
+    // try {
+    //   const result = await createHabit({
+    //     name: name,
+    //     description: description,
+    //     isReminder: false,
+    //     details: {
+    //       color: selectedColor || "#FF6B6B",
+    //       icon: icon,
+    //       periodType: 1,
+    //       periodCount: 1,
+    //       startTime: "2021-09-01T00:00:00",
+    //       endTime: "2021-09-01T00:00:00",
+    //     },
+    //   })
+    //     .then((res) => {
+    //       console.log("result then", result);
+    //       console.log("Alışkanlık başarıyla oluşturuldu!", res);
+
+    //       Toast.show({
+    //         type: "success",
+    //         position: "bottom",
+    //         text1: "Alışkanlık başarıyla oluşturuldu!",
+    //         visibilityTime: 3000,
+    //         autoHide: true,
+    //         bottomOffset: 50,
+    //       });
+
+    //       setTimeout(() => {
+    //         router.back();
+    //       }, 2000);
+    //     })
+    //     .catch((error) => {
+    //       console.log("alışkanlık oluşturma başarısız", error);
+    //       Toast.show({
+    //         type: "error",
+    //         position: "bottom",
+    //         text1: "Alışkanlık oluşturulurken hata oluştu",
+    //         visibilityTime: 3000,
+    //         autoHide: true,
+    //         bottomOffset: 50,
+    //       });
+    //     });
+    // } catch (error) {
+    //   console.log("Alışkanlık oluşturulurken hata oluştu", error);
+    //   Toast.show({
+    //     type: "error",
+    //     position: "bottom",
+    //     text1: "Alışkanlık oluşturulurken hata oluştu",
+    //     visibilityTime: 3000,
+    //     autoHide: true,
+    //     bottomOffset: 50,
+    //   });
+    // }
+  };
+
+  const stageOne = () => {
+    return (
+      <View style={[styles.screen]}>
+        <ScrollView
+          style={styles.content}
+          contentContainerStyle={{ paddingBottom: 20 }}
+          showsVerticalScrollIndicator={false}
+        >
+          <View
+            style={{
+              paddingTop: 10,
+            }}
+          >
+            <Text style={styles.contentHeader}>
+              First, let's find your new habit
+            </Text>
+            <Text style={styles.contentSubHeader}>
+              Choose from the list below or create a custom habit
+            </Text>
+          </View>
+          <View>
+            <View>
+              <Text style={styles.categoryTitle}>Benzersiz Ol</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  marginBottom: 20,
+                  marginLeft: 10,
+                  marginRight: 10,
+                }}
+              >
+                <TouchableOpacity
+                  style={[
+                    styles.habitCard,
+                    {
+                      width: "100%",
+                      justifyContent: "space-between",
+                    },
+                  ]}
+                  onPress={() => {
+                    handleTabPress(1);
+                  }}
+                >
+                  <View style={[styles.habitCard]}>
+                    <Text>
+                      <MaterialIcons name="add" size={24} color="#588157" />
+                    </Text>
+                    <Text style={styles.habitName}>
+                      Kendi alışkanlığını oluştur
+                    </Text>
+                  </View>
+                  <Text>
+                    <MaterialIcons
+                      name="chevron-right"
+                      size={24}
+                      color="#588157"
+                    />
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            {defaultHabitsCreate.map((category) => (
+              <View key={category.category}>
+                <Text style={styles.categoryTitle}>{category.category}</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    marginBottom: 20,
+                    paddingInline: 10,
+                  }}
+                >
+                  {category.habits.map((habit) => (
+                    <TouchableOpacity
+                      key={habit.name}
+                      style={styles.habitCard}
+                      onPress={() => {
+                        setName(habit.name);
+                        handleTabPress(1);
+                        setIcon(habit.icon);
+                        setDescription(habit.description);
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 14,
+                        }}
+                      >
+                        {habit.icon}
+                      </Text>
+                      <Text style={styles.habitName}>{habit.name}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
+    );
+  };
+
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
+  const stageTwo = () => {
+    return (
+      <View style={[styles.screen]}>
+        <ScrollView
+          style={styles.container2}
+          contentContainerStyle={{ paddingTop: 20 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Kart */}
+          <View
+            style={[
+              styles.card,
+              { backgroundColor: selectedColor || "#FF6B6B" },
+            ]}
+          >
+            <Text style={styles.cardTitle}>{`${icon} ${name}`}</Text>
+            <Text style={styles.cardSubtitle}>{description}</Text>
+          </View>
+
+          {/* Renk Seçimi */}
+          <Text style={styles.sectionTitle}>
+            Bu alışkanlığı rutinin için kişiselleştirelim
+          </Text>
+          <View style={styles.colorContainer}>
+            {colors.map((color) => (
+              <TouchableOpacity
+                key={color}
+                onPress={() => setSelectedColor(color)}
+                style={[
+                  styles.colorCircle,
+                  {
+                    backgroundColor: color,
+                    borderWidth: selectedColor === color ? 2 : 0,
+                  },
+                ]}
+              />
+            ))}
+          </View>
+
+          {/* Seçenekler */}
+          {["Hedef", "Tekrar", "Süre"].map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.optionRow}
+              onPress={handlePresentModalPress}
+            >
+              <Text style={styles.optionLabel}>{item}</Text>
+              <Text style={styles.optionValue}>
+                {item === "Hedef"
+                  ? "Belirlenmemiş"
+                  : item === "Tekrar"
+                  ? "Günlük"
+                  : "Herhangi bir zaman"}
+              </Text>
+            </TouchableOpacity>
+          ))}
+
+          {/* Hatırlatıcı */}
+          <View style={styles.reminderRow}>
+            <Text style={styles.optionLabel}>Hatırlatıcı</Text>
+            <Switch value={reminder} onValueChange={setReminder} />
+          </View>
+
+          {/* Kaydet Butonu */}
+          <Button
+            title="Değişiklikleri Kaydet"
+            color="#4B0082"
+            onPress={handleSaveChanges}
+          />
+        </ScrollView>
+      </View>
+    );
   };
 
   return (
     <GestureHandlerRootView>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => setCurrentPage(0)}>
+        <TouchableOpacity
+          onPress={() => {
+            handleTabPress(0);
+          }}
+        >
           <MaterialIcons
             name="chevron-left"
             size={24}
-            color={currentPage === 0 ? "#E8F5E9" : "#588157"}
+            color={activeTab === 0 ? "#E8F5E9" : "#588157"}
           />
         </TouchableOpacity>
 
@@ -124,192 +365,100 @@ const CustomModal = () => {
           <MaterialIcons name="close" size={24} color="#588157" />
         </TouchableOpacity>
       </View>
-      <PanGestureHandler
-        onGestureEvent={({ nativeEvent }) => {
-          // if (nativeEvent.translationX < -50) handleSwipe("left");
-          if (nativeEvent.translationX > 50) handleSwipe("right");
-        }}
-      >
-        <View
-          style={[
-            styles.container,
-            { transform: [{ translateX: -currentPage * width }] },
-          ]}
-        >
-          {/* Ekran 1 */}
-          <View style={[styles.screen]}>
-            <ScrollView
-              style={styles.content}
-              contentContainerStyle={{ paddingBottom: 20 }}
-              showsVerticalScrollIndicator={false}
-            >
-              <View
-                style={{
-                  paddingTop: 10,
-                }}
-              >
-                <Text style={styles.contentHeader}>
-                  First, let's find your new habit
-                </Text>
-                <Text style={styles.contentSubHeader}>
-                  Choose from the list below or create a custom habit
-                </Text>
-              </View>
-              <View>
-                <View>
-                  <Text style={styles.categoryTitle}>Benzersiz Ol</Text>
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      flexWrap: "wrap",
-                      marginBottom: 20,
-                      marginLeft: 10,
-                      marginRight: 10,
-                    }}
-                  >
-                    <TouchableOpacity
-                      style={[
-                        styles.habitCard,
-                        {
-                          width: "100%",
-                          justifyContent: "space-between",
-                        },
-                      ]}
-                      onPress={() => setCurrentPage(1)}
-                    >
-                      <View style={[styles.habitCard]}>
-                        <Text>
-                          <MaterialIcons name="add" size={24} color="#588157" />
-                        </Text>
-                        <Text style={styles.habitName}>
-                          Kendi alışkanlığını oluştur
-                        </Text>
-                      </View>
-                      <Text>
-                        <MaterialIcons
-                          name="chevron-right"
-                          size={24}
-                          color="#588157"
-                        />
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                {defaultHabitsCreate.map((category) => (
-                  <View key={category.category}>
-                    <Text style={styles.categoryTitle}>
-                      {category.category}
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        flexWrap: "wrap",
-                        marginBottom: 20,
-                        paddingInline: 10,
-                      }}
-                    >
-                      {category.habits.map((habit) => (
-                        <TouchableOpacity
-                          key={habit.name}
-                          style={styles.habitCard}
-                          onPress={() => {
-                            setName(habit.name);
-                            setCurrentPage(1);
-                            setIcon(habit.icon);
-                            setDescription(habit.description);
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 14,
-                            }}
-                          >
-                            {habit.icon}
-                          </Text>
-                          <Text style={styles.habitName}>{habit.name}</Text>
-                        </TouchableOpacity>
-                      ))}
-                    </View>
-                  </View>
-                ))}
-              </View>
-            </ScrollView>
-            <TouchableOpacity
-              onPress={() => setCurrentPage(1)}
-              style={styles.button}
-            >
-              <Text>Devam Et</Text>
-            </TouchableOpacity>
-          </View>
-          {/* Ekran 2 Add Habit */}
 
-          <View style={[styles.screen]}>
-            <ScrollView
-              style={styles.container2}
-              contentContainerStyle={{ paddingTop: 20 }}
-              showsVerticalScrollIndicator={false}
-            >
-              {/* Kart */}
-              <View
-                style={[
-                  styles.card,
-                  { backgroundColor: selectedColor || "#FF6B6B" },
-                ]}
-              >
-                <Text style={styles.cardTitle}>{`${icon} ${name}`}</Text>
-                <Text style={styles.cardSubtitle}>{description}</Text>
-              </View>
+      <BottomSheetModalProvider>
+        <Animated.FlatList
+          ref={flatListRef}
+          data={tabs.map((tab) => ({ key: tab }))}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.key}
+          scrollEnabled={name !== ""}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          renderItem={({ index }) => (index === 0 ? stageOne() : stageTwo())}
+        />
 
-              {/* Renk Seçimi */}
-              <Text style={styles.sectionTitle}>
-                Bu alışkanlığı rutinin için kişiselleştirelim
+        <BottomSheetModal ref={bottomSheetRef} onChange={handleSheetChanges}>
+          <BottomSheetView
+            style={{
+              padding: 16,
+
+              // backgroundColor: "#000000",
+            }}
+          >
+            {/* <DateTimePicker
+              testID="dateTimePicker"
+              value={new Date()}
+              mode="datetime"
+              is24Hour={true}
+              display="default"
+              onChange={(event: DateTimePickerEvent, date?: Date) => {
+                console.log("event", event);
+                console.log("date", date);
+              }}
+            /> */}
+
+            <View>
+              <Text
+                style={{ color: "#588157", fontSize: 20, fontWeight: "bold" }}
+              >
+                Start Time
               </Text>
-              <View style={styles.colorContainer}>
-                {colors.map((color) => (
-                  <TouchableOpacity
-                    key={color}
-                    onPress={() => setSelectedColor(color)}
-                    style={[
-                      styles.colorCircle,
-                      {
-                        backgroundColor: color,
-                        borderWidth: selectedColor === color ? 2 : 0,
-                      },
-                    ]}
-                  />
-                ))}
-              </View>
+            </View>
+            <RNDateTimePicker
+              value={new Date()}
+              textColor="#588157"
+              accentColor="#588157"
+              themeVariant="light"
+              mode="datetime"
+              is24Hour={true}
+              display="inline"
+              onChange={(event: DateTimePickerEvent, date?: Date) => {
+                console.log("event", event);
+                console.log("date", date);
+              }}
+              style={{ width: "100%", height: 200 }}
+            />
 
-              {/* Seçenekler */}
-              {["Hedef", "Tekrar", "Süre"].map((item, index) => (
-                <TouchableOpacity key={index} style={styles.optionRow}>
-                  <Text style={styles.optionLabel}>{item}</Text>
-                  <Text style={styles.optionValue}>
-                    {item === "Hedef"
-                      ? "Belirlenmemiş"
-                      : item === "Tekrar"
-                      ? "Günlük"
-                      : "Herhangi bir zaman"}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-
-              {/* Hatırlatıcı */}
-              <View style={styles.reminderRow}>
-                <Text style={styles.optionLabel}>Hatırlatıcı</Text>
-                <Switch value={reminder} onValueChange={setReminder} />
-              </View>
-
-              {/* Kaydet Butonu */}
-              <Button
-                title="Değişiklikleri Kaydet"
-                color="#4B0082"
-                onPress={handleSaveChanges}
-              />
-            </ScrollView>
-          </View>
-        </View>
-      </PanGestureHandler>
+            {/* <View>
+              <Text
+                style={{ color: "#588157", fontSize: 20, fontWeight: "bold" }}
+              >
+                End Time
+              </Text>
+            </View>
+            <RNDateTimePicker
+              value={new Date()}
+              textColor="#588157"
+              accentColor="#588157"
+              themeVariant="light"
+              mode="datetime"
+              is24Hour={true}
+              display="inline"
+              onChange={(event: DateTimePickerEvent, date?: Date) => {
+                console.log("event", event);
+                console.log("date", date);
+              }}
+            /> */}
+            <TouchableOpacity
+              onPress={() => bottomSheetRef.current?.close()}
+              style={{
+                backgroundColor: "#588157",
+                padding: 10,
+                borderRadius: 8,
+                marginTop: 20,
+                marginBottom: 10,
+              }}
+            >
+              <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
+                Uygula
+              </Text>
+            </TouchableOpacity>
+          </BottomSheetView>
+        </BottomSheetModal>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 };
@@ -325,6 +474,7 @@ const styles = StyleSheet.create({
     width,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#E8F5E9",
   },
   text: {
     fontSize: 20,
@@ -470,6 +620,26 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginVertical: 16,
+  },
+  tabContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    borderBottomWidth: 1,
+  },
+  tab: {
+    width: width / 2,
+    padding: 10,
+    textAlign: "center",
+    color: "gray",
+  },
+  activeTab: {
+    width: width / 2,
+    borderBottomWidth: 2,
+    borderBottomColor: "gray",
+  },
+  item: {
+    margin: 1,
   },
 });
 
