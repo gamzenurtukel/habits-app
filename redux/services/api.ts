@@ -5,14 +5,12 @@ import { RootState } from "../app/store";
 export const baseQuery = fetchBaseQuery({
   baseUrl: "https://development.habitz.pro",
   prepareHeaders: (headers, { getState }) => {
-    // By default, if we have a token in the store, let's use that for authenticated requests
     const token = (getState() as RootState).auth.token;
-    console.log({ token });
 
     headers.set("Content-Type", "application/json");
 
     if (token) {
-      headers.set("Token", `${token}`);
+      headers.set("Authorization", `Bearer ${token}`);
     }
 
     return headers;
