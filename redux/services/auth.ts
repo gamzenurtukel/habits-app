@@ -16,7 +16,7 @@ const authApi = api.injectEndpoints({
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body:body,
+        body: body,
       }),
     }),
     forgotPassword: build.mutation<any, any>({
@@ -26,11 +26,17 @@ const authApi = api.injectEndpoints({
         body: body,
       }),
     }),
-    logout: build.mutation<any, any>({
-      query: (body) => ({
+    // logout: build.mutation<any, any>({
+    //   query: (body) => ({
+    //     method: "POST",
+    //     url: "/Nexus/Api/User/Logout",
+    //     // body: body,
+    //   }),
+    // }),
+    logout: build.mutation({
+      query: () => ({
         method: "POST",
         url: "/Nexus/Api/User/Logout",
-        // body: body,
       }),
     }),
     register: build.mutation<
@@ -52,7 +58,6 @@ const authApi = api.injectEndpoints({
         url: "/Nexus/Api/User/Register",
         body: body,
       }),
-      
     }),
   }),
 });
