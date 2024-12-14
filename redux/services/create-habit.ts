@@ -3,7 +3,7 @@ import { api } from "./api";
 const createHabitApi = api.injectEndpoints({
   endpoints: (build) => ({
     createHabit: build.mutation<
-      any, // Daha güçlü bir type kullanımı önerilir
+      any,
       {
         name: string;
         description: string;
@@ -20,9 +20,6 @@ const createHabitApi = api.injectEndpoints({
     >({
       query: (body) => ({
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
         url: "/Habit/Api/Habit/Create",
         body: body,
       }),
@@ -31,9 +28,8 @@ const createHabitApi = api.injectEndpoints({
   overrideExisting: true,
 });
 
-// Hook ve endpoint exportları
+// Hook ve Endpoint Exportları
 export const { useCreateHabitMutation } = createHabitApi;
-
 export const {
   endpoints: { createHabit },
 } = createHabitApi;
