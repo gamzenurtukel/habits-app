@@ -12,6 +12,7 @@ import "react-native-reanimated";
 import Toast from "react-native-toast-message";
 import i18nextConfig from "@/i18n/i18nextConfig";
 import { I18nextProvider } from "react-i18next";
+import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import { persistor, store } from "@/redux/app/store";
