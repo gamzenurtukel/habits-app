@@ -67,20 +67,31 @@ export default function SettingsScreen() {
 
   const handleSignOut = async () => {
     try {
-      const result = await logout({});
-      console.log("result", result);
-      console.log("Çıkış Yapıldı", result);
-      Toast.show({
-        type: "success",
-        position: "bottom",
-        text1: "Çıkış Yapıldı",
-        visibilityTime: 3000,
-        autoHide: true,
-        bottomOffset: 50,
-      });
-      setTimeout(() => {
-        router.push("/(auth)/sign-in");
-      }, 1000);
+      const result = await logout({})
+        .then((res) => {
+          console.log("Çıkış Başarılı", result);
+          console.log("Çıkış Başarılı", res);
+          Toast.show({
+            type: "success",
+            position: "bottom",
+            text1: "Çıkış Başarılı",
+            visibilityTime: 3000,
+            autoHide: true,
+            bottomOffset: 50,
+          });
+          router.push("/(auth)/sign-in");
+        })
+        .catch((error) => {
+          console.log("Çıkış Yapılamadı", error);
+          Toast.show({
+            type: "error",
+            position: "bottom",
+            text1: "Çıkış Yapılamadı",
+            visibilityTime: 3000,
+            autoHide: true,
+            bottomOffset: 50,
+          });
+        });
     } catch (error) {
       console.log("Çıkış Yapılamadı", error);
       Toast.show({
