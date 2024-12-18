@@ -13,6 +13,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Platform,
+  Pressable
 } from "react-native";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -35,12 +36,11 @@ import DateTimePicker, {
 import moment from "moment";
 import { Overlay } from "@rneui/themed";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from '@react-native-picker/picker';
 
 const { width } = Dimensions.get("screen");
 
 const CustomModal = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
   const router = useRouter();
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [reminder, setReminder] = useState(false);
@@ -50,6 +50,9 @@ const CustomModal = () => {
   const flatListRef = useRef<FlatList<{ key: string }>>(null);
   const [activeTab, setActiveTab] = useState(0);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
+  const [isEnabled, setIsEnabled] = React.useState(true);
+  const [selectedDay, setSelectedDay] = useState<number>(1);
+  const [activeTabSheet, setActiveTabSheet] = useState("daily");
 
   const [createHabit] = useCreateHabitMutation();
 
@@ -84,6 +87,8 @@ const CustomModal = () => {
     const index = Math.round(offsetX / width);
     setActiveTab(index);
   };
+
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const handleSaveChanges = async () => {
     console.log("token", token);
@@ -311,7 +316,7 @@ const CustomModal = () => {
           </View>
 
           {/* Seçenekler */}
-          {["Hedef", "Tekrar", "Süre"].map((item, index) => (
+          {["Tekrar", "Süre"].map((item, index) => (
             <TouchableOpacity
               key={index}
               style={styles.optionRow}
@@ -319,11 +324,12 @@ const CustomModal = () => {
             >
               <Text style={styles.optionLabel}>{item}</Text>
               <Text style={styles.optionValue}>
-                {item === "Hedef"
+                {/* {item === "Hedef"
                   ? "Belirlenmemiş"
                   : item === "Tekrar"
                   ? "Günlük"
-                  : "Herhangi bir zaman"}
+                  : "Herhangi bir zaman"} */}
+                jsjsjsjjsj
               </Text>
             </TouchableOpacity>
           ))}
@@ -384,78 +390,80 @@ const CustomModal = () => {
           <BottomSheetView
             style={{
               padding: 16,
-
-              // backgroundColor: "#000000",
             }}
           >
-            {/* <DateTimePicker
-              testID="dateTimePicker"
-              value={new Date()}
-              mode="datetime"
-              is24Hour={true}
-              display="default"
-              onChange={(event: DateTimePickerEvent, date?: Date) => {
-                console.log("event", event);
-                console.log("date", date);
-              }}
-            /> */}
-
-            <View>
-              <Text
-                style={{ color: "#588157", fontSize: 20, fontWeight: "bold" }}
-              >
-                Start Time
-              </Text>
+            <View style={styles.container3}>
+              <View style={styles.tabContainer3}>
+                <Pressable
+                  style={[
+                    styles.tabButton3,
+                    activeTabSheet === 'daily' && styles.activeTab3,
+                  ]}
+                  onPress={() => setActiveTabSheet('daily')}
+                >
+                  <Text
+                    style={[
+                      styles.tabText3,
+                      activeTabSheet === 'daily' && styles.activeTabText3,
+                    ]}
+                  >
+                    Günlük
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={[
+                    styles.tabButton3,
+                    activeTabSheet === 'weekly' && styles.activeTab3,
+                  ]}
+                  onPress={() => setActiveTabSheet('weekly')}
+                >
+                  <Text
+                    style={[
+                      styles.tabText3,
+                      activeTabSheet === 'weekly' && styles.activeTabText3,
+                    ]}
+                  >
+                    Haftalık
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={[
+                    styles.tabButton3,
+                    activeTabSheet === 'monthly' && styles.activeTab3,
+                  ]}
+                  onPress={() => setActiveTabSheet('monthly')}
+                >
+                  <Text
+                    style={[
+                      styles.tabText3,
+                      activeTabSheet === 'monthly' && styles.activeTabText3,
+                    ]}
+                  >
+                    Aylık
+                  </Text>
+                </Pressable>
+              </View>
+              <View style={styles.pickerContainer}>
+                <Text style={styles.pickerText}>Her</Text>
+                <Picker
+                  selectedValue={selectedDay.toString()} // Değeri string'e çeviriyoruz
+                  onValueChange={(itemValue) => setSelectedDay(Number(itemValue))} // Geri sayıyı number'a çeviriyoruz
+                  // style={styles.picker}
+                  style={{ width: 100 }}
+                  mode="dropdown"
+                  itemStyle={{ color: 'black' }}
+                >
+                  {Array.from({ length: 30 }, (_, i) => (i + 1).toString()).map((day) => (
+                    <Picker.Item key={day} label={day} value={day} />
+                  ))}
+                </Picker>
+                <Text style={styles.pickerText}>gün</Text>
+              </View>
+              {/* <Text style={styles.footerText}>Her gün tekrar eder.</Text> */}
+              <Pressable style={styles.applyButton} >
+                <Text style={styles.applyText}>Uygula</Text>
+              </Pressable>
             </View>
-            <RNDateTimePicker
-              value={new Date()}
-              textColor="#588157"
-              accentColor="#588157"
-              themeVariant="light"
-              mode="datetime"
-              is24Hour={true}
-              display="inline"
-              onChange={(event: DateTimePickerEvent, date?: Date) => {
-                console.log("event", event);
-                console.log("date", date);
-              }}
-              style={{ width: "100%", height: 200 }}
-            />
-
-            {/* <View>
-              <Text
-                style={{ color: "#588157", fontSize: 20, fontWeight: "bold" }}
-              >
-                End Time
-              </Text>
-            </View>
-            <RNDateTimePicker
-              value={new Date()}
-              textColor="#588157"
-              accentColor="#588157"
-              themeVariant="light"
-              mode="datetime"
-              is24Hour={true}
-              display="inline"
-              onChange={(event: DateTimePickerEvent, date?: Date) => {
-                console.log("event", event);
-                console.log("date", date);
-              }}
-            /> */}
-            <TouchableOpacity
-              onPress={() => bottomSheetRef.current?.close()}
-              style={{
-                backgroundColor: "#588157",
-                padding: 10,
-                borderRadius: 8,
-                marginTop: 20,
-                marginBottom: 10,
-              }}
-            >
-              <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-                Uygula
-              </Text>
-            </TouchableOpacity>
           </BottomSheetView>
         </BottomSheetModal>
       </BottomSheetModalProvider>
@@ -640,6 +648,87 @@ const styles = StyleSheet.create({
   },
   item: {
     margin: 1,
+  },
+  container3: {
+    // flex: 1,
+    // paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+  },
+  tabContainer3: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+    backgroundColor:"#E8F5E9",
+    borderRadius: 50,
+    paddingVertical: 8,
+
+    
+  },
+
+  tabButton3: {
+    paddingVertical: 8,
+    paddingHorizontal: 24, 
+    borderRadius: 50, 
+    backgroundColor: '#E0E0E0', 
+  },
+  activeTab3: {
+    backgroundColor: '#588157', 
+  },
+  tabText3: {
+    fontSize: 16,
+    color: '#333', 
+  },
+  activeTabText3: {
+    color: '#FFFFFF', 
+    fontWeight: '600',
+  },
+  pickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
+  pickerText: {
+    fontSize: 16,
+    marginHorizontal: 5,
+    color: '#333',
+  },
+  footerText: {
+    textAlign: 'center',
+    color: '#777',
+    marginVertical: 10,
+  },
+  applyButton: {
+    backgroundColor: '#588157',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginVertical: 20,
+
+  },
+  applyText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  picker: {
+    height: 50,
+    // width: '100%',
+    width: 100,
+
   },
 });
 
