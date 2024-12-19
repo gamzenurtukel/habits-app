@@ -2,81 +2,86 @@ import { View, Text, ScrollView, StyleSheet, Pressable } from "react-native";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { Stack } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.date}>Friday, 13th</Text>
-        <Pressable style={styles.calendarIcon}>
-          <Ionicons name="calendar-outline" size={24} color="green" />
-        </Pressable>
-      </View>
-
-      <Text style={styles.title}>It's a great day to stay on track</Text>
-
-      {/* Habits Section */}
-      <View style={styles.habitsSection}>
-        <Text style={styles.sectionTitle}>Your habits</Text>
-        <Link href="/" style={styles.editButton}>
-          Edit
-        </Link>
-      </View>
-
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.habitCards}
-      >
-        <View style={styles.addHabitCard}>
-          <Ionicons name="add" size={28} color="green" />
-          <Text style={styles.addHabitText}>Add habit</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Stack.Screen options={{ headerShown: false }} />
+      <ScrollView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.date}>Friday, 13th</Text>
+          <Pressable style={styles.calendarIcon}>
+            <Ionicons name="calendar-outline" size={24} color="green" />
+          </Pressable>
         </View>
-        {["green", "yellow", "blue"].map((color, index) => (
-          <View
-            key={index}
-            style={[styles.habitCard, { backgroundColor: color }]}
-          >
-            {/* <Ionicons name="run-outline" size={28} color="white" /> */}
-            <MaterialIcons name="run-circle" size={28} color="white" />
-            <Text style={styles.habitText}>Running</Text>
-            <Text style={styles.habitText}>5 Days</Text>
+
+        <Text style={styles.title}>It's a great day to stay on track</Text>
+
+        {/* Habits Section */}
+        <View style={styles.habitsSection}>
+          <Text style={styles.sectionTitle}>Your habits</Text>
+          <Link href="/" style={styles.editButton}>
+            Edit
+          </Link>
+        </View>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.habitCards}
+        >
+          <View style={styles.addHabitCard}>
+            <Ionicons name="add" size={28} color="green" />
+            <Text style={styles.addHabitText}>Add habit</Text>
           </View>
-        ))}
+          {["green", "yellow", "blue"].map((color, index) => (
+            <View
+              key={index}
+              style={[styles.habitCard, { backgroundColor: color }]}
+            >
+              {/* <Ionicons name="run-outline" size={28} color="white" /> */}
+              <MaterialIcons name="run-circle" size={28} color="white" />
+              <Text style={styles.habitText}>Running</Text>
+              <Text style={styles.habitText}>5 Days</Text>
+            </View>
+          ))}
+        </ScrollView>
+
+        {/* Daily Progress */}
+        <Text style={styles.progressText}>Your daily goal progress</Text>
+        <Text style={styles.progressSubText}>4 out of 5 tasks completed.</Text>
+        <View style={styles.progressBarContainer}>
+          <View style={styles.progressBar} />
+        </View>
+
+        {/* Today's Habits */}
+        <View style={styles.habitsSection}>
+          <Text style={styles.sectionTitle}>Today's Habits</Text>
+          <Link href="/" style={styles.editButton}>
+            Edit
+          </Link>
+        </View>
+        <View style={styles.habitList}>
+          <View style={styles.habitDone}>
+            <Ionicons name="checkmark-circle" size={28} color="green" />
+            <View>
+              <Text style={styles.habitName}>Breath</Text>
+              <Text style={styles.habitTime}>Anytime</Text>
+            </View>
+            <Text style={styles.habitStatus}>Done</Text>
+          </View>
+          <View style={styles.habitPending}>
+            <Ionicons name="time-outline" size={28} color="orange" />
+            <View>
+              <Text style={styles.habitName}>Breath</Text>
+              <Text style={styles.habitTime}>10:00 AM</Text>
+            </View>
+          </View>
+        </View>
       </ScrollView>
-
-      {/* Daily Progress */}
-      <Text style={styles.progressText}>Your daily goal progress</Text>
-      <Text style={styles.progressSubText}>4 out of 5 tasks completed.</Text>
-      <View style={styles.progressBarContainer}>
-        <View style={styles.progressBar} />
-      </View>
-
-      {/* Today's Habits */}
-      <View style={styles.habitsSection}>
-        <Text style={styles.sectionTitle}>Today's Habits</Text>
-        <Link href="/" style={styles.editButton}>
-          Edit
-        </Link>
-      </View>
-      <View style={styles.habitList}>
-        <View style={styles.habitDone}>
-          <Ionicons name="checkmark-circle" size={28} color="green" />
-          <View>
-            <Text style={styles.habitName}>Breath</Text>
-            <Text style={styles.habitTime}>Anytime</Text>
-          </View>
-          <Text style={styles.habitStatus}>Done</Text>
-        </View>
-        <View style={styles.habitPending}>
-          <Ionicons name="time-outline" size={28} color="orange" />
-          <View>
-            <Text style={styles.habitName}>Breath</Text>
-            <Text style={styles.habitTime}>10:00 AM</Text>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
