@@ -13,7 +13,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   Platform,
-  Pressable
+  Pressable,
 } from "react-native";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -36,7 +36,7 @@ import DateTimePicker, {
 import moment from "moment";
 import { Overlay } from "@rneui/themed";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from "@react-native-picker/picker";
 
 const { width } = Dimensions.get("screen");
 
@@ -63,12 +63,30 @@ const CustomModal = () => {
   const tabs = ["stageOne", "stageTwo"];
 
   const colors = [
-    "#FF6B6B",
-    "#FFA93A",
-    "#FFD93A",
-    "#2DC26B",
-    "#3B9CFF",
-    "#D28CFF",
+    "#FF5733",
+    "#FFBD33",
+    "#C70039",
+    "#900C3F",
+    "#581845",
+    "#28B463",
+    "#1F77B4",
+    "#F39C12",
+    "#8E44AD",
+    "#3498DB",
+    "#16A085",
+    "#F1C40F",
+    "#D35400",
+    "#7D3C98",
+    "#27AE60",
+    "#2980B9",
+    "#F1948A",
+    "#5D6D7E",
+    "#8E44AD",
+    "#E74C3C",
+    "#2E4053",
+    "#16A085",
+    "#C39BD3",
+    "#D2691E",
   ];
 
   const handleTabPress = (index: number) => {
@@ -300,19 +318,25 @@ const CustomModal = () => {
             Bu alışkanlığı rutinin için kişiselleştirelim
           </Text>
           <View style={styles.colorContainer}>
-            {colors.map((color) => (
-              <TouchableOpacity
-                key={color}
-                onPress={() => setSelectedColor(color)}
-                style={[
-                  styles.colorCircle,
-                  {
-                    backgroundColor: color,
-                    borderWidth: selectedColor === color ? 2 : 0,
-                  },
-                ]}
-              />
-            ))}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.colorScrollView}
+            >
+              {colors.map((color, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => setSelectedColor(color)}
+                  style={[
+                    styles.colorCircle,
+                    {
+                      backgroundColor: color,
+                      borderWidth: selectedColor === color ? 2 : 0,
+                    },
+                  ]}
+                />
+              ))}
+            </ScrollView>
           </View>
 
           {/* Seçenekler */}
@@ -329,7 +353,7 @@ const CustomModal = () => {
                   : item === "Tekrar"
                   ? "Günlük"
                   : "Herhangi bir zaman"} */}
-                jsjsjsjjsj
+                Belirtilmemiş
               </Text>
             </TouchableOpacity>
           ))}
@@ -341,11 +365,12 @@ const CustomModal = () => {
           </View>
 
           {/* Kaydet Butonu */}
-          <Button
-            title="Değişiklikleri Kaydet"
-            color="#4B0082"
+          <TouchableOpacity
+            style={styles.applyButton}
             onPress={handleSaveChanges}
-          />
+          >
+            <Text style={styles.applyText}>Değişikleri Kaydet</Text>
+          </TouchableOpacity>
         </ScrollView>
       </View>
     );
@@ -397,14 +422,14 @@ const CustomModal = () => {
                 <Pressable
                   style={[
                     styles.tabButton3,
-                    activeTabSheet === 'daily' && styles.activeTab3,
+                    activeTabSheet === "daily" && styles.activeTab3,
                   ]}
-                  onPress={() => setActiveTabSheet('daily')}
+                  onPress={() => setActiveTabSheet("daily")}
                 >
                   <Text
                     style={[
                       styles.tabText3,
-                      activeTabSheet === 'daily' && styles.activeTabText3,
+                      activeTabSheet === "daily" && styles.activeTabText3,
                     ]}
                   >
                     Günlük
@@ -413,14 +438,14 @@ const CustomModal = () => {
                 <Pressable
                   style={[
                     styles.tabButton3,
-                    activeTabSheet === 'weekly' && styles.activeTab3,
+                    activeTabSheet === "weekly" && styles.activeTab3,
                   ]}
-                  onPress={() => setActiveTabSheet('weekly')}
+                  onPress={() => setActiveTabSheet("weekly")}
                 >
                   <Text
                     style={[
                       styles.tabText3,
-                      activeTabSheet === 'weekly' && styles.activeTabText3,
+                      activeTabSheet === "weekly" && styles.activeTabText3,
                     ]}
                   >
                     Haftalık
@@ -429,14 +454,14 @@ const CustomModal = () => {
                 <Pressable
                   style={[
                     styles.tabButton3,
-                    activeTabSheet === 'monthly' && styles.activeTab3,
+                    activeTabSheet === "monthly" && styles.activeTab3,
                   ]}
-                  onPress={() => setActiveTabSheet('monthly')}
+                  onPress={() => setActiveTabSheet("monthly")}
                 >
                   <Text
                     style={[
                       styles.tabText3,
-                      activeTabSheet === 'monthly' && styles.activeTabText3,
+                      activeTabSheet === "monthly" && styles.activeTabText3,
                     ]}
                   >
                     Aylık
@@ -447,20 +472,28 @@ const CustomModal = () => {
                 <Text style={styles.pickerText}>Her</Text>
                 <Picker
                   selectedValue={selectedDay.toString()} // Değeri string'e çeviriyoruz
-                  onValueChange={(itemValue) => setSelectedDay(Number(itemValue))} // Geri sayıyı number'a çeviriyoruz
-                  // style={styles.picker}
+                  onValueChange={(itemValue) =>
+                    setSelectedDay(Number(itemValue))
+                  }
                   style={{ width: 100 }}
                   mode="dropdown"
-                  itemStyle={{ color: 'black' }}
+                  itemStyle={{ color: "black" }}
                 >
-                  {Array.from({ length: 30 }, (_, i) => (i + 1).toString()).map((day) => (
-                    <Picker.Item key={day} label={day} value={day} />
-                  ))}
+                  {Array.from({ length: 30 }, (_, i) => (i + 1).toString()).map(
+                    (day) => (
+                      <Picker.Item key={day} label={day} value={day} />
+                    )
+                  )}
                 </Picker>
                 <Text style={styles.pickerText}>gün</Text>
               </View>
               {/* <Text style={styles.footerText}>Her gün tekrar eder.</Text> */}
-              <Pressable style={styles.applyButton} >
+              <Pressable
+                style={styles.applyButton}
+                onPress={() => {
+                  bottomSheetRef.current?.close();
+                }}
+              >
                 <Text style={styles.applyText}>Uygula</Text>
               </Pressable>
             </View>
@@ -598,8 +631,11 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   colorContainer: {
-    flexDirection: "row",
     marginBottom: 16,
+    width: "100%",
+  },
+  colorScrollView: {
+    paddingVertical: 10,
   },
   colorCircle: {
     width: 40,
@@ -655,80 +691,76 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
   },
   switchRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 20,
   },
   label: {
     fontSize: 16,
   },
   tabContainer3: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginBottom: 20,
-    backgroundColor:"#E8F5E9",
+    // backgroundColor: "#E8F5E9",
     borderRadius: 50,
     paddingVertical: 8,
-
-    
   },
 
   tabButton3: {
     paddingVertical: 8,
-    paddingHorizontal: 24, 
-    borderRadius: 50, 
-    backgroundColor: '#E0E0E0', 
+    paddingHorizontal: 24,
+    borderRadius: 50,
+    backgroundColor: "#E0E0E0",
   },
   activeTab3: {
-    backgroundColor: '#588157', 
+    backgroundColor: "#588157",
   },
   tabText3: {
     fontSize: 16,
-    color: '#333', 
+    color: "#333",
   },
   activeTabText3: {
-    color: '#FFFFFF', 
-    fontWeight: '600',
+    color: "#FFFFFF",
+    fontWeight: "600",
   },
   pickerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginVertical: 10,
   },
   pickerText: {
     fontSize: 16,
     marginHorizontal: 5,
-    color: '#333',
+    color: "#333",
   },
   footerText: {
-    textAlign: 'center',
-    color: '#777',
+    textAlign: "center",
+    color: "#777",
     marginVertical: 10,
   },
   applyButton: {
-    backgroundColor: '#588157',
+    backgroundColor: "#588157",
     paddingVertical: 12,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 20,
-
   },
   applyText: {
-    color: '#fff',
-    fontWeight: '600',
+    color: "#fff",
+    fontWeight: "600",
     fontSize: 16,
   },
   picker: {
     height: 50,
     // width: '100%',
     width: 100,
-
   },
 });
 
