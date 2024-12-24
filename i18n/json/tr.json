@@ -4,5 +4,10 @@
     "turkish": "Türkçe",
     "english": "İngilizce",
     "cancel": "İptal",
-    "select_language": "Dil Seçiniz"
+    "select_language": "Dil Seçiniz",
+    "create_a_new_habit":" Yeni bir alışkanlık oluştur",
+    "first_lets_find_your_new_habit":"Öncelikle yeni alışkanlığınızı bul",
+    "choose_from_the_list_below_or_create_a_custom_habit":"Aşağıdaki listeden seçim yapın veya özel bir alışkanlık oluşturun.",
+    "be_unique":"Benzersiz Ol",
+    "create_your_own_habit":"Kendi alışkanlığını oluştur"
 }

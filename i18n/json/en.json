@@ -4,5 +4,10 @@
     "turkish": "Turkish",
     "english": "English",
     "cancel": "Cancel",
-    "select_language": "Select Language"
+    "select_language": "Select Language",
+    "create_a_new_habit":"Create a new habit",
+    "first_lets_find_your_new_habit":"First, let's find your new habit",
+    "choose_from_the_list_below_or_create_a_custom_habit":"Choose from the list below or create a custom habit.",
+    "be_unique":"Be Unique",
+    "create_your_own_habit":"Create your own habit"
 }
