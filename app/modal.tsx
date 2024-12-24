@@ -37,6 +37,7 @@ import moment from "moment";
 import { Overlay } from "@rneui/themed";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
+import { useTranslation } from "react-i18next";
 
 const { width } = Dimensions.get("screen");
 
@@ -57,6 +58,7 @@ const CustomModal = () => {
   const [createHabit] = useCreateHabitMutation();
 
   const token = useSelector((state: RootState) => selectToken(state));
+  const { t } = useTranslation();
 
   const { width, height } = Dimensions.get("screen");
 
@@ -197,15 +199,15 @@ const CustomModal = () => {
             }}
           >
             <Text style={styles.contentHeader}>
-              First, let's find your new habit
+              {t("first_lets_find_your_new_habit")}
             </Text>
             <Text style={styles.contentSubHeader}>
-              Choose from the list below or create a custom habit
+              {t("choose_from_the_list_below_or_create_a_custom_habit")}
             </Text>
           </View>
           <View>
             <View>
-              <Text style={styles.categoryTitle}>Benzersiz Ol</Text>
+              <Text style={styles.categoryTitle}>{t("be_unique")}</Text>
               <View
                 style={{
                   flexDirection: "row",
@@ -232,7 +234,7 @@ const CustomModal = () => {
                       <MaterialIcons name="add" size={24} color="#588157" />
                     </Text>
                     <Text style={styles.habitName}>
-                      Kendi alışkanlığını oluştur
+                     {t("create_your_own_habit")}
                     </Text>
                   </View>
                   <Text>
@@ -391,7 +393,7 @@ const CustomModal = () => {
           />
         </TouchableOpacity>
 
-        <Text style={styles.headerText}>Create a new habit</Text>
+        <Text style={styles.headerText}>{t("create_a_new_habit")}</Text>
         <TouchableOpacity onPress={() => router.back()}>
           <MaterialIcons name="close" size={24} color="#588157" />
         </TouchableOpacity>
