@@ -365,7 +365,6 @@ const CustomModal = () => {
             <Text style={styles.optionLabel}>{t("reminder")}</Text>
             <Switch value={reminder} onValueChange={setReminder} />
           </View>
-
           {/* Kaydet Butonu */}
           <TouchableOpacity
             style={styles.applyButton}
