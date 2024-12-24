@@ -234,7 +234,7 @@ const CustomModal = () => {
                       <MaterialIcons name="add" size={24} color="#588157" />
                     </Text>
                     <Text style={styles.habitName}>
-                     {t("create_your_own_habit")}
+                      {t("create_your_own_habit")}
                     </Text>
                   </View>
                   <Text>
@@ -317,7 +317,7 @@ const CustomModal = () => {
 
           {/* Renk Seçimi */}
           <Text style={styles.sectionTitle}>
-            Bu alışkanlığı rutinin için kişiselleştirelim
+            {t("lets_personalize_this_habit_for_your_routine")}
           </Text>
           <View style={styles.colorContainer}>
             <ScrollView
@@ -342,13 +342,13 @@ const CustomModal = () => {
           </View>
 
           {/* Seçenekler */}
-          {["Tekrar", "Süre"].map((item, index) => (
+          {["repetition", "duration"].map((item, index) => (
             <TouchableOpacity
               key={index}
               style={styles.optionRow}
               onPress={handlePresentModalPress}
             >
-              <Text style={styles.optionLabel}>{item}</Text>
+              <Text style={styles.optionLabel}>{t(`${item}`)}</Text>
               <Text style={styles.optionValue}>
                 {/* {item === "Hedef"
                   ? "Belirlenmemiş"
@@ -362,7 +362,7 @@ const CustomModal = () => {
 
           {/* Hatırlatıcı */}
           <View style={styles.reminderRow}>
-            <Text style={styles.optionLabel}>Hatırlatıcı</Text>
+            <Text style={styles.optionLabel}>{t("reminder")}</Text>
             <Switch value={reminder} onValueChange={setReminder} />
           </View>
 
