@@ -9,5 +9,9 @@
     "first_lets_find_your_new_habit":"First, let's find your new habit",
     "choose_from_the_list_below_or_create_a_custom_habit":"Choose from the list below or create a custom habit.",
     "be_unique":"Be Unique",
-    "create_your_own_habit":"Create your own habit"
+    "create_your_own_habit":"Create your own habit",
+    "lets_personalize_this_habit_for_your_routine":"Let's personalize this habit for your routine",
+    "repetition":"Repetition",
+    "duration":"Duration",
+    "reminder":"Reminder"
 }
