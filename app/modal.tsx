@@ -53,6 +53,9 @@ const CustomModal = () => {
   const [isEnabled, setIsEnabled] = React.useState(true);
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [activeTabSheet, setActiveTabSheet] = useState("daily");
+  const [bottomSheetContent, setBottomSheetContent] = useState("");
+  const [startTime, setStartTime] = useState(new Date());
+  const [endTime, setEndTime] = useState(new Date());
 
   const [createHabit] = useCreateHabitMutation();
 
@@ -290,6 +293,7 @@ const CustomModal = () => {
   const handlePresentModalPress = useCallback(() => {
     bottomSheetRef.current?.present();
   }, []);
+
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
   }, []);
@@ -344,7 +348,10 @@ const CustomModal = () => {
             <TouchableOpacity
               key={index}
               style={styles.optionRow}
-              onPress={handlePresentModalPress}
+              onPress={() => {
+                handlePresentModalPress();
+                setBottomSheetContent(item);
+              }}
             >
               <Text style={styles.optionLabel}>{item}</Text>
               <Text style={styles.optionValue}>
@@ -417,86 +424,153 @@ const CustomModal = () => {
               padding: 16,
             }}
           >
-            <View style={styles.container3}>
-              <View style={styles.tabContainer3}>
-                <Pressable
-                  style={[
-                    styles.tabButton3,
-                    activeTabSheet === "daily" && styles.activeTab3,
-                  ]}
-                  onPress={() => setActiveTabSheet("daily")}
-                >
-                  <Text
+            {bottomSheetContent === "Tekrar" ? (
+              <View style={styles.container3}>
+                <View style={styles.tabContainer3}>
+                  <Pressable
                     style={[
-                      styles.tabText3,
-                      activeTabSheet === "daily" && styles.activeTabText3,
+                      styles.tabButton3,
+                      activeTabSheet === "daily" && styles.activeTab3,
                     ]}
+                    onPress={() => setActiveTabSheet("daily")}
                   >
-                    Günlük
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={[
-                    styles.tabButton3,
-                    activeTabSheet === "weekly" && styles.activeTab3,
-                  ]}
-                  onPress={() => setActiveTabSheet("weekly")}
-                >
-                  <Text
+                    <Text
+                      style={[
+                        styles.tabText3,
+                        activeTabSheet === "daily" && styles.activeTabText3,
+                      ]}
+                    >
+                      Günlük
+                    </Text>
+                  </Pressable>
+                  <Pressable
                     style={[
-                      styles.tabText3,
-                      activeTabSheet === "weekly" && styles.activeTabText3,
+                      styles.tabButton3,
+                      activeTabSheet === "weekly" && styles.activeTab3,
                     ]}
+                    onPress={() => setActiveTabSheet("weekly")}
                   >
-                    Haftalık
-                  </Text>
-                </Pressable>
-                <Pressable
-                  style={[
-                    styles.tabButton3,
-                    activeTabSheet === "monthly" && styles.activeTab3,
-                  ]}
-                  onPress={() => setActiveTabSheet("monthly")}
-                >
-                  <Text
+                    <Text
+                      style={[
+                        styles.tabText3,
+                        activeTabSheet === "weekly" && styles.activeTabText3,
+                      ]}
+                    >
+                      Haftalık
+                    </Text>
+                  </Pressable>
+                  <Pressable
                     style={[
-                      styles.tabText3,
-                      activeTabSheet === "monthly" && styles.activeTabText3,
+                      styles.tabButton3,
+                      activeTabSheet === "monthly" && styles.activeTab3,
                     ]}
+                    onPress={() => setActiveTabSheet("monthly")}
                   >
-                    Aylık
-                  </Text>
-                </Pressable>
-              </View>
-              <View style={styles.pickerContainer}>
-                <Text style={styles.pickerText}>Her</Text>
-                <Picker
-                  selectedValue={selectedDay.toString()} // Değeri string'e çeviriyoruz
-                  onValueChange={(itemValue) =>
-                    setSelectedDay(Number(itemValue))
-                  }
-                  style={{ width: 100 }}
-                  mode="dropdown"
-                  itemStyle={{ color: "black" }}
-                >
-                  {Array.from({ length: 30 }, (_, i) => (i + 1).toString()).map(
-                    (day) => (
+                    <Text
+                      style={[
+                        styles.tabText3,
+                        activeTabSheet === "monthly" && styles.activeTabText3,
+                      ]}
+                    >
+                      Aylık
+                    </Text>
+                  </Pressable>
+                </View>
+                <View style={styles.pickerContainer}>
+                  <Text style={styles.pickerText}>Her</Text>
+                  <Picker
+                    selectedValue={selectedDay.toString()} // Değeri string'e çeviriyoruz
+                    onValueChange={(itemValue) =>
+                      setSelectedDay(Number(itemValue))
+                    }
+                    style={{ width: 100 }}
+                    mode="dropdown"
+                    itemStyle={{ color: "black" }}
+                  >
+                    {Array.from({ length: 30 }, (_, i) =>
+                      (i + 1).toString()
+                    ).map((day) => (
                       <Picker.Item key={day} label={day} value={day} />
-                    )
-                  )}
-                </Picker>
-                <Text style={styles.pickerText}>gün</Text>
+                    ))}
+                  </Picker>
+                  <Text style={styles.pickerText}>gün</Text>
+                </View>
+
+                <Pressable
+                  style={styles.applyButton}
+                  onPress={() => {
+                    bottomSheetRef.current?.close();
+                  }}
+                >
+                  <Text style={styles.applyText}>Uygula</Text>
+                </Pressable>
               </View>
-              {/* <Text style={styles.footerText}>Her gün tekrar eder.</Text> */}
-              <Pressable
-                style={styles.applyButton}
-                onPress={() => {
-                  bottomSheetRef.current?.close();
-                }}
-              >
-                <Text style={styles.applyText}>Uygula</Text>
-              </Pressable>
-            </View>
+            ) : (
+              <View style={styles.container3}>
+                <View style={styles.tabContainer3}>
+                  <Pressable
+                    style={[
+                      styles.tabButton3,
+                      activeTabSheet === "startTime" && styles.activeTab3,
+                    ]}
+                    onPress={() => setActiveTabSheet("startTime")}
+                  >
+                    <Text
+                      style={[
+                        styles.tabText3,
+                        activeTabSheet === "startTime" && styles.activeTabText3,
+                      ]}
+                    >
+                      Başlangıç Zamanı
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    style={[
+                      styles.tabButton3,
+                      activeTabSheet === "timeRange" && styles.activeTab3,
+                    ]}
+                    onPress={() => setActiveTabSheet("timeRange")}
+                  >
+                    <Text
+                      style={[
+                        styles.tabText3,
+                        activeTabSheet === "timeRange" && styles.activeTabText3,
+                      ]}
+                    >
+                      Zaman Aralığı
+                    </Text>
+                  </Pressable>
+                </View>
+                <View style={styles.pickerContainer}>
+                  <Picker
+                    selectedValue={startTime}
+                    onValueChange={(itemValue) => setStartTime(itemValue)}
+                    style={{ width: 100 }}
+                    mode="dropdown"
+                    itemStyle={{ color: "black" }}
+                  >
+                    {`${Array.from({ length: 24 }, (_, i) =>
+                      (i + 1).toString()
+                    ).map((hour) => (
+                      <Picker.Item key={hour} label={hour} value={hour} />
+                    ))}:${Array.from({ length: 60 }, (_, i) =>
+                      (i + 1).toString()
+                    ).map((minute) => (
+                      <Picker.Item key={minute} label={minute} value={minute} />
+                    ))}`}
+                  </Picker>
+                </View>
+                {/* <Text style={styles.footerText}>Her gün tekrar eder.</Text> */}
+                <Pressable
+                  style={styles.applyButton}
+                  onPress={() => {
+                    bottomSheetRef.current?.close();
+                  }}
+                >
+                  <Text style={styles.applyText}>Uygula</Text>
+                </Pressable>
+              </View>
+            )}
           </BottomSheetView>
         </BottomSheetModal>
       </BottomSheetModalProvider>
