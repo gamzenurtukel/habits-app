@@ -53,10 +53,13 @@ const CustomModal = () => {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [isEnabled, setIsEnabled] = React.useState(true);
   const [selectedDay, setSelectedDay] = useState<number>(1);
-  const [activeTabSheet, setActiveTabSheet] = useState("daily");
   const [bottomSheetContent, setBottomSheetContent] = useState("");
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
+  const [activeTabSheetRepetition, setActiveTabSheetRepetition] =
+    useState("daily");
+  const [activeTabSheetDuration, setActiveTabSheetDuration] =
+    useState("startTime");
+  const [startTime, setStartTime] = useState({ hour: "00", minute: "00" });
+  const [endTime, setEndTime] = useState({ hour: "00", minute: "00" });
 
   const [createHabit] = useCreateHabitMutation();
 
@@ -384,6 +387,22 @@ const CustomModal = () => {
     );
   };
 
+  const handleHourChangeStartTime = (hour: any) => {
+    setStartTime((prev) => ({ ...prev, hour: hour.padStart(2, "0") }));
+  };
+
+  const handleMinuteChangeStartTime = (minute: any) => {
+    setStartTime((prev) => ({ ...prev, minute: minute.padStart(2, "0") }));
+  };
+
+  const handleHourChangeEndTime = (hour: any) => {
+    setEndTime((prev) => ({ ...prev, hour: hour.padStart(2, "0") }));
+  };
+
+  const handleMinuteChangeEndTime = (minute: any) => {
+    setEndTime((prev) => ({ ...prev, minute: minute.padStart(2, "0") }));
+  };
+
   return (
     <GestureHandlerRootView>
       <View style={styles.header}>
@@ -425,20 +444,21 @@ const CustomModal = () => {
               padding: 16,
             }}
           >
-            {bottomSheetContent === "Tekrar" ? (
+            {bottomSheetContent === "repetition" ? (
               <View style={styles.container3}>
                 <View style={styles.tabContainer3}>
                   <Pressable
                     style={[
                       styles.tabButton3,
-                      activeTabSheet === "daily" && styles.activeTab3,
+                      activeTabSheetRepetition === "daily" && styles.activeTab3,
                     ]}
-                    onPress={() => setActiveTabSheet("daily")}
+                    onPress={() => setActiveTabSheetRepetition("daily")}
                   >
                     <Text
                       style={[
                         styles.tabText3,
-                        activeTabSheet === "daily" && styles.activeTabText3,
+                        activeTabSheetRepetition === "daily" &&
+                          styles.activeTabText3,
                       ]}
                     >
                       Günlük
@@ -447,14 +467,16 @@ const CustomModal = () => {
                   <Pressable
                     style={[
                       styles.tabButton3,
-                      activeTabSheet === "weekly" && styles.activeTab3,
+                      activeTabSheetRepetition === "weekly" &&
+                        styles.activeTab3,
                     ]}
-                    onPress={() => setActiveTabSheet("weekly")}
+                    onPress={() => setActiveTabSheetRepetition("weekly")}
                   >
                     <Text
                       style={[
                         styles.tabText3,
-                        activeTabSheet === "weekly" && styles.activeTabText3,
+                        activeTabSheetRepetition === "weekly" &&
+                          styles.activeTabText3,
                       ]}
                     >
                       Haftalık
@@ -463,14 +485,16 @@ const CustomModal = () => {
                   <Pressable
                     style={[
                       styles.tabButton3,
-                      activeTabSheet === "monthly" && styles.activeTab3,
+                      activeTabSheetRepetition === "monthly" &&
+                        styles.activeTab3,
                     ]}
-                    onPress={() => setActiveTabSheet("monthly")}
+                    onPress={() => setActiveTabSheetRepetition("monthly")}
                   >
                     <Text
                       style={[
                         styles.tabText3,
-                        activeTabSheet === "monthly" && styles.activeTabText3,
+                        activeTabSheetRepetition === "monthly" &&
+                          styles.activeTabText3,
                       ]}
                     >
                       Aylık
@@ -512,14 +536,16 @@ const CustomModal = () => {
                   <Pressable
                     style={[
                       styles.tabButton3,
-                      activeTabSheet === "startTime" && styles.activeTab3,
+                      activeTabSheetDuration === "startTime" &&
+                        styles.activeTab3,
                     ]}
-                    onPress={() => setActiveTabSheet("startTime")}
+                    onPress={() => setActiveTabSheetDuration("startTime")}
                   >
                     <Text
                       style={[
                         styles.tabText3,
-                        activeTabSheet === "startTime" && styles.activeTabText3,
+                        activeTabSheetDuration === "startTime" &&
+                          styles.activeTabText3,
                       ]}
                     >
                       Başlangıç Zamanı
@@ -528,40 +554,139 @@ const CustomModal = () => {
                   <Pressable
                     style={[
                       styles.tabButton3,
-                      activeTabSheet === "timeRange" && styles.activeTab3,
+                      activeTabSheetDuration === "timeRange" &&
+                        styles.activeTab3,
                     ]}
-                    onPress={() => setActiveTabSheet("timeRange")}
+                    onPress={() => setActiveTabSheetDuration("timeRange")}
                   >
                     <Text
                       style={[
                         styles.tabText3,
-                        activeTabSheet === "timeRange" && styles.activeTabText3,
+                        activeTabSheetDuration === "timeRange" &&
+                          styles.activeTabText3,
                       ]}
                     >
                       Zaman Aralığı
                     </Text>
                   </Pressable>
                 </View>
-                <View style={styles.pickerContainer}>
+                <View
+                  style={[
+                    {
+                      height: 200,
+                      flexDirection: "row",
+                      justifyContent: "center",
+                    },
+                  ]}
+                >
                   <Picker
-                    selectedValue={startTime}
-                    onValueChange={(itemValue) => setStartTime(itemValue)}
-                    style={{ width: 100 }}
+                    selectedValue={startTime.hour}
+                    onValueChange={handleHourChangeStartTime}
+                    style={styles.picker}
                     mode="dropdown"
-                    itemStyle={{ color: "black" }}
                   >
-                    {`${Array.from({ length: 24 }, (_, i) =>
-                      (i + 1).toString()
-                    ).map((hour) => (
-                      <Picker.Item key={hour} label={hour} value={hour} />
-                    ))}:${Array.from({ length: 60 }, (_, i) =>
-                      (i + 1).toString()
-                    ).map((minute) => (
-                      <Picker.Item key={minute} label={minute} value={minute} />
-                    ))}`}
+                    {Array.from({ length: 24 }, (_, i) => i.toString()).map(
+                      (hour) => (
+                        <Picker.Item
+                          key={hour}
+                          label={hour.padStart(2, "0")}
+                          value={hour}
+                        />
+                      )
+                    )}
+                  </Picker>
+                  <Text
+                    style={{
+                      fontSize: 26,
+                      marginHorizontal: 5,
+                      color: "#333",
+                      marginBlock: "auto",
+                    }}
+                  >
+                    :
+                  </Text>
+                  <Picker
+                    selectedValue={startTime.minute}
+                    onValueChange={handleMinuteChangeStartTime}
+                    style={styles.picker}
+                    mode="dropdown"
+                  >
+                    {Array.from({ length: 60 }, (_, i) => i.toString()).map(
+                      (minute) => (
+                        <Picker.Item
+                          key={minute}
+                          label={minute.padStart(2, "0")}
+                          value={minute}
+                        />
+                      )
+                    )}
                   </Picker>
                 </View>
-                {/* <Text style={styles.footerText}>Her gün tekrar eder.</Text> */}
+                {activeTabSheetDuration === "timeRange" && (
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#333",
+                      textAlign: "center",
+                      borderBottomColor: "#E0E0E0",
+                      borderBottomWidth: 1,
+                    }}
+                  ></Text>
+                )}
+                {activeTabSheetDuration === "timeRange" && (
+                  <View
+                    style={[
+                      {
+                        height: 200,
+                        flexDirection: "row",
+                        justifyContent: "center",
+                      },
+                    ]}
+                  >
+                    <Picker
+                      selectedValue={endTime.hour}
+                      onValueChange={handleHourChangeEndTime}
+                      style={styles.picker}
+                      mode="dropdown"
+                    >
+                      {Array.from({ length: 24 }, (_, i) => i.toString()).map(
+                        (hour) => (
+                          <Picker.Item
+                            key={hour}
+                            label={hour.padStart(2, "0")}
+                            value={hour}
+                          />
+                        )
+                      )}
+                    </Picker>
+                    <Text
+                      style={{
+                        fontSize: 26,
+                        marginHorizontal: 5,
+                        color: "#333",
+                        marginBlock: "auto",
+                      }}
+                    >
+                      :
+                    </Text>
+                    <Picker
+                      selectedValue={endTime.minute}
+                      onValueChange={handleMinuteChangeEndTime}
+                      style={styles.picker}
+                      mode="dropdown"
+                    >
+                      {Array.from({ length: 60 }, (_, i) => i.toString()).map(
+                        (minute) => (
+                          <Picker.Item
+                            key={minute}
+                            label={minute.padStart(2, "0")}
+                            value={minute}
+                          />
+                        )
+                      )}
+                    </Picker>
+                  </View>
+                )}
                 <Pressable
                   style={styles.applyButton}
                   onPress={() => {
