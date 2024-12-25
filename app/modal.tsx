@@ -14,6 +14,7 @@ import {
   NativeScrollEvent,
   Platform,
   Pressable,
+  TextInput,
 } from "react-native";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -95,6 +96,92 @@ const CustomModal = () => {
     "#16A085",
     "#C39BD3",
     "#D2691E",
+  ];
+
+  const icons = [
+    "🏋️‍♂️",
+    "🚴‍♂️",
+    "🏃‍♂️",
+    "🧘‍♂️",
+    "🚶‍♂️",
+    "🧗‍♂️",
+    "🏊‍♂️",
+    "🎨",
+    "🎸",
+    "🎮",
+    "📚",
+    "🎤",
+    "🎥",
+    "🍳",
+    "🌱",
+    "🧹",
+    "🧼",
+    "🚗",
+    "🚲",
+    "🚀",
+    "🛸",
+    "🚢",
+    "🚂",
+    "🚁",
+    "🛶",
+    "🚤",
+    "🚲",
+    "🛴",
+    "🚜",
+    "🚛",
+    "🚚",
+    "🚓",
+    "🚒",
+    "🚑",
+    "🚐",
+    "🚎",
+    "🚕",
+    "🚗",
+    "🚘",
+    "🚙",
+    "🚚",
+    "🚛",
+    "🚜",
+    "🏎️",
+    "🚲",
+    "🛵",
+    "🏍️",
+    "🚔",
+    "🚖",
+    "🚡",
+    "🚠",
+    "🚟",
+    "🚃",
+    "🚋",
+    "🚝",
+    "🚄",
+    "🚅",
+    "🚈",
+    "🚞",
+    "🚂",
+    "🚆",
+    "🚇",
+    "🚊",
+    "🚉",
+    "🚁",
+    "🛩️",
+    "🛫",
+    "🛬",
+    "🪂",
+    "🚀",
+    "🛸",
+    "🚲",
+    "🛴",
+    "🛹",
+    "🛵",
+    "🚏",
+    "🛤️",
+    "🛣️",
+    "🛢️",
+    "🛣️",
+    "🛤️",
+    "🛣️",
+    "🛢️",
   ];
 
   const handleTabPress = (index: number) => {
@@ -348,6 +435,28 @@ const CustomModal = () => {
             </ScrollView>
           </View>
 
+          {["name", "icon", "description"].map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.optionRow}
+              onPress={() => {
+                handlePresentModalPress();
+                setBottomSheetContent(item);
+              }}
+            >
+              <Text style={styles.optionLabel}>{t(`${item}`)}</Text>
+              <Text style={styles.optionValue}>
+                {item === "name"
+                  ? name
+                  : item === "icon"
+                  ? icon
+                  : description
+                  ? description
+                  : "Belirlenmemiş"}
+              </Text>
+            </TouchableOpacity>
+          ))}
+
           {/* Seçenekler */}
           {["repetition", "duration"].map((item, index) => (
             <TouchableOpacity
@@ -365,7 +474,18 @@ const CustomModal = () => {
                   : item === "Tekrar"
                   ? "Günlük"
                   : "Herhangi bir zaman"} */}
-                Belirtilmemiş
+
+                {item === "repetition"
+                  ? activeTabSheetRepetition === "daily"
+                    ? "Günlük"
+                    : activeTabSheetRepetition === "weekly"
+                    ? "Haftalık"
+                    : "Aylık"
+                  : item === "duration"
+                  ? activeTabSheetDuration === "startTime"
+                    ? `${startTime.hour}:${startTime.minute}`
+                    : `${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}`
+                  : "Belirlenmemiş"}
               </Text>
             </TouchableOpacity>
           ))}
@@ -530,7 +650,7 @@ const CustomModal = () => {
                   <Text style={styles.applyText}>Uygula</Text>
                 </Pressable>
               </View>
-            ) : (
+            ) : bottomSheetContent === "duration" ? (
               <View style={styles.container3}>
                 <View style={styles.tabContainer3}>
                   <Pressable
@@ -696,7 +816,138 @@ const CustomModal = () => {
                   <Text style={styles.applyText}>Uygula</Text>
                 </Pressable>
               </View>
-            )}
+            ) : bottomSheetContent === "name" ? (
+              <View style={styles.container3}>
+                {/* <Text>Alışkanlık adını girin</Text> */}
+
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputLabel}>
+                    {t("please_enter_the_name_of_the_habit")}
+                  </Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="örn. Spor yap"
+                    value={name}
+                    onChangeText={setName}
+                    autoCapitalize="none"
+                    placeholderTextColor="#B0B0B0"
+                  />
+                </View>
+
+                <Pressable
+                  style={styles.applyButton}
+                  onPress={() => {
+                    bottomSheetRef.current?.close();
+                  }}
+                >
+                  <Text style={styles.applyText}>Uygula</Text>
+                </Pressable>
+              </View>
+            ) : bottomSheetContent === "icon" ? (
+              <View>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputLabel}>
+                    {t("please_enter_the_icon_of_the_habit")}
+                  </Text>
+                </View>
+                {/* <View
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    // justifyContent: "space-between",
+                  }}
+                >
+                  <FlatList
+                    data={icons}
+                    keyExtractor={(item) => item}
+                    contentContainerStyle={{
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                    }}
+                    renderItem={({ item }) => (
+                      <Pressable
+                        // style={styles.iconContainer}
+                        onPress={() => setIcon(item)}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                          marginHorizontal: 4,
+                          borderColor: "#FFF",
+                          backgroundColor: "#FFFFFF",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          borderWidth: icon === item ? 2 : 0,
+                        }}
+                      >
+                        <Text>{item}</Text>
+                      </Pressable>
+                    )}
+                    numColumns={6}
+                  />
+                </View> */}
+                <View
+                  style={{
+                    width: "100%",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {icons.map((item) => (
+                    <Pressable
+                      // style={styles.iconContainer}
+                      onPress={() => setIcon(item)}
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 20,
+                        marginHorizontal: 4,
+                        borderColor: "#FFF",
+                        backgroundColor: "#FFFFFF",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderWidth: icon === item ? 2 : 0,
+                      }}
+                    >
+                      <Text>{item}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+                <Pressable
+                  style={styles.applyButton}
+                  onPress={() => {
+                    bottomSheetRef.current?.close();
+                  }}
+                >
+                  <Text style={styles.applyText}>Uygula</Text>
+                </Pressable>
+              </View>
+            ) : bottomSheetContent === "description" ? (
+              <View style={styles.container3}>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.inputLabel}>
+                    {t("please_enter_the_description_of_the_habit")}
+                  </Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="örn. Günde 30 dakika spor yap"
+                    value={description}
+                    onChangeText={setDescription}
+                    autoCapitalize="none"
+                    placeholderTextColor="#B0B0B0"
+                  />
+                </View>
+                <Pressable
+                  style={styles.applyButton}
+                  onPress={() => {
+                    bottomSheetRef.current?.close();
+                  }}
+                >
+                  <Text style={styles.applyText}>Uygula</Text>
+                </Pressable>
+              </View>
+            ) : null}
           </BottomSheetView>
         </BottomSheetModal>
       </BottomSheetModalProvider>
@@ -961,6 +1212,23 @@ const styles = StyleSheet.create({
     height: 50,
     // width: '100%',
     width: 100,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  inputLabel: {
+    fontSize: 16,
+    // color: "#FFFFFF",
+    marginBottom: 5,
+  },
+  input: {
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    padding: 15,
+    borderRadius: 8,
+    fontSize: 16,
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    borderWidth: 1,
+    color: "#333",
   },
 });
 
