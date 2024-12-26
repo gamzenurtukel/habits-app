@@ -886,10 +886,11 @@ const CustomModal = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  {icons.map((item) => (
+                  {icons.map((item, index) => (
                     <Pressable
                       // style={styles.iconContainer}
                       onPress={() => setIcon(item)}
+                      key={index}
                       style={{
                         width: 40,
                         height: 40,
