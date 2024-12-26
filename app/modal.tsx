@@ -44,10 +44,10 @@ const { width } = Dimensions.get("screen");
 
 const CustomModal = () => {
   const router = useRouter();
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>("#FF6B6B");
   const [reminder, setReminder] = useState(false);
   const [name, setName] = useState("");
-  const [icon, setIcon] = useState("");
+  const [icon, setIcon] = useState("🧘‍♂️");
   const [description, setDescription] = useState("");
   const flatListRef = useRef<FlatList<{ key: string }>>(null);
   const [activeTab, setActiveTab] = useState(0);
@@ -206,12 +206,12 @@ const CustomModal = () => {
   const handleSaveChanges = async () => {
     console.log("token", token);
     const habitData = {
-      name: "jsjsjsjjsjjs",
-      description: "jsjsjsjjsjs açıklaması",
-      isReminder: true,
+      name: name,
+      description: description,
+      isReminder: reminder,
       details: {
-        color: "#FF5733",
-        icon: "📘",
+        color: selectedColor || "#FF6B6B",
+        icon: icon,
         periodType: 1,
         periodCount: 1,
         startTime: null,
@@ -446,13 +446,11 @@ const CustomModal = () => {
             >
               <Text style={styles.optionLabel}>{t(`${item}`)}</Text>
               <Text style={styles.optionValue}>
-                {item === "name"
-                  ? name
-                  : item === "icon"
-                  ? icon
-                  : description
-                  ? description
-                  : "Belirlenmemiş"}
+                {{
+                  name: name,
+                  icon: icon,
+                  description: description,
+                }[item] || "Belirlenmemiş"}
               </Text>
             </TouchableOpacity>
           ))}
@@ -469,12 +467,6 @@ const CustomModal = () => {
             >
               <Text style={styles.optionLabel}>{t(`${item}`)}</Text>
               <Text style={styles.optionValue}>
-                {/* {item === "Hedef"
-                  ? "Belirlenmemiş"
-                  : item === "Tekrar"
-                  ? "Günlük"
-                  : "Herhangi bir zaman"} */}
-
                 {item === "repetition"
                   ? activeTabSheetRepetition === "daily"
                     ? "Günlük"
