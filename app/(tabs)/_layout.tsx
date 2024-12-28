@@ -4,9 +4,11 @@ import { Platform, TouchableOpacity, View } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import { IconSymbol } from "@/components/ui/IconSymbol";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useTranslation } from "react-i18next";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { t } = useTranslation();
 
   return (
     <Tabs
@@ -54,7 +56,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: `${t("today")}`,
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house.fill" color="#A6B0A7" />
           ),
@@ -88,7 +90,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
+          title: `${t("profile")}`,
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="person.fill" color="#A6B0A7" />
           ),
