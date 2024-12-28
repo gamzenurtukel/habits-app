@@ -6,12 +6,93 @@ import { Stack } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
+  const data = {
+    date: "2024-12-12T00:00:00",
+    habits: [
+      {
+        id: "35000220-1d5c-43b5-4585-08dd157ba7a9",
+        name: "dene Habitim",
+        description: "qwerty",
+        status: 1,
+        isReminder: false,
+        creationTime: "2024-12-06T02:11:17",
+        details: {
+          id: "00c6ac77-b373-482f-79f5-08dd157ba7af",
+          color: "#ffffff",
+          icon: "gulucukIcon",
+          periodType: 1,
+          periodCount: 2,
+          startTime: null,
+          endTime: null,
+        },
+      },
+      {
+        id: "e89d7dd8-bdd1-4394-8989-08dd1ad08bb9",
+        name: "denemem",
+        description: "qwer",
+        status: 1,
+        isReminder: false,
+        creationTime: "2024-12-12T17:15:15.811049",
+        details: {
+          id: "4135340e-6c26-4093-50cb-08dd1ad08bbf",
+          color: "#ffffff",
+          icon: "gulucuk",
+          periodType: 1,
+          periodCount: 1,
+          startTime: null,
+          endTime: null,
+        },
+      },
+      {
+        id: "8b13046c-0a94-4b3a-20af-08dd1ad43bfd",
+        name: "denemem haftalık",
+        description: "qwer",
+        status: 1,
+        isReminder: false,
+        creationTime: "2024-12-12T17:41:39.96821",
+        details: {
+          id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
+          color: "#ffffff",
+          icon: "gulucuk",
+          periodType: 1,
+          periodCount: 1,
+          startTime: null,
+          endTime: null,
+        },
+      },
+      {
+        id: "e7f1b0d9-6d1c-4c5a-20b0-08dd1ad43bfd",
+        name: "denemem aylık",
+        description: "qwer",
+        status: 1,
+        isReminder: false,
+        creationTime: "2024-12-12T17:41:39.96821",
+        details: {
+          id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
+          color: "#ffffff",
+          icon: "gulucuk",
+          periodType: 1,
+          periodCount: 1,
+          startTime: null,
+          endTime: null,
+        },
+      },
+    ],
+  };
+
+  const date = new Date();
+  const day = date.toLocaleDateString("en-US", { weekday: "long" });
+  const month = date.toLocaleDateString("en-US", { month: "long" });
+  const dayOfMonth = date.getDate();
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.date}>Friday, 13th</Text>
+          <Text style={styles.date}>
+            {day}, {month} {dayOfMonth}
+          </Text>
           <Pressable style={styles.calendarIcon}>
             <Ionicons name="calendar-outline" size={24} color="green" />
           </Pressable>
@@ -22,9 +103,9 @@ export default function HomeScreen() {
         {/* Habits Section */}
         <View style={styles.habitsSection}>
           <Text style={styles.sectionTitle}>Your habits</Text>
-          <Link href="/" style={styles.editButton}>
+          {/* <Link href="/" style={styles.editButton}>
             Edit
-          </Link>
+          </Link> */}
         </View>
 
         <ScrollView
