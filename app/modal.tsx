@@ -203,6 +203,7 @@ const CustomModal = () => {
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
+  console.log("token", token);
   const handleSaveChanges = async () => {
     console.log("token", token);
     const habitData = {
