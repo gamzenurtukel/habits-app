@@ -18,15 +18,39 @@ import { Stack } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { router } from "expo-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import moment from "moment";
+import {
+  useHabitActionListQuery,
+  useHabitGetListQuery,
+} from "@/redux/services/habit";
 
 const { width } = Dimensions.get("screen");
+
+interface Habit {
+  creationTime: Date;
+  description: string;
+  details: {
+    color: string;
+    endTime: Date | null;
+    icon: string;
+    id: string;
+    periodCount: number;
+    periodType: number;
+    startTime: Date | null;
+  };
+  id: string;
+  isReminder: boolean;
+  name: string;
+  status: number;
+}
 
 export default function HomeScreen() {
   const { t } = useTranslation();
   const flatListRef = useRef<FlatList<{ key: string }>>(null);
+  const [allHabitsList, setAllHabitsList] = useState<Habit[]>([]);
+  // const [habitActionList, setHabitActionList] = useState<any[]>([]);
 
   const data = {
     date: "2024-12-12T00:00:00",
@@ -153,17 +177,28 @@ export default function HomeScreen() {
     ],
   };
 
-  const sortDataHabits = (habits: any) => {
-    return habits.sort((a: any, b: any) => {
-      if (a.status < b.status) {
-        return -1;
-      }
-      if (a.status > b.status) {
-        return 1;
-      }
-      return 0;
-    });
-  };
+  const date = new Date();
+  const day = date.toLocaleDateString("en-US", { weekday: "long" });
+  const month = date.toLocaleDateString("en-US", { month: "long" });
+  const dayOfMonth = date.getDate();
+
+  const [currentDate, setCurrentDate] = useState(date);
+
+  const { data: habitGetList } = useHabitGetListQuery();
+  const { data: habitActionListData, refetch: refetchHabitActionList } =
+    useHabitActionListQuery(currentDate);
+
+  useEffect(() => {
+    if (habitGetList) {
+      setAllHabitsList(habitGetList.data);
+    }
+  }, []);
+
+  useEffect(() => {
+    refetchHabitActionList();
+  }, [currentDate, refetchHabitActionList]);
+
+  console.log("habitActionListData", habitActionListData);
 
   const groupByStatus = data.habits.reduce((acc: any, habit: any) => {
     if (!acc[habit.status]) {
@@ -172,11 +207,6 @@ export default function HomeScreen() {
     acc[habit.status].push(habit);
     return acc;
   }, {});
-
-  const date = new Date();
-  const day = date.toLocaleDateString("en-US", { weekday: "long" });
-  const month = date.toLocaleDateString("en-US", { month: "long" });
-  const dayOfMonth = date.getDate();
 
   const DAYS = [
     {
@@ -302,7 +332,7 @@ export default function HomeScreen() {
                 <Text style={styles.addHabitText}>{t("add_habit")}</Text>
               </TouchableOpacity>
 
-              {data.habits.map((habit, index) => (
+              {allHabitsList?.map((habit: Habit, index: number) => (
                 <View
                   key={index}
                   style={[
@@ -372,11 +402,11 @@ export default function HomeScreen() {
             onScroll={handleScroll}
             scrollEventThrottle={16}
             renderItem={({ index }) => (
-              <View style={styles.screen}>
+              <View style={styles.screen} key={index}>
                 <ScrollView style={styles.container2}>
                   <View style={styles.habitList}>
-                    {[1, 2, 3].map((status) => (
-                      <View>
+                    {[1, 2, 3].map((status, index) => (
+                      <View key={index}>
                         <Text
                           style={{
                             fontSize: 10,
@@ -484,14 +514,21 @@ const styles = StyleSheet.create({
   editButton: { color: "green", fontSize: 16 },
   habitCards: { flexDirection: "row", marginBottom: 24 },
   addHabitCard: {
-    backgroundColor: "#e5f9e7",
+    // backgroundColor: "#e5f9e7",
+    backgroundColor: "#E0E0E0",
+    borderColor: "#e5f9e7",
+    borderWidth: 1,
     padding: 16,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",
     width: 100,
   },
-  addHabitText: { marginTop: 8, color: "green", fontWeight: "600" },
+  addHabitText: {
+    marginTop: 8,
+    color: "green",
+    fontWeight: "600",
+  },
   habitCard: {
     padding: 16,
     borderRadius: 8,
