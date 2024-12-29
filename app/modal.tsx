@@ -21,7 +21,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { useCreateHabitMutation } from "@/redux/services/create-habit";
+import { useCreateHabitMutation } from "@/redux/services/habit";
 import { selectToken } from "@/redux/reducers/auth-reducer";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/app/store";
