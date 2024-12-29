@@ -214,13 +214,14 @@ export default function HomeScreen() {
   const [selectedDate, setSelectedDate] = useState(dayOfMonth);
   const handlePress = (date: number) => {
     setSelectedDate(date);
-    // router.push(`/habits/${date}`); // Tarihe göre farklı bir route açabilirsiniz.
-    handleTabPress(date);
+    // handleTabPress(date);
+    const findIndex = DAYS.findIndex((day) => day.date === date);
+    flatListRef.current?.scrollToIndex({ index: findIndex });
   };
 
   const handleTabPress = (index: number) => {
-    flatListRef.current?.scrollToOffset({ offset: index * width });
-    setSelectedDate(index);
+    // flatListRef.current?.scrollToOffset({ offset: index * width });
+    // setSelectedDate(index);
   };
 
   const renderItem = ({ item }: { item: (typeof DAYS)[0] }) => {
