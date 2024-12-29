@@ -24,16 +24,23 @@ const habitApi = api.injectEndpoints({
         body: body,
       }),
     }),
-    habitGetList: build.query<any, any>({
+    habitGetList: build.query<any, void>({
       query: () => ({
         method: "GET",
         url: "/Habit/Api/Habit/GetList?Size=100&PageNumber=0&IsFailed=false",
       }),
     }),
     habitActionList: build.query<any, any>({
-      query: ({ date }: { date: Date }) => ({
+      query: (date) => ({
         method: "GET",
-        url: `/Habit/Api/HabitAction/ActionGetList?Date=${date.toISOString()}`,
+        url: "/Habit/Api/HabitAction/ActionGetList",
+        params: {
+          Date: date.toDateString(),
+        },
+        // transformResponse: (response: any) => ({
+        //   data: response.data,
+        //   date: date,
+        // }),
       }),
     }),
   }),
