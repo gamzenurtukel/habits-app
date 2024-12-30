@@ -10,6 +10,7 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   ScrollView,
+ 
 } from "react-native";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -25,6 +26,8 @@ import {
   useHabitActionListQuery,
   useHabitGetListQuery,
 } from "@/redux/services/habit";
+import LoadingScreen from "../loading";
+
 
 const { width } = Dimensions.get("screen");
 
@@ -50,132 +53,7 @@ export default function HomeScreen() {
   const { t } = useTranslation();
   const flatListRef = useRef<FlatList<{ key: string }>>(null);
   const [allHabitsList, setAllHabitsList] = useState<Habit[]>([]);
-  // const [habitActionList, setHabitActionList] = useState<any[]>([]);
-
-  const data = {
-    date: "2024-12-12T00:00:00",
-    habits: [
-      {
-        id: "35000220-1d5c-43b5-4585-08dd157ba7a9",
-        name: "dene Habitim",
-        description: "qwerty",
-        status: 2,
-        isReminder: false,
-        creationTime: "2024-12-06T02:11:17",
-        details: {
-          id: "00c6ac77-b373-482f-79f5-08dd157ba7af",
-          color: "#C39BD3",
-          icon: "🏋️‍♂️",
-          periodType: 1,
-          periodCount: 2,
-          startTime: null,
-          endTime: null,
-        },
-      },
-      {
-        id: "e89d7dd8-bdd1-4394-8989-08dd1ad08bb9",
-        name: "denemem",
-        description: "qwer",
-        status: 1,
-        isReminder: false,
-        creationTime: "2024-12-12T17:15:15.811049",
-        details: {
-          id: "4135340e-6c26-4093-50cb-08dd1ad08bbf",
-          color: "#8E44AD",
-          icon: "🏊‍♂️",
-          periodType: 1,
-          periodCount: 1,
-          startTime: null,
-          endTime: null,
-        },
-      },
-      {
-        id: "8b13046c-0a94-4b3a-20af-08dd1ad43bfd",
-        name: "denemem haftalık",
-        description: "qwer",
-        status: 2,
-        isReminder: false,
-        creationTime: "2024-12-12T17:41:39.96821",
-        details: {
-          id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
-          color: "#C70039",
-          icon: "🍳",
-          periodType: 3,
-          periodCount: 1,
-          startTime: null,
-          endTime: null,
-        },
-      },
-      {
-        id: "e7f1b0d9-6d1c-4c5a-20b0-08dd1ad43bfd",
-        name: "denemem aylık",
-        description: "qwer",
-        status: 3,
-        isReminder: false,
-        creationTime: "2024-12-12T17:41:39.96821",
-        details: {
-          id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
-          color: "#3498DB",
-          icon: "🚒",
-          periodType: 2,
-          periodCount: 2,
-          startTime: null,
-          endTime: null,
-        },
-      },
-      {
-        id: "e7f1b0d9-6d1c-4c5a-20b0-08dd1ad43bfd",
-        name: "denemem aylık",
-        description: "qwer",
-        status: 3,
-        isReminder: false,
-        creationTime: "2024-12-12T17:41:39.96821",
-        details: {
-          id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
-          color: "#3498DB",
-          icon: "🚒",
-          periodType: 2,
-          periodCount: 2,
-          startTime: null,
-          endTime: null,
-        },
-      },
-      {
-        id: "e7f1b0d9-6d1c-4c5a-20b0-08dd1ad43bfd",
-        name: "denemem aylık",
-        description: "qwer",
-        status: 2,
-        isReminder: false,
-        creationTime: "2024-12-12T17:41:39.96821",
-        details: {
-          id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
-          color: "#3498DB",
-          icon: "🚒",
-          periodType: 2,
-          periodCount: 2,
-          startTime: null,
-          endTime: null,
-        },
-      },
-      {
-        id: "e7f1b0d9-6d1c-4c5a-20b0-08dd1ad43bfd",
-        name: "denemem aylık",
-        description: "qwer",
-        status: 3,
-        isReminder: false,
-        creationTime: "2024-12-12T17:41:39.96821",
-        details: {
-          id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
-          color: "#3498DB",
-          icon: "🚒",
-          periodType: 2,
-          periodCount: 2,
-          startTime: null,
-          endTime: null,
-        },
-      },
-    ],
-  };
+  const [habitActionList, setHabitActionList] = useState<any[]>([]);
 
   const date = new Date();
   const day = date.toLocaleDateString("en-US", { weekday: "long" });
@@ -184,21 +62,35 @@ export default function HomeScreen() {
 
   const [currentDate, setCurrentDate] = useState(date);
 
-  const { data: habitGetList } = useHabitGetListQuery();
-  const { data: habitActionListData, refetch: refetchHabitActionList } =
+  const { data: habitGetList, isLoading: isLoadingHabitsActionList, } = useHabitGetListQuery();
+  const { data: habitActionListData, refetch: refetchHabitActionList, isLoading: isLoadingHabits } =
     useHabitActionListQuery(currentDate);
 
   useEffect(() => {
-    if (habitGetList) {
-      setAllHabitsList(habitGetList.data);
+    // if (habitGetList) {
+    //   setAllHabitsList(habitGetList.data);
+    // }
+    if (isLoadingHabits) {
+      console.log("habitGetList", habitGetList);
+      setAllHabitsList(habitGetList?.data || []);
     }
-  }, []);
+  }, [isLoadingHabits, habitGetList]);
 
   useEffect(() => {
     refetchHabitActionList();
-  }, [currentDate, refetchHabitActionList]);
 
-  console.log("habitActionListData", habitActionListData);
+    if (isLoadingHabitsActionList) {
+      console.log("habitActionListData", habitActionListData);
+      setHabitActionList(habitActionListData?.data || []);
+    }
+
+  }, [currentDate, refetchHabitActionList, isLoadingHabitsActionList, habitActionListData]);
+
+
+
+  console.log("habitGetList", allHabitsList);
+
+  console.log("habitActionListData", habitActionList);
 
   const groupByStatus = data.habits.reduce((acc: any, habit: any) => {
     if (!acc[habit.status]) {
@@ -240,6 +132,7 @@ export default function HomeScreen() {
   ];
 
   const [selectedDate, setSelectedDate] = useState(dayOfMonth);
+
   const handlePress = (date: number) => {
     setSelectedDate(date);
     // handleTabPress(date);
@@ -291,6 +184,33 @@ export default function HomeScreen() {
         return "#F9D3D0";
     }
   };
+
+  console.log({ isLoadingHabits, isLoadingHabitsActionList })
+
+  if (isLoadingHabits || isLoadingHabitsActionList || !habitGetList || !habitActionListData) {
+    // return (
+    //   // <LinearGradient colors={["#4CAF50", "#A5D6A7"]} style={{
+    //   //   flex: 1,
+    //   //   justifyContent: "center",
+    //   //   alignItems: "center",
+    //   // }}>
+    //   //   <Image source={require("../../assets/images/habitz_logo.png")} style={{ width: 100, height: 100 }} />
+    //   //   <Text style={{
+    //   //     fontSize: 36,
+    //   //     fontWeight: "bold",
+    //   //     textAlign: "center",
+    //   //     color: "#FFFFFF",
+    //   //     marginBottom: 30,
+    //   //     textShadowColor: "gray",
+    //   //     textShadowOffset: { width: 0, height: 2 },
+    //   //     textShadowRadius: 10,
+    //   //   }}>Habitz</Text>
+    //   //   <ActivityIndicator size="large" color="#FFFFFF" />
+        
+    //   // </LinearGradient>
+    // );
+    return LoadingScreen();
+  }
 
   return (
     <GestureHandlerRootView>
@@ -347,8 +267,8 @@ export default function HomeScreen() {
                     {habit.details.periodType === 1
                       ? t("day")
                       : habit.details.periodType === 2
-                      ? t("week")
-                      : t("month")}
+                        ? t("week")
+                        : t("month")}
                   </Text>
                 </View>
               ))}
@@ -369,9 +289,8 @@ export default function HomeScreen() {
                 style={[
                   styles.progressBar,
                   {
-                    width: `${
-                      (groupByStatus[2]?.length / data.habits.length) * 100
-                    }%`,
+                    width: `${(groupByStatus[2]?.length / data.habits.length) * 100
+                      }%`,
                     height: "100%",
                   },
                 ]}
@@ -418,8 +337,8 @@ export default function HomeScreen() {
                           {status === 1
                             ? t("pending")
                             : status === 2
-                            ? t("completed")
-                            : t("failed")}{" "}
+                              ? t("completed")
+                              : t("failed")}{" "}
                           {`(${groupByStatus[status]?.length})`}
                         </Text>
                         {groupByStatus[status]?.map(
@@ -451,8 +370,8 @@ export default function HomeScreen() {
                                   {habit.details.periodType === 1
                                     ? t("day")
                                     : habit.details.periodType === 2
-                                    ? t("week")
-                                    : t("month")}
+                                      ? t("week")
+                                      : t("month")}
                                 </Text>
                               </View>
                               <Text
@@ -466,16 +385,16 @@ export default function HomeScreen() {
                                       habit.status === 1
                                         ? "orange"
                                         : habit.status === 2
-                                        ? "green"
-                                        : "red",
+                                          ? "green"
+                                          : "red",
                                   },
                                 ]}
                               >
                                 {habit.status === 1
                                   ? "Pending"
                                   : habit.status === 2
-                                  ? "Completed"
-                                  : "Failed"}
+                                    ? "Completed"
+                                    : "Failed"}
                               </Text>
                             </View>
                           )
@@ -638,3 +557,129 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 10,
   },
 });
+
+
+const data = {
+  date: "2024-12-12T00:00:00",
+  habits: [
+    {
+      id: "35000220-1d5c-43b5-4585-08dd157ba7a9",
+      name: "dene Habitim",
+      description: "qwerty",
+      status: 2,
+      isReminder: false,
+      creationTime: "2024-12-06T02:11:17",
+      details: {
+        id: "00c6ac77-b373-482f-79f5-08dd157ba7af",
+        color: "#C39BD3",
+        icon: "🏋️‍♂️",
+        periodType: 1,
+        periodCount: 2,
+        startTime: null,
+        endTime: null,
+      },
+    },
+    {
+      id: "e89d7dd8-bdd1-4394-8989-08dd1ad08bb9",
+      name: "denemem",
+      description: "qwer",
+      status: 1,
+      isReminder: false,
+      creationTime: "2024-12-12T17:15:15.811049",
+      details: {
+        id: "4135340e-6c26-4093-50cb-08dd1ad08bbf",
+        color: "#8E44AD",
+        icon: "🏊‍♂️",
+        periodType: 1,
+        periodCount: 1,
+        startTime: null,
+        endTime: null,
+      },
+    },
+    {
+      id: "8b13046c-0a94-4b3a-20af-08dd1ad43bfd",
+      name: "denemem haftalık",
+      description: "qwer",
+      status: 2,
+      isReminder: false,
+      creationTime: "2024-12-12T17:41:39.96821",
+      details: {
+        id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
+        color: "#C70039",
+        icon: "🍳",
+        periodType: 3,
+        periodCount: 1,
+        startTime: null,
+        endTime: null,
+      },
+    },
+    {
+      id: "e7f1b0d9-6d1c-4c5a-20b0-08dd1ad43bfd",
+      name: "denemem aylık",
+      description: "qwer",
+      status: 3,
+      isReminder: false,
+      creationTime: "2024-12-12T17:41:39.96821",
+      details: {
+        id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
+        color: "#3498DB",
+        icon: "🚒",
+        periodType: 2,
+        periodCount: 2,
+        startTime: null,
+        endTime: null,
+      },
+    },
+    {
+      id: "e7f1b0d9-6d1c-4c5a-20b0-08dd1ad43bfd",
+      name: "denemem aylık",
+      description: "qwer",
+      status: 3,
+      isReminder: false,
+      creationTime: "2024-12-12T17:41:39.96821",
+      details: {
+        id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
+        color: "#3498DB",
+        icon: "🚒",
+        periodType: 2,
+        periodCount: 2,
+        startTime: null,
+        endTime: null,
+      },
+    },
+    {
+      id: "e7f1b0d9-6d1c-4c5a-20b0-08dd1ad43bfd",
+      name: "denemem aylık",
+      description: "qwer",
+      status: 2,
+      isReminder: false,
+      creationTime: "2024-12-12T17:41:39.96821",
+      details: {
+        id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
+        color: "#3498DB",
+        icon: "🚒",
+        periodType: 2,
+        periodCount: 2,
+        startTime: null,
+        endTime: null,
+      },
+    },
+    {
+      id: "e7f1b0d9-6d1c-4c5a-20b0-08dd1ad43bfd",
+      name: "denemem aylık",
+      description: "qwer",
+      status: 3,
+      isReminder: false,
+      creationTime: "2024-12-12T17:41:39.96821",
+      details: {
+        id: "361bf577-e4b7-41e5-bafb-08dd1ad43c02",
+        color: "#3498DB",
+        icon: "🚒",
+        periodType: 2,
+        periodCount: 2,
+        startTime: null,
+        endTime: null,
+      },
+    },
+  ],
+};
