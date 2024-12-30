@@ -54,11 +54,17 @@ export default function RootLayout() {
           case 'explore':
             validPath = '/(tabs)/explore';
             break;
+          case 'reset-password':
+            validPath = '/(auth)/reset-password';
+            break;
+          case 'confirm-email':
+            validPath = '/(auth)/confirm-email';
+            break;
           default:
             validPath = '/(tabs)';
         }
         
-        // Navigate to the appropriate screen
+        // Navigate to the appropriate screen with parameters
         router.push({
           pathname: validPath as any,
           params: queryParams || undefined
