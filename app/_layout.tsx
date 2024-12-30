@@ -64,6 +64,7 @@ export default function RootLayout() {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen name="+not-found" />
+                <Stack.Screen name="loading"  />
                 <Stack.Screen
                   name="modal"
                   options={{
