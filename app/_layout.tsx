@@ -4,7 +4,7 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -20,12 +20,14 @@ import { PersistGate } from "redux-persist/integration/react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import * as Linking from 'expo-linking';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const router = useRouter();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -36,6 +38,48 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  useEffect(() => {
+    // Handle deep linking
+    const handleDeepLink = (event: { url: string }) => {
+      const { path, queryParams } = Linking.parse(event.url);
+      
+      if (path) {
+        // Map the incoming path to a valid app route
+        let validPath: string;
+        switch (path) {
+          case 'profile':
+            validPath = '/(tabs)/profile';
+            break;
+          case 'explore':
+            validPath = '/(tabs)/explore';
+            break;
+          default:
+            validPath = '/(tabs)';
+        }
+        
+        // Navigate to the appropriate screen
+        router.push({
+          pathname: validPath as any,
+          params: queryParams || undefined
+        });
+      }
+    };
+
+    // Add event listener for deep links when app is already running
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+
+    // Handle deep link if app was launched from URL
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleDeepLink({ url });
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [router]);
 
   if (!loaded) {
     return null;
