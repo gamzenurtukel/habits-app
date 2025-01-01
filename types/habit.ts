@@ -2,7 +2,7 @@ export interface details {
   color: string;
   endTime: Date | null;
   icon: string;
-  id: string;
+  id?: string;
   periodCount: number;
   periodType: number;
   startTime: Date | null;
