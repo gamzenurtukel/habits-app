@@ -10,7 +10,6 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   ScrollView,
- 
 } from "react-native";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,198 +18,145 @@ import { Stack } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { router } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import moment from "moment";
 import {
   useHabitActionListQuery,
   useHabitGetListQuery,
 } from "@/redux/services/habit";
-import LoadingScreen from "../loading";
-
+import { IHabit } from "@/types/habit";
 
 const { width } = Dimensions.get("screen");
-
-interface Habit {
-  creationTime: Date;
-  description: string;
-  details: {
-    color: string;
-    endTime: Date | null;
-    icon: string;
-    id: string;
-    periodCount: number;
-    periodType: number;
-    startTime: Date | null;
-  };
-  id: string;
-  isReminder: boolean;
-  name: string;
-  status: number;
-}
 
 export default function HomeScreen() {
   const { t } = useTranslation();
   const flatListRef = useRef<FlatList<{ key: string }>>(null);
-  const [allHabitsList, setAllHabitsList] = useState<Habit[]>([]);
+  const [allHabitsList, setAllHabitsList] = useState<IHabit[]>([]);
   const [habitActionList, setHabitActionList] = useState<any[]>([]);
 
   const date = new Date();
-  const day = date.toLocaleDateString("en-US", { weekday: "long" });
-  const month = date.toLocaleDateString("en-US", { month: "long" });
-  const dayOfMonth = date.getDate();
+  const today = moment(date);
+  const [selectedDate, setSelectedDate] = useState(today.toISOString());
 
-  const [currentDate, setCurrentDate] = useState(date);
+  const {
+    data: habitGetList,
+    isLoading: isLoadingHabits,
+    isFetching: isFetchingHabits,
+    isError: isErrorHabits,
+    isSuccess: isSuccessHabits,
+  } = useHabitGetListQuery();
+  const {
+    data: habitActionListData,
+    refetch: refetchHabitActionList,
+    isLoading: isLoadingHabitsActionList,
+    isFetching: isFetchingHabitsActionList,
+    isError: isErrorHabitsActionList,
+    isSuccess: isSuccessHabitsActionList,
+    isUninitialized: isUninitializedHabitsActionList,
+  } = useHabitActionListQuery(selectedDate);
 
-  const { data: habitGetList, isLoading: isLoadingHabitsActionList, } = useHabitGetListQuery();
-  const { data: habitActionListData, refetch: refetchHabitActionList, isLoading: isLoadingHabits } =
-    useHabitActionListQuery(currentDate);
+  const reFetchHabitAction = async () => {
+    try {
+      const response = await refetchHabitActionList();
+
+      if (response?.data?.isSuccessful) {
+        const groupByStatus = response.data.data.habits.reduce(
+          (acc: any, habit: any) => {
+            if (!acc[habit.status]) {
+              acc[habit.status] = [];
+            }
+            acc[habit.status].push(habit);
+            return acc;
+          },
+          {}
+        );
+        setHabitActionList(groupByStatus);
+      }
+
+      // console.log({
+      //   habitActionListData: response?.data,
+      //   isFetchingHabitsActionList,
+      //   isErrorHabitsActionList,
+      //   isLoadingHabitsActionList,
+      //   isSuccessHabitsActionList,
+      // });
+    } catch (error) {
+      console.error("Error fetching habit actions:", error);
+    }
+  };
 
   useEffect(() => {
-    // if (habitGetList) {
-    //   setAllHabitsList(habitGetList.data);
-    // }
-    if (isLoadingHabits) {
-      console.log("habitGetList", habitGetList);
-      setAllHabitsList(habitGetList?.data || []);
-    }
-  }, [isLoadingHabits, habitGetList]);
-
-  useEffect(() => {
-    refetchHabitActionList();
-
-    if (isLoadingHabitsActionList) {
-      console.log("habitActionListData", habitActionListData);
-      setHabitActionList(habitActionListData?.data || []);
-    }
-
-  }, [currentDate, refetchHabitActionList, isLoadingHabitsActionList, habitActionListData]);
-
-
-
-  console.log("habitGetList", allHabitsList);
-
-  console.log("habitActionListData", habitActionList);
-
-  const groupByStatus = data.habits.reduce((acc: any, habit: any) => {
-    if (!acc[habit.status]) {
-      acc[habit.status] = [];
-    }
-    acc[habit.status].push(habit);
-    return acc;
-  }, {});
+    reFetchHabitAction();
+  }, [selectedDate]);
 
   const DAYS = [
-    {
-      day: moment(date).subtract(3, "days").format("ddd").toUpperCase(),
-      date: dayOfMonth - 3,
-    },
-    {
-      day: moment(date).subtract(2, "days").format("ddd").toUpperCase(),
-      date: dayOfMonth - 2,
-    },
-    {
-      day: moment(date).subtract(1, "days").format("ddd").toUpperCase(),
-      date: dayOfMonth - 1,
-    },
-    {
-      day: "TODAY",
-      date: dayOfMonth,
-    },
-    {
-      day: moment(date).add(1, "days").format("ddd").toUpperCase(),
-      date: dayOfMonth + 1,
-    },
-    {
-      day: moment(date).add(2, "days").format("ddd").toUpperCase(),
-      date: dayOfMonth + 2,
-    },
-    {
-      day: moment(date).add(3, "days").format("ddd").toUpperCase(),
-      date: dayOfMonth + 3,
-    },
+    { day: today.clone().subtract(3, "days").toISOString() },
+    { day: today.clone().subtract(2, "days").toISOString() },
+    { day: today.clone().subtract(1, "days").toISOString() },
+    { day: today.toISOString() },
+    { day: today.clone().add(1, "days").toISOString() },
+    { day: today.clone().add(2, "days").toISOString() },
+    { day: today.clone().add(3, "days").toISOString() },
   ];
 
-  const [selectedDate, setSelectedDate] = useState(dayOfMonth);
+  const handlePress = (date: string) => {
+    console.log("date handlePress", moment(date).toISOString());
 
-  const handlePress = (date: number) => {
-    setSelectedDate(date);
-    // handleTabPress(date);
-    const findIndex = DAYS.findIndex((day) => day.date === date);
+    const findIndex = DAYS.findIndex((day) => day.day === date);
     flatListRef.current?.scrollToIndex({ index: findIndex });
-  };
-
-  const handleTabPress = (index: number) => {
-    // flatListRef.current?.scrollToOffset({ offset: index * width });
-    // setSelectedDate(index);
-  };
-
-  const renderItem = ({ item }: { item: (typeof DAYS)[0] }) => {
-    const isSelected = item.date === selectedDate;
-    return (
-      <TouchableOpacity
-        onPress={() => handlePress(item.date)}
-        style={[styles.dayContainer, isSelected && styles.selectedDay]}
-      >
-        <Text style={[styles.dayText, isSelected && styles.selectedDayText]}>
-          {item.day}
-        </Text>
-
-        <Text style={[styles.dateText, isSelected && styles.selectedDateText]}>
-          <MaterialIcons name="circle" size={6} />
-          {` `}
-          {item.date}
-        </Text>
-      </TouchableOpacity>
-    );
+    setSelectedDate(moment(date).toISOString());
   };
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetX = event.nativeEvent.contentOffset.x;
 
     const index = Math.round(offsetX / width);
-    const date = DAYS[index].date;
-    setSelectedDate(date);
-    // setSelectedDate(index);
+    const date = DAYS[index].day;
+    console.log("date handleScroll", moment(date).toISOString());
+    setSelectedDate(moment(date).toISOString());
   };
 
-  const badgeColor = (status: number) => {
-    switch (status) {
-      case 1:
-        return "#FCE5CD";
-      case 2:
-        return "#e5f9e7";
-      case 3:
-        return "#F9D3D0";
-    }
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: (typeof DAYS)[0];
+    index: number;
+  }) => {
+    const itemMoment = moment(item.day);
+    const dayName = itemMoment.isSame(today, "day")
+      ? "TODAY"
+      : itemMoment.format("ddd").toUpperCase();
+    const dayNumber = itemMoment.date();
+
+    const isSelected = moment(item.day).isSame(moment(selectedDate), "day");
+
+    return (
+      <TouchableOpacity
+        key={index}
+        onPress={() => handlePress(item.day)}
+        style={[styles.dayContainer, isSelected && styles.selectedDay]}
+      >
+        <Text style={[styles.dayText, isSelected && styles.selectedDayText]}>
+          {dayName}
+        </Text>
+
+        <Text style={[styles.dateText, isSelected && styles.selectedDateText]}>
+          <MaterialIcons name="circle" size={6} />
+          {` `}
+          {dayNumber}
+        </Text>
+      </TouchableOpacity>
+    );
   };
 
-  console.log({ isLoadingHabits, isLoadingHabitsActionList })
-
-  if (isLoadingHabits || isLoadingHabitsActionList || !habitGetList || !habitActionListData) {
-    // return (
-    //   // <LinearGradient colors={["#4CAF50", "#A5D6A7"]} style={{
-    //   //   flex: 1,
-    //   //   justifyContent: "center",
-    //   //   alignItems: "center",
-    //   // }}>
-    //   //   <Image source={require("../../assets/images/habitz_logo.png")} style={{ width: 100, height: 100 }} />
-    //   //   <Text style={{
-    //   //     fontSize: 36,
-    //   //     fontWeight: "bold",
-    //   //     textAlign: "center",
-    //   //     color: "#FFFFFF",
-    //   //     marginBottom: 30,
-    //   //     textShadowColor: "gray",
-    //   //     textShadowOffset: { width: 0, height: 2 },
-    //   //     textShadowRadius: 10,
-    //   //   }}>Habitz</Text>
-    //   //   <ActivityIndicator size="large" color="#FFFFFF" />
-        
-    //   // </LinearGradient>
-    // );
-    return LoadingScreen();
-  }
+  const badgeColor = (status: number) =>
+    ({
+      1: "#FCE5CD",
+      2: "#e5f9e7",
+      3: "#F9D3D0",
+    }[status] || "#FCE5CD");
 
   return (
     <GestureHandlerRootView>
@@ -220,7 +166,7 @@ export default function HomeScreen() {
           <View style={{ padding: 16 }}>
             <View style={styles.header}>
               <Text style={styles.date}>
-                {day}, {month} {dayOfMonth}
+                {today.clone().format("dddd, MMMM D")}
               </Text>
               <Pressable style={styles.calendarIcon}>
                 <Ionicons name="calendar-outline" size={24} color="green" />
@@ -234,9 +180,6 @@ export default function HomeScreen() {
             {/* Habits Section */}
             <View style={styles.habitsSection}>
               <Text style={styles.sectionTitle}>{t("yours_habits")}</Text>
-              {/* <Link href="/" style={styles.editButton}>
-            Edit
-          </Link> */}
             </View>
 
             <ScrollView
@@ -252,7 +195,7 @@ export default function HomeScreen() {
                 <Text style={styles.addHabitText}>{t("add_habit")}</Text>
               </TouchableOpacity>
 
-              {allHabitsList?.map((habit: Habit, index: number) => (
+              {allHabitsList?.map((habit, index: number) => (
                 <View
                   key={index}
                   style={[
@@ -267,8 +210,8 @@ export default function HomeScreen() {
                     {habit.details.periodType === 1
                       ? t("day")
                       : habit.details.periodType === 2
-                        ? t("week")
-                        : t("month")}
+                      ? t("week")
+                      : t("month")}
                   </Text>
                 </View>
               ))}
@@ -281,7 +224,7 @@ export default function HomeScreen() {
             <Text style={styles.progressSubText}>
               {/* 4 out of 5 tasks completed. */}
               {t("progress_bar")
-                .replace("{current}", groupByStatus[2]?.length.toString())
+                .replace("{current}", habitActionList[2]?.length.toString())
                 .replace("{total}", data.habits.length.toString())}
             </Text>
             <View style={styles.progressBarContainer}>
@@ -289,8 +232,9 @@ export default function HomeScreen() {
                 style={[
                   styles.progressBar,
                   {
-                    width: `${(groupByStatus[2]?.length / data.habits.length) * 100
-                      }%`,
+                    width: `${
+                      (habitActionList[2]?.length / data.habits.length) * 100
+                    }%`,
                     height: "100%",
                   },
                 ]}
@@ -302,7 +246,8 @@ export default function HomeScreen() {
             <FlatList
               data={DAYS}
               horizontal
-              keyExtractor={(item) => item.date.toString()}
+              keyExtractor={(item) => item.day.toString()}
+              // keyExtractor={(item) => item.day}
               renderItem={renderItem}
               showsHorizontalScrollIndicator={false}
               contentContainerStyle={styles.listContainer}
@@ -310,19 +255,17 @@ export default function HomeScreen() {
           </View>
           <Animated.FlatList
             ref={flatListRef}
-            data={DAYS.map((day) => ({ key: day.date.toString() }))}
-            keyExtractor={(item) => item.key.toString()}
+            data={DAYS.map((day) => ({ key: day.day }))}
+            keyExtractor={(item) => item.key}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
-            // keyExtractor={(item) => item.key}
-
             // scrollEnabled={name !== ""}
             onScroll={handleScroll}
             scrollEventThrottle={16}
             renderItem={({ index }) => (
               <View style={styles.screen} key={index}>
-                <ScrollView style={styles.container2}>
+                <ScrollView style={styles.container2} key={index}>
                   <View style={styles.habitList}>
                     {[1, 2, 3].map((status, index) => (
                       <View key={index}>
@@ -337,11 +280,11 @@ export default function HomeScreen() {
                           {status === 1
                             ? t("pending")
                             : status === 2
-                              ? t("completed")
-                              : t("failed")}{" "}
-                          {`(${groupByStatus[status]?.length})`}
+                            ? t("completed")
+                            : t("failed")}{" "}
+                          {`(${habitActionList[status]?.length})`}
                         </Text>
-                        {groupByStatus[status]?.map(
+                        {habitActionList[status]?.map(
                           (habit: any, index: number) => (
                             <View
                               key={index}
@@ -370,8 +313,8 @@ export default function HomeScreen() {
                                   {habit.details.periodType === 1
                                     ? t("day")
                                     : habit.details.periodType === 2
-                                      ? t("week")
-                                      : t("month")}
+                                    ? t("week")
+                                    : t("month")}
                                 </Text>
                               </View>
                               <Text
@@ -385,16 +328,16 @@ export default function HomeScreen() {
                                       habit.status === 1
                                         ? "orange"
                                         : habit.status === 2
-                                          ? "green"
-                                          : "red",
+                                        ? "green"
+                                        : "red",
                                   },
                                 ]}
                               >
                                 {habit.status === 1
                                   ? "Pending"
                                   : habit.status === 2
-                                    ? "Completed"
-                                    : "Failed"}
+                                  ? "Completed"
+                                  : "Failed"}
                               </Text>
                             </View>
                           )
@@ -557,7 +500,6 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 10,
   },
 });
-
 
 const data = {
   date: "2024-12-12T00:00:00",
