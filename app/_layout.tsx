@@ -17,10 +17,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import { persistor, store } from "@/redux/app/store";
 import { PersistGate } from "redux-persist/integration/react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import * as Linking from 'expo-linking';
+import * as Linking from "expo-linking";
+import LoadingScreen from "./loading";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -43,37 +42,37 @@ export default function RootLayout() {
     // Handle deep linking
     const handleDeepLink = (event: { url: string }) => {
       const { path, queryParams } = Linking.parse(event.url);
-      
+
       if (path) {
         // Map the incoming path to a valid app route
         let validPath: string;
         switch (path) {
-          case 'profile':
-            validPath = '/(tabs)/profile';
+          case "profile":
+            validPath = "/(tabs)/profile";
             break;
-          case 'explore':
-            validPath = '/(tabs)/explore';
+          case "explore":
+            validPath = "/(tabs)/explore";
             break;
-          case 'reset-password':
-            validPath = '/(auth)/reset-password';
+          case "reset-password":
+            validPath = "/(auth)/reset-password";
             break;
-          case 'confirm-email':
-            validPath = '/(auth)/confirm-email';
+          case "confirm-email":
+            validPath = "/(auth)/confirm-email";
             break;
           default:
-            validPath = '/(tabs)';
+            validPath = "/(tabs)";
         }
-        
+
         // Navigate to the appropriate screen with parameters
         router.push({
           pathname: validPath as any,
-          params: queryParams || undefined
+          params: queryParams || undefined,
         });
       }
     };
 
     // Add event listener for deep links when app is already running
-    const subscription = Linking.addEventListener('url', handleDeepLink);
+    const subscription = Linking.addEventListener("url", handleDeepLink);
 
     // Handle deep link if app was launched from URL
     Linking.getInitialURL().then((url) => {
@@ -92,12 +91,7 @@ export default function RootLayout() {
   }
 
   const loadingScreen = () => {
-    return (
-      <LinearGradient colors={["#4CAF50", "#A5D6A7"]} style={styles.container}>
-        <ActivityIndicator size="large" color="#FFFFFF" />
-        <Text style={styles.text}>Habits App</Text>
-      </LinearGradient>
-    );
+    return <LoadingScreen />;
   };
 
   return (
@@ -114,7 +108,6 @@ export default function RootLayout() {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen name="+not-found" />
-                <Stack.Screen name="loading"  />
                 <Stack.Screen
                   name="modal"
                   options={{
@@ -139,21 +132,3 @@ export default function RootLayout() {
     </ThemeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    fontSize: 36,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#FFFFFF",
-    marginBottom: 30,
-    textShadowColor: "gray",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 10,
-  },
-});
