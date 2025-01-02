@@ -23,19 +23,43 @@ const habitApi = api.injectEndpoints({
         url: "/Habit/Api/Habit/GetList?Size=100&PageNumber=0&IsFailed=false",
       }),
     }),
-    habitActionList: build.query<IServerResponse<IHabitActionListData>, any>({
-      query: (date) => ({
-        method: "GET",
-        url: "/Habit/Api/HabitAction/ActionGetList",
-        params: {
-          Date: date.toDateString(),
+    habitActionList: build.query<IServerResponse<IHabitActionListData>, string>(
+      {
+        query: (date) => {
+          const newDate = new Date(date).toISOString().slice(0, 10);
+          // console.log("New Date:", newDate);
+          console.log("Date:", date);
+          return {
+            method: "GET",
+            url: "/Habit/Api/HabitAction/ActionGetList",
+            params: {
+              Date: date,
+            },
+            transformResponse: (
+              response: any,
+              meta: any,
+              arg: any,
+              date: any
+            ) => {
+              console.log("Response:", response);
+              console.log("Meta:", meta);
+              console.log("Arg:", arg);
+              console.log("Date:", date);
+              return response;
+            },
+            onQueryStarted: async (arg: any, { queryFulfilled }: any) => {
+              console.log("Query started with arg:", arg); // Sorguya gönderilen argüman
+              try {
+                const { data } = await queryFulfilled;
+                console.log("Query fulfilled with data:", data); // API'den gelen veri
+              } catch (error) {
+                console.log("Query failed with error:", error); // Hata durumu
+              }
+            },
+          };
         },
-        // transformResponse: (response: any) => ({
-        //   data: response.data,
-        //   date: date,
-        // }),
-      }),
-    }),
+      }
+    ),
     habitGetById: build.query<IServerResponse<IHabit>, string>({
       query: (id) => ({
         method: "GET",
