@@ -90,6 +90,12 @@ export default function HomeScreen() {
     reFetchHabitAction();
   }, [selectedDate]);
 
+  useEffect(() => {
+    if (habitGetList?.isSuccessful) {
+      setAllHabitsList(habitGetList.data);
+    }
+  }, [habitGetList]);
+
   const DAYS = [
     { day: today.clone().subtract(3, "days").toISOString() },
     { day: today.clone().subtract(2, "days").toISOString() },
