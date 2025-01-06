@@ -413,9 +413,7 @@ export default function HomeScreen() {
                                     />
                                   </TouchableOpacity>
                                   <TouchableOpacity
-                                    onPress={() =>
-                                      handleDeletePress(habit?.details?.id)
-                                    }
+                                    onPress={() => handleDeletePress(habit?.id)}
                                     style={{
                                       marginLeft: 10,
                                       padding: 5,
