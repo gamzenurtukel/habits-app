@@ -22,10 +22,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import moment from "moment";
 import {
+  useDeleteHabitMutation,
   useHabitActionListQuery,
   useHabitGetListQuery,
 } from "@/redux/services/habit";
 import { IHabit } from "@/types/habit";
+import Toast from "react-native-toast-message";
 
 const { width } = Dimensions.get("screen");
 
@@ -38,6 +40,7 @@ export default function HomeScreen() {
   const date = new Date();
   const today = moment(date);
   const [selectedDate, setSelectedDate] = useState(today.toISOString());
+  const [longPressedIndex, setLongPressedIndex] = useState<number | null>(null);
 
   const {
     data: habitGetList,
@@ -55,6 +58,7 @@ export default function HomeScreen() {
     isSuccess: isSuccessHabitsActionList,
     isUninitialized: isUninitializedHabitsActionList,
   } = useHabitActionListQuery(selectedDate);
+  const [deleteHabit] = useDeleteHabitMutation();
 
   const reFetchHabitAction = async () => {
     try {
@@ -163,6 +167,48 @@ export default function HomeScreen() {
       2: "#e5f9e7",
       3: "#F9D3D0",
     }[status] || "#FCE5CD");
+
+  const handleLongPress = (index: number) => {
+    setLongPressedIndex(index);
+  };
+
+  const handlePressOut = () => {
+    setTimeout(() => {
+      setLongPressedIndex(null);
+    }, 1000);
+  };
+
+  const handleDeletePress = (id: string) => {
+    console.log("Habit id to delete:", id);
+    deleteHabit({ id }).then((response) => {
+      console.log("Response:", response);
+      if (response?.data?.isSuccessful) {
+        console.log("Habit deleted successfully:", response);
+        Toast.show({
+          type: "success",
+          position: "bottom",
+          text1: "Alışkanlık başarıyla silindi!",
+          visibilityTime: 3000,
+          autoHide: true,
+          bottomOffset: 50,
+        });
+
+        reFetchHabitAction();
+
+        setLongPressedIndex(null);
+      } else {
+        console.log("Habit delete failed:", response?.data?.errors);
+        Toast.show({
+          type: "error",
+          position: "bottom",
+          text1: "Alışkanlık silinemedi!",
+          visibilityTime: 3000,
+          autoHide: true,
+          bottomOffset: 50,
+        });
+      }
+    });
+  };
 
   return (
     <GestureHandlerRootView>
@@ -299,9 +345,20 @@ export default function HomeScreen() {
                         </Text>
                         {habitActionList[status]?.map(
                           (habit: any, index: number) => (
-                            <View
+                            <TouchableOpacity
                               key={index}
-                              style={[styles.habitListCard, { gap: 10 }]}
+                              style={[
+                                styles.habitListCard,
+                                {
+                                  backgroundColor:
+                                    longPressedIndex === index
+                                      ? "#EFEFEF"
+                                      : "#fff",
+                                  gap: 10,
+                                },
+                              ]}
+                              onLongPress={() => handleLongPress(index)}
+                              onPressOut={handlePressOut}
                             >
                               <View
                                 style={{
@@ -324,35 +381,80 @@ export default function HomeScreen() {
                                 <Text style={styles.habitTime}>
                                   {habit.details.periodCount}{" "}
                                   {habit.details.periodType === 1
-                                    ? t("day")
+                                    ? (t("day") as string)
                                     : habit.details.periodType === 2
-                                    ? t("week")
-                                    : t("month")}
+                                    ? (t("week") as string)
+                                    : (t("month") as string)}
                                 </Text>
                               </View>
-                              <Text
-                                style={[
-                                  styles.habitStatus,
-                                  {
-                                    backgroundColor: badgeColor(habit.status),
-                                    borderRadius: 8,
-                                    padding: 8,
-                                    color:
-                                      habit.status === 1
-                                        ? "orange"
-                                        : habit.status === 2
-                                        ? "green"
-                                        : "red",
-                                  },
-                                ]}
-                              >
-                                {habit.status === 1
-                                  ? "Pending"
-                                  : habit.status === 2
-                                  ? "Completed"
-                                  : "Failed"}
-                              </Text>
-                            </View>
+
+                              {/* delete edit buttons */}
+                              {longPressedIndex === index ? (
+                                <View
+                                  style={{
+                                    flexDirection: "row",
+                                    marginLeft: "auto",
+                                  }}
+                                >
+                                  <TouchableOpacity
+                                    style={{
+                                      padding: 5,
+                                      borderRadius: 20,
+                                      backgroundColor: "#DDE5DD",
+                                    }}
+                                    onPress={() => {
+                                      console.log("Düzenleye tıklandı:", habit);
+                                    }}
+                                  >
+                                    <Ionicons
+                                      name="pencil"
+                                      size={20}
+                                      color="#588157"
+                                    />
+                                  </TouchableOpacity>
+                                  <TouchableOpacity
+                                    onPress={() =>
+                                      handleDeletePress(habit?.details?.id)
+                                    }
+                                    style={{
+                                      marginLeft: 10,
+                                      padding: 5,
+                                      borderRadius: 20,
+                                      backgroundColor: "#FFE5E5",
+                                    }}
+                                  >
+                                    <Ionicons
+                                      name="trash"
+                                      size={20}
+                                      color="red"
+                                    />
+                                  </TouchableOpacity>
+                                </View>
+                              ) : (
+                                <Text
+                                  style={[
+                                    styles.habitStatus,
+                                    {
+                                      backgroundColor: badgeColor(habit.status),
+                                      borderRadius: 8,
+                                      padding: 8,
+                                      color:
+                                        habit.status === 1
+                                          ? "orange"
+                                          : habit.status === 2
+                                          ? "green"
+                                          : "red",
+                                    },
+                                  ]}
+                                >
+                                  {habit.status === 1
+                                    ? "Pending"
+                                    : habit.status === 2
+                                    ? "Completed"
+                                    : "Failed"}
+                                </Text>
+                              )}
+                            </TouchableOpacity>
                           )
                         )}
                       </View>
@@ -512,6 +614,10 @@ const styles = StyleSheet.create({
     // width: "90%",
     // paddingHorizontal: 10,
   },
+  habitListCardActive: {
+    backgroundColor: "#f0f0f0",
+    padding: 10,
+  },
 });
 
 // const data = {
@@ -637,4 +743,4 @@ const styles = StyleSheet.create({
 //       },
 //     },
 //   ],
-// };
+// }
