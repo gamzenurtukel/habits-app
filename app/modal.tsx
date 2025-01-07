@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useCallback } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,8 @@ import {
   Platform,
   Pressable,
   TextInput,
+  KeyboardAvoidingView,
+  Keyboard,
 } from "react-native";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -62,6 +64,28 @@ const CustomModal = () => {
   const [startTime, setStartTime] = useState({ hour: "00", minute: "00" });
   const [endTime, setEndTime] = useState({ hour: "00", minute: "00" });
 
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    icon: "",
+    color: "",
+    periodType: 1,
+    periodCount: 1,
+    startTime: null,
+    endTime: null,
+  });
+
+  const [draft, setDraft] = useState({
+    name: "",
+    description: "",
+    icon: "",
+    color: "",
+    periodType: 1,
+    periodCount: 1,
+    startTime: null,
+    endTime: null,
+  });
+
   const [createHabit] = useCreateHabitMutation();
 
   const token = useSelector((state: RootState) => selectToken(state));
@@ -90,7 +114,7 @@ const CustomModal = () => {
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
-  console.log("token", token);
+  // console.log("token", token);
   const handleSaveChanges = async () => {
     console.log("token", token);
     const habitData = {
@@ -174,6 +198,7 @@ const CustomModal = () => {
           style={{ flex: 1 }}
           start={{ x: 0, y: 1 }}
           end={{ x: 1, y: 0 }}
+          key={"stageOne"}
         >
           <View
             style={{
@@ -309,10 +334,22 @@ const CustomModal = () => {
                             height: 120,
                           }}
                           onPress={() => {
-                            setName(habit.name);
+                            // setName(habit.name);
                             handleTabPress(1);
-                            setIcon(habit.icon);
-                            setDescription(habit.description);
+                            // setIcon(habit.icon);
+                            // setDescription(habit.description);
+                            setForm({
+                              ...form,
+                              name: habit.name,
+                              icon: habit.icon,
+                              description: habit.description,
+                            });
+                            setDraft({
+                              ...draft,
+                              name: habit.name,
+                              icon: habit.icon,
+                              description: habit.description,
+                            });
                           }}
                         >
                           <View>
@@ -365,6 +402,7 @@ const CustomModal = () => {
           style={{ flex: 1 }}
           start={{ x: 0, y: 1 }}
           end={{ x: 1, y: 0 }}
+          key={"stageTwo"}
         >
           <View
             style={{
@@ -376,9 +414,26 @@ const CustomModal = () => {
             <TouchableOpacity
               onPress={() => {
                 handleTabPress(0);
-                setName("");
-                setIcon("");
-                setDescription("");
+                setForm({
+                  name: "",
+                  description: "",
+                  icon: "",
+                  color: "",
+                  periodType: 1,
+                  periodCount: 1,
+                  startTime: null,
+                  endTime: null,
+                });
+                setDraft({
+                  name: "",
+                  description: "",
+                  icon: "",
+                  color: "",
+                  periodType: 1,
+                  periodCount: 1,
+                  startTime: null,
+                  endTime: null,
+                });
               }}
               style={{ flexDirection: "row", alignItems: "center" }}
             >
@@ -402,7 +457,7 @@ const CustomModal = () => {
                   alignItems: "center",
                   paddingVertical: 20,
                   paddingHorizontal: 5,
-                  backgroundColor: `${selectedColor}`,
+                  backgroundColor: `${form.color || "#FFFFFF"}`,
                   opacity: 0.8,
                   justifyContent: "space-around",
                   borderRadius: 15,
@@ -419,7 +474,7 @@ const CustomModal = () => {
                       fontWeight: "500",
                     }}
                   >
-                    {icon}
+                    {form.icon}
                   </Text>
                 </View>
                 <Text
@@ -517,7 +572,7 @@ const CustomModal = () => {
                         fontWeight: "500",
                       }}
                     >
-                      {icon}
+                      {form.icon}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -540,7 +595,7 @@ const CustomModal = () => {
               >
                 <TouchableOpacity
                   onPress={() => {
-                    setBottomSheetContent("icon");
+                    setBottomSheetContent("color");
                     handlePresentModalPress();
                   }}
                 >
@@ -570,7 +625,7 @@ const CustomModal = () => {
                       flexDirection: "column",
                       alignItems: "center",
                       justifyContent: "space-around",
-                      backgroundColor: `${selectedColor}`,
+                      backgroundColor: `${form.color || "#FFFFFF"}`,
                       borderRadius: 10,
                       width: 70,
                       height: 80,
@@ -610,9 +665,8 @@ const CustomModal = () => {
                   <Text style={styles.optionLabel}>{t(`${item}`)}</Text>
                   <Text style={styles.optionValue}>
                     {{
-                      name: name,
-                      icon: icon,
-                      description: description,
+                      name: form.name,
+                      description: form.description,
                     }[item] || "Belirlenmemiş"}
                   </Text>
                 </TouchableOpacity>
@@ -681,6 +735,7 @@ const CustomModal = () => {
               start={{ x: 0, y: 1 }}
               end={{ x: 1, y: 0 }}
               style={styles.applyButton}
+              key={"apply-1"}
             >
               <TouchableOpacity
                 onPress={handleSaveChanges}
@@ -717,6 +772,448 @@ const CustomModal = () => {
     setEndTime((prev) => ({ ...prev, minute: minute.padStart(2, "0") }));
   };
 
+  const renderBottomSheetContent = () => {
+    switch (bottomSheetContent) {
+      case "repetition":
+        return renderRepetition();
+      case "duration":
+        return renderDuration();
+      case "name":
+        return renderName();
+      case "description":
+        return renderDescription();
+      case "icon":
+        return renderIcon();
+      case "color":
+        return renderColor();
+      default:
+        return null;
+    }
+  };
+
+  //repetition
+  const renderRepetition = () => (
+    <View style={styles.container3}>
+      <View style={styles.tabContainer3}>
+        <Pressable
+          style={[
+            styles.tabButton3,
+            activeTabSheetRepetition === "daily" && styles.activeTab3,
+          ]}
+          onPress={() => setActiveTabSheetRepetition("daily")}
+        >
+          <Text
+            style={[
+              styles.tabText3,
+              activeTabSheetRepetition === "daily" && styles.activeTabText3,
+            ]}
+          >
+            Günlük
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[
+            styles.tabButton3,
+            activeTabSheetRepetition === "weekly" && styles.activeTab3,
+          ]}
+          onPress={() => setActiveTabSheetRepetition("weekly")}
+        >
+          <Text
+            style={[
+              styles.tabText3,
+              activeTabSheetRepetition === "weekly" && styles.activeTabText3,
+            ]}
+          >
+            Haftalık
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[
+            styles.tabButton3,
+            activeTabSheetRepetition === "monthly" && styles.activeTab3,
+          ]}
+          onPress={() => setActiveTabSheetRepetition("monthly")}
+        >
+          <Text
+            style={[
+              styles.tabText3,
+              activeTabSheetRepetition === "monthly" && styles.activeTabText3,
+            ]}
+          >
+            Aylık
+          </Text>
+        </Pressable>
+      </View>
+      <View style={styles.pickerContainer}>
+        <Text style={styles.pickerText}>Her</Text>
+        <Picker
+          selectedValue={selectedDay.toString()} // Değeri string'e çeviriyoruz
+          onValueChange={(itemValue) => setSelectedDay(Number(itemValue))}
+          style={{ width: 100 }}
+          mode="dropdown"
+          itemStyle={{ color: "black" }}
+        >
+          {Array.from({ length: 30 }, (_, i) => (i + 1).toString()).map(
+            (day) => (
+              <Picker.Item key={day} label={day} value={day} />
+            )
+          )}
+        </Picker>
+        <Text style={styles.pickerText}>gün</Text>
+      </View>
+
+      <Pressable
+        style={styles.applyButton}
+        onPress={() => {
+          bottomSheetRef.current?.close();
+        }}
+      >
+        <Text style={styles.applyText}>Uygula</Text>
+      </Pressable>
+    </View>
+  );
+
+  //duration
+  const renderDuration = () => (
+    <View style={styles.container3}>
+      <View style={styles.tabContainer3}>
+        <Pressable
+          style={[
+            styles.tabButton3,
+            activeTabSheetDuration === "startTime" && styles.activeTab3,
+          ]}
+          onPress={() => setActiveTabSheetDuration("startTime")}
+        >
+          <Text
+            style={[
+              styles.tabText3,
+              activeTabSheetDuration === "startTime" && styles.activeTabText3,
+            ]}
+          >
+            Başlangıç Zamanı
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[
+            styles.tabButton3,
+            activeTabSheetDuration === "timeRange" && styles.activeTab3,
+          ]}
+          onPress={() => setActiveTabSheetDuration("timeRange")}
+        >
+          <Text
+            style={[
+              styles.tabText3,
+              activeTabSheetDuration === "timeRange" && styles.activeTabText3,
+            ]}
+          >
+            Zaman Aralığı
+          </Text>
+        </Pressable>
+      </View>
+      <View
+        style={[
+          {
+            height: 200,
+            flexDirection: "row",
+            justifyContent: "center",
+          },
+        ]}
+      >
+        <Picker
+          selectedValue={startTime.hour}
+          onValueChange={handleHourChangeStartTime}
+          style={styles.picker}
+          mode="dropdown"
+        >
+          {Array.from({ length: 24 }, (_, i) => i.toString()).map((hour) => (
+            <Picker.Item
+              key={hour}
+              label={hour.padStart(2, "0")}
+              value={hour}
+            />
+          ))}
+        </Picker>
+        <Text
+          style={{
+            fontSize: 26,
+            marginHorizontal: 5,
+            color: "#333",
+            marginBlock: "auto",
+          }}
+        >
+          :
+        </Text>
+        <Picker
+          selectedValue={startTime.minute}
+          onValueChange={handleMinuteChangeStartTime}
+          style={styles.picker}
+          mode="dropdown"
+        >
+          {Array.from({ length: 60 }, (_, i) => i.toString()).map((minute) => (
+            <Picker.Item
+              key={minute}
+              label={minute.padStart(2, "0")}
+              value={minute}
+            />
+          ))}
+        </Picker>
+      </View>
+      {activeTabSheetDuration === "timeRange" && (
+        <Text
+          style={{
+            fontSize: 16,
+            color: "#333",
+            textAlign: "center",
+            borderBottomColor: "#E0E0E0",
+            borderBottomWidth: 1,
+          }}
+        ></Text>
+      )}
+      {activeTabSheetDuration === "timeRange" && (
+        <View
+          style={[
+            {
+              height: 200,
+              flexDirection: "row",
+              justifyContent: "center",
+            },
+          ]}
+        >
+          <Picker
+            selectedValue={endTime.hour}
+            onValueChange={handleHourChangeEndTime}
+            style={styles.picker}
+            mode="dropdown"
+          >
+            {Array.from({ length: 24 }, (_, i) => i.toString()).map((hour) => (
+              <Picker.Item
+                key={hour}
+                label={hour.padStart(2, "0")}
+                value={hour}
+              />
+            ))}
+          </Picker>
+          <Text
+            style={{
+              fontSize: 26,
+              marginHorizontal: 5,
+              color: "#333",
+              marginBlock: "auto",
+            }}
+          >
+            :
+          </Text>
+          <Picker
+            selectedValue={endTime.minute}
+            onValueChange={handleMinuteChangeEndTime}
+            style={styles.picker}
+            mode="dropdown"
+          >
+            {Array.from({ length: 60 }, (_, i) => i.toString()).map(
+              (minute) => (
+                <Picker.Item
+                  key={minute}
+                  label={minute.padStart(2, "0")}
+                  value={minute}
+                />
+              )
+            )}
+          </Picker>
+        </View>
+      )}
+      <Pressable
+        style={styles.applyButton}
+        onPress={() => {
+          bottomSheetRef.current?.close();
+        }}
+      >
+        <Text style={styles.applyText}>Uygula</Text>
+      </Pressable>
+    </View>
+  );
+
+  // name
+  const renderName = () => (
+    <View style={styles.container3}>
+      <Text style={styles.title}>
+        {t("please_enter_the_name_of_the_habit")}
+      </Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        value={draft.name}
+        autoFocus={true}
+        onChangeText={(text) => setDraft({ ...draft, name: text })}
+      />
+    </View>
+  );
+
+  // description
+  const renderDescription = () => (
+    <View style={styles.container3}>
+      <Text style={styles.title}>
+        {t("please_enter_the_description_of_the_habit")}
+      </Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Description"
+        value={draft.description}
+        onChangeText={(text) => setDraft({ ...draft, description: text })}
+      />
+    </View>
+  );
+
+  // icon
+  const renderIcon = () => (
+    <View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.inputLabel}>
+          {/* {t("please_enter_the_icon_of_the_habit")} */}
+          Alışkanlık simgesi seçin
+        </Text>
+      </View>
+
+      <FlatList
+        data={icons}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+        numColumns={10}
+        renderItem={({ item, index }) => (
+          <View>
+            <Pressable
+              key={index}
+              style={{
+                backgroundColor: draft.icon === item ? "gray" : "#FFF",
+                justifyContent: "center",
+                alignItems: "center",
+                width: 40,
+                height: 40,
+                borderRadius: 10,
+                margin: 5,
+              }}
+              onPress={() => {
+                setDraft({ ...draft, icon: item });
+              }}
+            >
+              <Text style={{ fontSize: 24 }}>{item}</Text>
+            </Pressable>
+            {draft.icon === item && (
+              <MaterialIcons
+                style={{
+                  position: "absolute",
+                  width: 15,
+                  height: 15,
+                  right: 0,
+                  left: 35,
+                  top: 0,
+                  borderRadius: 10,
+                  backgroundColor: "#588157",
+                }}
+                name="check"
+                size={14}
+                color="#FFF"
+              />
+            )}
+          </View>
+        )}
+      />
+    </View>
+  );
+
+  // color
+  const renderColor = () => (
+    <View style={styles.container3}>
+      <Text style={styles.title}>Choose a color</Text>
+      <View style={styles.colorContainer}>
+        <FlatList
+          data={colors}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: "center",
+          }}
+          numColumns={7}
+          renderItem={({ item, index }) => (
+            <Pressable
+              key={index}
+              style={[styles.colorCircle, { backgroundColor: item, margin: 5 }]}
+              onPress={() => setDraft({ ...draft, color: item })}
+            >
+              {draft.color === item && (
+                <MaterialIcons
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    left: 7,
+                    top: 7,
+                  }}
+                  name="check"
+                  size={24}
+                  color="#FFF"
+                />
+              )}
+            </Pressable>
+          )}
+        />
+        <Pressable
+          style={styles.applyButton}
+          onPress={() => {
+            bottomSheetRef.current?.close();
+          }}
+        >
+          <Text style={styles.applyText}>Uygula</Text>
+        </Pressable>
+      </View>
+      {/* <LinearGradient
+        colors={["green", "#80B900"]}
+        start={{ x: 0, y: 1 }}
+        end={{ x: 1, y: 0 }}
+        style={styles.applyButton}
+        key={"apply-3"}
+      >
+        <Pressable
+          onPress={() => {
+            bottomSheetRef.current?.close();
+          }}
+        >
+          <Text style={styles.applyText}>Apply</Text>
+        </Pressable>
+      </LinearGradient> */}
+    </View>
+  );
+
+  const handleAppyBottomSheetPress = () => {
+    switch (bottomSheetContent) {
+      case "name":
+        setForm({
+          ...form,
+          name: draft.name,
+        });
+        break;
+      case "description":
+        setForm({
+          ...form,
+          description: draft.description,
+        });
+        break;
+      case "icon":
+        setForm({
+          ...form,
+          icon: draft.icon,
+        });
+        break;
+      case "color":
+        setForm({
+          ...form,
+          color: draft.color,
+        });
+        break;
+    }
+    bottomSheetRef.current?.close();
+  };
+
   return (
     <GestureHandlerRootView>
       <BottomSheetModalProvider>
@@ -733,397 +1230,37 @@ const CustomModal = () => {
           renderItem={({ index }) => (index === 0 ? stageOne() : stageTwo())}
         />
 
-        <BottomSheetModal ref={bottomSheetRef} onChange={handleSheetChanges}>
+        <BottomSheetModal
+          ref={bottomSheetRef}
+          onChange={handleSheetChanges}
+          enableDynamicSizing
+          containerStyle={{
+            backgroundColor: "rgba(0,0,0,0.5)",
+          }}
+        >
           <BottomSheetView
             style={{
               padding: 16,
             }}
           >
-            {bottomSheetContent === "repetition" ? (
-              <View style={styles.container3}>
-                <View style={styles.tabContainer3}>
-                  <Pressable
-                    style={[
-                      styles.tabButton3,
-                      activeTabSheetRepetition === "daily" && styles.activeTab3,
-                    ]}
-                    onPress={() => setActiveTabSheetRepetition("daily")}
-                  >
-                    <Text
-                      style={[
-                        styles.tabText3,
-                        activeTabSheetRepetition === "daily" &&
-                          styles.activeTabText3,
-                      ]}
-                    >
-                      Günlük
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    style={[
-                      styles.tabButton3,
-                      activeTabSheetRepetition === "weekly" &&
-                        styles.activeTab3,
-                    ]}
-                    onPress={() => setActiveTabSheetRepetition("weekly")}
-                  >
-                    <Text
-                      style={[
-                        styles.tabText3,
-                        activeTabSheetRepetition === "weekly" &&
-                          styles.activeTabText3,
-                      ]}
-                    >
-                      Haftalık
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    style={[
-                      styles.tabButton3,
-                      activeTabSheetRepetition === "monthly" &&
-                        styles.activeTab3,
-                    ]}
-                    onPress={() => setActiveTabSheetRepetition("monthly")}
-                  >
-                    <Text
-                      style={[
-                        styles.tabText3,
-                        activeTabSheetRepetition === "monthly" &&
-                          styles.activeTabText3,
-                      ]}
-                    >
-                      Aylık
-                    </Text>
-                  </Pressable>
-                </View>
-                <View style={styles.pickerContainer}>
-                  <Text style={styles.pickerText}>Her</Text>
-                  <Picker
-                    selectedValue={selectedDay.toString()} // Değeri string'e çeviriyoruz
-                    onValueChange={(itemValue) =>
-                      setSelectedDay(Number(itemValue))
-                    }
-                    style={{ width: 100 }}
-                    mode="dropdown"
-                    itemStyle={{ color: "black" }}
-                  >
-                    {Array.from({ length: 30 }, (_, i) =>
-                      (i + 1).toString()
-                    ).map((day) => (
-                      <Picker.Item key={day} label={day} value={day} />
-                    ))}
-                  </Picker>
-                  <Text style={styles.pickerText}>gün</Text>
-                </View>
+            {renderBottomSheetContent()}
 
-                <Pressable
-                  style={styles.applyButton}
-                  onPress={() => {
-                    bottomSheetRef.current?.close();
-                  }}
-                >
-                  <Text style={styles.applyText}>Uygula</Text>
-                </Pressable>
-              </View>
-            ) : bottomSheetContent === "duration" ? (
-              <View style={styles.container3}>
-                <View style={styles.tabContainer3}>
-                  <Pressable
-                    style={[
-                      styles.tabButton3,
-                      activeTabSheetDuration === "startTime" &&
-                        styles.activeTab3,
-                    ]}
-                    onPress={() => setActiveTabSheetDuration("startTime")}
-                  >
-                    <Text
-                      style={[
-                        styles.tabText3,
-                        activeTabSheetDuration === "startTime" &&
-                          styles.activeTabText3,
-                      ]}
-                    >
-                      Başlangıç Zamanı
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    style={[
-                      styles.tabButton3,
-                      activeTabSheetDuration === "timeRange" &&
-                        styles.activeTab3,
-                    ]}
-                    onPress={() => setActiveTabSheetDuration("timeRange")}
-                  >
-                    <Text
-                      style={[
-                        styles.tabText3,
-                        activeTabSheetDuration === "timeRange" &&
-                          styles.activeTabText3,
-                      ]}
-                    >
-                      Zaman Aralığı
-                    </Text>
-                  </Pressable>
-                </View>
-                <View
-                  style={[
-                    {
-                      height: 200,
-                      flexDirection: "row",
-                      justifyContent: "center",
-                    },
-                  ]}
-                >
-                  <Picker
-                    selectedValue={startTime.hour}
-                    onValueChange={handleHourChangeStartTime}
-                    style={styles.picker}
-                    mode="dropdown"
-                  >
-                    {Array.from({ length: 24 }, (_, i) => i.toString()).map(
-                      (hour) => (
-                        <Picker.Item
-                          key={hour}
-                          label={hour.padStart(2, "0")}
-                          value={hour}
-                        />
-                      )
-                    )}
-                  </Picker>
-                  <Text
-                    style={{
-                      fontSize: 26,
-                      marginHorizontal: 5,
-                      color: "#333",
-                      marginBlock: "auto",
-                    }}
-                  >
-                    :
-                  </Text>
-                  <Picker
-                    selectedValue={startTime.minute}
-                    onValueChange={handleMinuteChangeStartTime}
-                    style={styles.picker}
-                    mode="dropdown"
-                  >
-                    {Array.from({ length: 60 }, (_, i) => i.toString()).map(
-                      (minute) => (
-                        <Picker.Item
-                          key={minute}
-                          label={minute.padStart(2, "0")}
-                          value={minute}
-                        />
-                      )
-                    )}
-                  </Picker>
-                </View>
-                {activeTabSheetDuration === "timeRange" && (
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      color: "#333",
-                      textAlign: "center",
-                      borderBottomColor: "#E0E0E0",
-                      borderBottomWidth: 1,
-                    }}
-                  ></Text>
-                )}
-                {activeTabSheetDuration === "timeRange" && (
-                  <View
-                    style={[
-                      {
-                        height: 200,
-                        flexDirection: "row",
-                        justifyContent: "center",
-                      },
-                    ]}
-                  >
-                    <Picker
-                      selectedValue={endTime.hour}
-                      onValueChange={handleHourChangeEndTime}
-                      style={styles.picker}
-                      mode="dropdown"
-                    >
-                      {Array.from({ length: 24 }, (_, i) => i.toString()).map(
-                        (hour) => (
-                          <Picker.Item
-                            key={hour}
-                            label={hour.padStart(2, "0")}
-                            value={hour}
-                          />
-                        )
-                      )}
-                    </Picker>
-                    <Text
-                      style={{
-                        fontSize: 26,
-                        marginHorizontal: 5,
-                        color: "#333",
-                        marginBlock: "auto",
-                      }}
-                    >
-                      :
-                    </Text>
-                    <Picker
-                      selectedValue={endTime.minute}
-                      onValueChange={handleMinuteChangeEndTime}
-                      style={styles.picker}
-                      mode="dropdown"
-                    >
-                      {Array.from({ length: 60 }, (_, i) => i.toString()).map(
-                        (minute) => (
-                          <Picker.Item
-                            key={minute}
-                            label={minute.padStart(2, "0")}
-                            value={minute}
-                          />
-                        )
-                      )}
-                    </Picker>
-                  </View>
-                )}
-                <Pressable
-                  style={styles.applyButton}
-                  onPress={() => {
-                    bottomSheetRef.current?.close();
-                  }}
-                >
-                  <Text style={styles.applyText}>Uygula</Text>
-                </Pressable>
-              </View>
-            ) : bottomSheetContent === "name" ? (
-              <View style={styles.container3}>
-                {/* <Text>Alışkanlık adını girin</Text> */}
-
-                <View style={styles.inputContainer}>
-                  <Text style={styles.inputLabel}>
-                    {t("please_enter_the_name_of_the_habit")}
-                  </Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="örn. Spor yap"
-                    value={name}
-                    onChangeText={setName}
-                    autoCapitalize="none"
-                    placeholderTextColor="#B0B0B0"
-                  />
-                </View>
-
-                <Pressable
-                  style={styles.applyButton}
-                  onPress={() => {
-                    bottomSheetRef.current?.close();
-                  }}
-                >
-                  <Text style={styles.applyText}>Uygula</Text>
-                </Pressable>
-              </View>
-            ) : bottomSheetContent === "icon" ? (
-              <View>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.inputLabel}>
-                    {t("please_enter_the_icon_of_the_habit")}
-                  </Text>
-                </View>
-                {/* <View
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    // justifyContent: "space-between",
-                  }}
-                >
-                  <FlatList
-                    data={icons}
-                    keyExtractor={(item) => item}
-                    contentContainerStyle={{
-                      flexDirection: "row",
-                      flexWrap: "wrap",
-                    }}
-                    renderItem={({ item }) => (
-                      <Pressable
-                        // style={styles.iconContainer}
-                        onPress={() => setIcon(item)}
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 20,
-                          marginHorizontal: 4,
-                          borderColor: "#FFF",
-                          backgroundColor: "#FFFFFF",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          borderWidth: icon === item ? 2 : 0,
-                        }}
-                      >
-                        <Text>{item}</Text>
-                      </Pressable>
-                    )}
-                    numColumns={6}
-                  />
-                </View> */}
-                <View
-                  style={{
-                    width: "100%",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {icons.map((item, index) => (
-                    <Pressable
-                      // style={styles.iconContainer}
-                      onPress={() => setIcon(item)}
-                      key={index}
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 20,
-                        marginHorizontal: 4,
-                        borderColor: "#FFF",
-                        backgroundColor: "#FFFFFF",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderWidth: icon === item ? 2 : 0,
-                      }}
-                    >
-                      <Text>{item}</Text>
-                    </Pressable>
-                  ))}
-                </View>
-                <Pressable
-                  style={styles.applyButton}
-                  onPress={() => {
-                    bottomSheetRef.current?.close();
-                  }}
-                >
-                  <Text style={styles.applyText}>Uygula</Text>
-                </Pressable>
-              </View>
-            ) : bottomSheetContent === "description" ? (
-              <View style={styles.container3}>
-                <View style={styles.inputContainer}>
-                  <Text style={styles.inputLabel}>
-                    {t("please_enter_the_description_of_the_habit")}
-                  </Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="örn. Günde 30 dakika spor yap"
-                    value={description}
-                    onChangeText={setDescription}
-                    autoCapitalize="none"
-                    placeholderTextColor="#B0B0B0"
-                  />
-                </View>
-                <Pressable
-                  style={styles.applyButton}
-                  onPress={() => {
-                    bottomSheetRef.current?.close();
-                  }}
-                >
-                  <Text style={styles.applyText}>Uygula</Text>
-                </Pressable>
-              </View>
-            ) : null}
+            <TouchableOpacity
+              onPress={() => {
+                handleAppyBottomSheetPress();
+                // bottomSheetRef.current?.close();
+              }}
+            >
+              <LinearGradient
+                colors={["green", "#80B900"]}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.applyButton}
+                key={"apply"}
+              >
+                <Text style={styles.applyText}>Apply</Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </BottomSheetView>
         </BottomSheetModal>
       </BottomSheetModalProvider>
@@ -1376,8 +1513,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     gap: 10,
-    // backgroundColor: "#588157",
-    // backgroundColor: "green",
 
     paddingVertical: 12,
     borderRadius: 8,
