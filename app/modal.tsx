@@ -12,11 +12,8 @@ import {
   FlatList,
   NativeSyntheticEvent,
   NativeScrollEvent,
-  Platform,
   Pressable,
   TextInput,
-  KeyboardAvoidingView,
-  Keyboard,
 } from "react-native";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -32,12 +29,6 @@ import {
   BottomSheetView,
   BottomSheetModalProvider,
 } from "@gorhom/bottom-sheet";
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
-import moment from "moment";
-import { Overlay } from "@rneui/themed";
-import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
@@ -46,23 +37,16 @@ const { width } = Dimensions.get("screen");
 
 const CustomModal = () => {
   const router = useRouter();
-  const [selectedColor, setSelectedColor] = useState<string | null>("#FF6B6B");
   const [reminder, setReminder] = useState(false);
-  const [name, setName] = useState("");
-  const [icon, setIcon] = useState("🧘‍♂️");
-  const [description, setDescription] = useState("");
   const flatListRef = useRef<FlatList<{ key: string }>>(null);
   const [activeTab, setActiveTab] = useState(0);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const [isEnabled, setIsEnabled] = React.useState(true);
-  const [selectedDay, setSelectedDay] = useState<number>(1);
   const [bottomSheetContent, setBottomSheetContent] = useState("");
   const [activeTabSheetRepetition, setActiveTabSheetRepetition] =
     useState("daily");
   const [activeTabSheetDuration, setActiveTabSheetDuration] =
     useState("startTime");
-  const [startTime, setStartTime] = useState({ hour: "00", minute: "00" });
-  const [endTime, setEndTime] = useState({ hour: "00", minute: "00" });
 
   const [form, setForm] = useState({
     name: "",
@@ -71,8 +55,10 @@ const CustomModal = () => {
     color: "",
     periodType: 1,
     periodCount: 1,
-    startTime: null,
-    endTime: null,
+    startTime: { hour: "00", minute: "00" } as { hour: string; minute: string },
+    endTime: { hour: "00", minute: "00" } as { hour: string; minute: string },
+    daysOfWeeks: [] as { dayOfWeek: number }[],
+    daysOfMonthly: [] as { dayOfMonth: number }[],
   });
 
   const [draft, setDraft] = useState({
@@ -82,8 +68,10 @@ const CustomModal = () => {
     color: "",
     periodType: 1,
     periodCount: 1,
-    startTime: null,
-    endTime: null,
+    startTime: { hour: "00", minute: "00" } as { hour: string; minute: string },
+    endTime: { hour: "00", minute: "00" } as { hour: string; minute: string },
+    daysOfWeeks: [] as { dayOfWeek: number }[],
+    daysOfMonthly: [] as { dayOfMonth: number }[],
   });
 
   const [createHabit] = useCreateHabitMutation();
@@ -103,9 +91,42 @@ const CustomModal = () => {
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (event.nativeEvent.contentOffset.x === 0) {
       setActiveTab(0);
-      setName("");
-      setIcon("");
-      setDescription("");
+      setForm({
+        name: "",
+        description: "",
+        icon: "",
+        color: "",
+        periodType: 1,
+        periodCount: 1,
+        startTime: { hour: "00", minute: "00" } as {
+          hour: string;
+          minute: string;
+        },
+        endTime: { hour: "00", minute: "00" } as {
+          hour: string;
+          minute: string;
+        },
+        daysOfWeeks: [] as { dayOfWeek: number }[],
+        daysOfMonthly: [] as { dayOfMonth: number }[],
+      });
+      setDraft({
+        name: "",
+        description: "",
+        icon: "",
+        color: "",
+        periodType: 1,
+        periodCount: 1,
+        startTime: { hour: "00", minute: "00" } as {
+          hour: string;
+          minute: string;
+        },
+        endTime: { hour: "00", minute: "00" } as {
+          hour: string;
+          minute: string;
+        },
+        daysOfWeeks: [] as { dayOfWeek: number }[],
+        daysOfMonthly: [] as { dayOfMonth: number }[],
+      });
     }
     const offsetX = event.nativeEvent.contentOffset.x;
     const index = Math.round(offsetX / width);
@@ -118,12 +139,12 @@ const CustomModal = () => {
   const handleSaveChanges = async () => {
     console.log("token", token);
     const habitData = {
-      name: name,
-      description: description,
+      name: "test",
+      description: "test",
       isReminder: reminder,
       details: {
-        color: selectedColor || "#FF6B6B",
-        icon: icon,
+        color: "#FF6B6B",
+        icon: "🧘‍♂️",
         periodType: 1,
         periodCount: 1,
         startTime: null,
@@ -392,6 +413,7 @@ const CustomModal = () => {
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
+    // setDraft(form);
   }, []);
 
   const stageTwo = () => {
@@ -421,8 +443,10 @@ const CustomModal = () => {
                   color: "",
                   periodType: 1,
                   periodCount: 1,
-                  startTime: null,
-                  endTime: null,
+                  startTime: { hour: "00", minute: "00" },
+                  endTime: { hour: "00", minute: "00" },
+                  daysOfWeeks: [] as { dayOfWeek: number }[],
+                  daysOfMonthly: [] as { dayOfMonth: number }[],
                 });
                 setDraft({
                   name: "",
@@ -431,8 +455,10 @@ const CustomModal = () => {
                   color: "",
                   periodType: 1,
                   periodCount: 1,
-                  startTime: null,
-                  endTime: null,
+                  startTime: { hour: "00", minute: "00" },
+                  endTime: { hour: "00", minute: "00" },
+                  daysOfWeeks: [] as { dayOfWeek: number }[],
+                  daysOfMonthly: [] as { dayOfMonth: number }[],
                 });
               }}
               style={{ flexDirection: "row", alignItems: "center" }}
@@ -484,7 +510,7 @@ const CustomModal = () => {
                     fontWeight: "500",
                   }}
                 >
-                  {name}
+                  {form.name}
                 </Text>
               </View>
             </View>
@@ -712,8 +738,20 @@ const CustomModal = () => {
                             : "Aylık"
                           : item === "duration"
                           ? activeTabSheetDuration === "startTime"
-                            ? `${startTime.hour}:${startTime.minute}`
-                            : `${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}`
+                            ? `${form.startTime.hour.padStart(
+                                2,
+                                "0"
+                              )}:${form.startTime.minute.padStart(2, "0")}`
+                            : `${form.startTime.hour.padStart(
+                                2,
+                                "0"
+                              )}:${form.startTime.minute.padStart(
+                                2,
+                                "0"
+                              )} - ${form.endTime.hour.padStart(
+                                2,
+                                "0"
+                              )}:${form.endTime.minute.padStart(2, "0")}`
                           : "Belirlenmemiş"}
                       </Text>
                       <Text style={styles.optionValue}>
@@ -756,22 +794,6 @@ const CustomModal = () => {
     );
   };
 
-  const handleHourChangeStartTime = (hour: any) => {
-    setStartTime((prev) => ({ ...prev, hour: hour.padStart(2, "0") }));
-  };
-
-  const handleMinuteChangeStartTime = (minute: any) => {
-    setStartTime((prev) => ({ ...prev, minute: minute.padStart(2, "0") }));
-  };
-
-  const handleHourChangeEndTime = (hour: any) => {
-    setEndTime((prev) => ({ ...prev, hour: hour.padStart(2, "0") }));
-  };
-
-  const handleMinuteChangeEndTime = (minute: any) => {
-    setEndTime((prev) => ({ ...prev, minute: minute.padStart(2, "0") }));
-  };
-
   const renderBottomSheetContent = () => {
     switch (bottomSheetContent) {
       case "repetition":
@@ -791,16 +813,357 @@ const CustomModal = () => {
     }
   };
 
+  const renderDaily = () => (
+    <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "500",
+            color: "#333",
+            marginBottom: 10,
+          }}
+        >
+          Her
+        </Text>
+        <Picker
+          selectedValue={draft.periodCount.toString()}
+          onValueChange={(itemValue) =>
+            setDraft({ ...draft, periodCount: Number(itemValue) })
+          }
+          style={{ width: 100 }}
+          mode="dropdown"
+          itemStyle={{ color: "black" }}
+          accessibilityLabel="periodCount"
+        >
+          {Array.from({ length: 6 }, (_, i) => (i + 1).toString()).map(
+            (day) => (
+              <Picker.Item key={day} label={day} value={day} />
+            )
+          )}
+        </Picker>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "500",
+            color: "#333",
+            marginBottom: 10,
+          }}
+        >
+          gün
+        </Text>
+      </View>
+      <Text
+        style={{
+          fontSize: 12,
+          fontWeight: "500",
+          color: "#333",
+          marginTop: 10,
+          textAlign: "center",
+        }}
+      >
+        {draft.periodCount} gün boyunca her gün tekrarla
+      </Text>
+    </View>
+  );
+
+  const handleDayPress = (dayIndex: number) => {
+    setDraft((prevDraft) => {
+      const isDaySelected = prevDraft.daysOfWeeks.some(
+        (day) => day?.dayOfWeek === dayIndex
+      );
+
+      return {
+        ...prevDraft,
+        daysOfWeeks: isDaySelected
+          ? prevDraft.daysOfWeeks.filter((day) => day?.dayOfWeek !== dayIndex)
+          : [...prevDraft.daysOfWeeks, { dayOfWeek: dayIndex }],
+      };
+    });
+  };
+
+  const handleDayOfMonthPress = (dayIndex: number) => {
+    setDraft((prevDraft) => {
+      const isDaySelected = prevDraft.daysOfMonthly.some(
+        (day) => day?.dayOfMonth === dayIndex
+      );
+
+      return {
+        ...prevDraft,
+        daysOfMonthly: isDaySelected
+          ? prevDraft.daysOfMonthly.filter(
+              (day) => day?.dayOfMonth !== dayIndex
+            )
+          : [...prevDraft.daysOfMonthly, { dayOfMonth: dayIndex }],
+      };
+    });
+  };
+
+  const renderWeekly = () => (
+    <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "500",
+            color: "#333",
+            marginBottom: 10,
+          }}
+        >
+          Her
+        </Text>
+        <Picker
+          selectedValue={draft.periodCount.toString()}
+          onValueChange={(itemValue) =>
+            setDraft({ ...draft, periodCount: Number(itemValue) })
+          }
+          style={{ width: 100 }}
+          mode="dropdown"
+          itemStyle={{ color: "black" }}
+          accessibilityLabel="periodCount"
+        >
+          {Array.from({ length: 4 }, (_, i) => (i + 1).toString()).map(
+            (day) => (
+              <Picker.Item key={day} label={day} value={day} />
+            )
+          )}
+        </Picker>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "500",
+            color: "#333",
+            marginBottom: 10,
+          }}
+        >
+          Hafta
+        </Text>
+      </View>
+      <View>
+        <Text
+          style={{
+            fontSize: 12,
+            fontWeight: "500",
+            color: "#333",
+            marginBottom: 10,
+          }}
+        >
+          Hangi günler tekrarlasın?
+        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center",
+          }}
+        >
+          {["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"].map(
+            (day, index) => (
+              <Pressable
+                key={day}
+                onPress={() => handleDayPress(index)}
+                style={{
+                  borderRadius: 10,
+                  width: 40,
+                  height: 40,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  margin: 5,
+                  backgroundColor: draft.daysOfWeeks.some(
+                    (selectedDay) => selectedDay?.dayOfWeek === index
+                  )
+                    ? "#D1E7DD"
+                    : "#F0F0F0",
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: "500",
+                    fontSize: 10,
+                  }}
+                >
+                  {day}
+                </Text>
+              </Pressable>
+            )
+          )}
+        </View>
+      </View>
+      <Text
+        style={{
+          fontSize: 12,
+          fontWeight: "500",
+          color: "#333",
+          marginTop: 10,
+          textAlign: "center",
+        }}
+      >
+        {draft.periodCount} haftada bir seçtiğiniz gün(ler)de tekrarla
+      </Text>
+    </View>
+  );
+
+  const renderMonthly = () => (
+    <View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "500",
+            color: "#333",
+            marginBottom: 10,
+          }}
+        >
+          Her
+        </Text>
+        <Picker
+          selectedValue={draft.periodCount.toString()}
+          onValueChange={(itemValue) =>
+            setDraft({ ...draft, periodCount: Number(itemValue) })
+          }
+          style={{ width: 100 }}
+          mode="dropdown"
+          itemStyle={{ color: "black" }}
+          accessibilityLabel="periodCount"
+        >
+          {Array.from({ length: 12 }, (_, i) => (i + 1).toString()).map(
+            (day) => (
+              <Picker.Item key={day} label={day} value={day} />
+            )
+          )}
+        </Picker>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: "500",
+            color: "#333",
+            marginBottom: 10,
+          }}
+        >
+          Ay
+        </Text>
+      </View>
+      <View>
+        <Text
+          style={{
+            fontSize: 12,
+            fontWeight: "500",
+            color: "#333",
+            marginBottom: 10,
+          }}
+        >
+          Hangi günler tekrarlasın?
+        </Text>
+        <View
+          style={{
+            flexWrap: "wrap",
+            flexDirection: "row",
+          }}
+        >
+          {Array.from({ length: 31 }, (_, i) => i + 1).map((day, index) => (
+            <Pressable
+              key={day}
+              onPress={() => handleDayOfMonthPress(index)}
+              style={{
+                borderRadius: 10,
+                width: 40,
+                height: 40,
+                alignItems: "center",
+                justifyContent: "center",
+                margin: 5,
+                backgroundColor: draft.daysOfMonthly.some(
+                  (selectedDay) => selectedDay?.dayOfMonth === index
+                )
+                  ? "#D1E7DD"
+                  : "#F0F0F0",
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "500",
+                  fontSize: 10,
+                }}
+              >
+                {day}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      </View>
+      {/* <Text
+        style={{
+          fontSize: 12,
+          fontWeight: "500",
+          color: "#333",
+          marginTop: 10,
+          textAlign: "center",
+        }}
+      >
+        {draft.periodCount} haftada bir seçtiğiniz gün(ler)de tekrarla
+      </Text> */}
+    </View>
+  );
+
+  const renderActiveTabRepetitionContent = () => {
+    switch (activeTabSheetRepetition) {
+      case "daily":
+        return renderDaily();
+      case "weekly":
+        return renderWeekly();
+      case "monthly":
+        return renderMonthly();
+      default:
+        return null;
+    }
+  };
+
   //repetition
   const renderRepetition = () => (
     <View style={styles.container3}>
+      <Text
+        style={{
+          fontSize: 12,
+          fontWeight: "600",
+          color: "#333",
+          marginBottom: 10,
+        }}
+      >
+        Alışkanlık tekrarlanma sıklığını belirleyin
+      </Text>
       <View style={styles.tabContainer3}>
         <Pressable
           style={[
             styles.tabButton3,
             activeTabSheetRepetition === "daily" && styles.activeTab3,
           ]}
-          onPress={() => setActiveTabSheetRepetition("daily")}
+          onPress={() => {
+            setActiveTabSheetRepetition("daily");
+            setDraft({
+              ...draft,
+              periodType: 1,
+              periodCount: 1,
+              daysOfWeeks: [],
+              daysOfMonthly: [],
+            });
+          }}
         >
           <Text
             style={[
@@ -816,7 +1179,15 @@ const CustomModal = () => {
             styles.tabButton3,
             activeTabSheetRepetition === "weekly" && styles.activeTab3,
           ]}
-          onPress={() => setActiveTabSheetRepetition("weekly")}
+          onPress={() => {
+            setActiveTabSheetRepetition("weekly");
+            setDraft({
+              ...draft,
+              periodType: 2,
+              periodCount: 1,
+              daysOfMonthly: [],
+            });
+          }}
         >
           <Text
             style={[
@@ -832,7 +1203,15 @@ const CustomModal = () => {
             styles.tabButton3,
             activeTabSheetRepetition === "monthly" && styles.activeTab3,
           ]}
-          onPress={() => setActiveTabSheetRepetition("monthly")}
+          onPress={() => {
+            setActiveTabSheetRepetition("monthly");
+            setDraft({
+              ...draft,
+              periodType: 3,
+              periodCount: 1,
+              daysOfWeeks: [],
+            });
+          }}
         >
           <Text
             style={[
@@ -844,34 +1223,36 @@ const CustomModal = () => {
           </Text>
         </Pressable>
       </View>
-      <View style={styles.pickerContainer}>
-        <Text style={styles.pickerText}>Her</Text>
-        <Picker
-          selectedValue={selectedDay.toString()} // Değeri string'e çeviriyoruz
-          onValueChange={(itemValue) => setSelectedDay(Number(itemValue))}
-          style={{ width: 100 }}
-          mode="dropdown"
-          itemStyle={{ color: "black" }}
-        >
-          {Array.from({ length: 30 }, (_, i) => (i + 1).toString()).map(
-            (day) => (
-              <Picker.Item key={day} label={day} value={day} />
-            )
-          )}
-        </Picker>
-        <Text style={styles.pickerText}>gün</Text>
-      </View>
-
-      <Pressable
-        style={styles.applyButton}
-        onPress={() => {
-          bottomSheetRef.current?.close();
-        }}
-      >
-        <Text style={styles.applyText}>Uygula</Text>
-      </Pressable>
+      {renderActiveTabRepetitionContent()}
     </View>
   );
+
+  const TimeSelector = ({ label, value, onChange }: any) => {
+    return (
+      <Picker
+        selectedValue={value}
+        onValueChange={onChange}
+        style={styles.picker}
+        mode="dropdown"
+      >
+        {label === "hour"
+          ? Array.from({ length: 24 }, (_, i) => i.toString()).map((hour) => (
+              <Picker.Item
+                key={hour}
+                label={hour.padStart(2, "0")}
+                value={hour}
+              />
+            ))
+          : Array.from({ length: 60 }, (_, i) => i.toString()).map((minute) => (
+              <Picker.Item
+                key={minute}
+                label={minute.padStart(2, "0")}
+                value={minute}
+              />
+            ))}
+      </Picker>
+    );
+  };
 
   //duration
   const renderDuration = () => (
@@ -882,7 +1263,16 @@ const CustomModal = () => {
             styles.tabButton3,
             activeTabSheetDuration === "startTime" && styles.activeTab3,
           ]}
-          onPress={() => setActiveTabSheetDuration("startTime")}
+          onPress={() => {
+            setActiveTabSheetDuration("startTime");
+            setDraft({
+              ...draft,
+              endTime: {
+                hour: "00",
+                minute: "00",
+              },
+            });
+          }}
         >
           <Text
             style={[
@@ -910,6 +1300,15 @@ const CustomModal = () => {
           </Text>
         </Pressable>
       </View>
+      <Text
+        style={{
+          fontSize: 12,
+          color: "#333",
+          paddingVertical: 10,
+        }}
+      >
+        Başlangıç Zamanı
+      </Text>
       <View
         style={[
           {
@@ -919,20 +1318,17 @@ const CustomModal = () => {
           },
         ]}
       >
-        <Picker
-          selectedValue={startTime.hour}
-          onValueChange={handleHourChangeStartTime}
-          style={styles.picker}
-          mode="dropdown"
-        >
-          {Array.from({ length: 24 }, (_, i) => i.toString()).map((hour) => (
-            <Picker.Item
-              key={hour}
-              label={hour.padStart(2, "0")}
-              value={hour}
-            />
-          ))}
-        </Picker>
+        <TimeSelector
+          label="hour"
+          value={draft.startTime.hour}
+          onChange={(hour: any) => {
+            setDraft((prev) => ({
+              ...prev,
+              startTime: { ...prev.startTime, hour },
+            }));
+          }}
+        />
+
         <Text
           style={{
             fontSize: 26,
@@ -943,92 +1339,75 @@ const CustomModal = () => {
         >
           :
         </Text>
-        <Picker
-          selectedValue={startTime.minute}
-          onValueChange={handleMinuteChangeStartTime}
-          style={styles.picker}
-          mode="dropdown"
-        >
-          {Array.from({ length: 60 }, (_, i) => i.toString()).map((minute) => (
-            <Picker.Item
-              key={minute}
-              label={minute.padStart(2, "0")}
-              value={minute}
-            />
-          ))}
-        </Picker>
+        <TimeSelector
+          label="minute"
+          value={draft.startTime.minute}
+          onChange={(minute: any) =>
+            setDraft((prev) => ({
+              ...prev,
+              startTime: { ...prev.startTime, minute },
+            }))
+          }
+        />
       </View>
+
       {activeTabSheetDuration === "timeRange" && (
-        <Text
-          style={{
-            fontSize: 16,
-            color: "#333",
-            textAlign: "center",
-            borderBottomColor: "#E0E0E0",
-            borderBottomWidth: 1,
-          }}
-        ></Text>
-      )}
-      {activeTabSheetDuration === "timeRange" && (
-        <View
-          style={[
-            {
-              height: 200,
-              flexDirection: "row",
-              justifyContent: "center",
-            },
-          ]}
-        >
-          <Picker
-            selectedValue={endTime.hour}
-            onValueChange={handleHourChangeEndTime}
-            style={styles.picker}
-            mode="dropdown"
-          >
-            {Array.from({ length: 24 }, (_, i) => i.toString()).map((hour) => (
-              <Picker.Item
-                key={hour}
-                label={hour.padStart(2, "0")}
-                value={hour}
-              />
-            ))}
-          </Picker>
+        <View>
           <Text
             style={{
-              fontSize: 26,
-              marginHorizontal: 5,
+              fontSize: 12,
               color: "#333",
-              marginBlock: "auto",
+              borderTopColor: "#E0E0E0",
+              borderTopWidth: 1,
+              paddingVertical: 10,
             }}
           >
-            :
+            Bitiş Zamanı
           </Text>
-          <Picker
-            selectedValue={endTime.minute}
-            onValueChange={handleMinuteChangeEndTime}
-            style={styles.picker}
-            mode="dropdown"
+
+          <View
+            style={[
+              {
+                height: 200,
+                flexDirection: "row",
+                justifyContent: "center",
+              },
+            ]}
           >
-            {Array.from({ length: 60 }, (_, i) => i.toString()).map(
-              (minute) => (
-                <Picker.Item
-                  key={minute}
-                  label={minute.padStart(2, "0")}
-                  value={minute}
-                />
-              )
-            )}
-          </Picker>
+            <TimeSelector
+              label="hour"
+              value={draft.endTime?.hour}
+              onChange={(hour: any) =>
+                setDraft((prev) => ({
+                  ...prev,
+                  endTime: { ...prev.endTime, hour },
+                }))
+              }
+            />
+
+            <Text
+              style={{
+                fontSize: 26,
+                marginHorizontal: 5,
+                color: "#333",
+                marginBlock: "auto",
+              }}
+            >
+              :
+            </Text>
+            <TimeSelector
+              label="minute"
+              value={draft.endTime?.minute}
+              onChange={(minute: any) =>
+                setDraft((prev) => ({
+                  ...prev,
+                  endTime: { ...prev.endTime, minute },
+                }))
+              }
+            />
+          </View>
         </View>
       )}
-      <Pressable
-        style={styles.applyButton}
-        onPress={() => {
-          bottomSheetRef.current?.close();
-        }}
-      >
-        <Text style={styles.applyText}>Uygula</Text>
-      </Pressable>
     </View>
   );
 
@@ -1210,6 +1589,24 @@ const CustomModal = () => {
           color: draft.color,
         });
         break;
+      case "repetition":
+        setForm({
+          ...form,
+          periodType: draft.periodType,
+          periodCount: draft.periodCount,
+          daysOfWeeks: draft.daysOfWeeks,
+          daysOfMonthly: draft.daysOfMonthly,
+        });
+        break;
+      case "duration":
+        setForm({
+          ...form,
+          startTime: draft.startTime,
+          endTime: draft.endTime,
+        });
+        break;
+      default:
+        break;
     }
     bottomSheetRef.current?.close();
   };
@@ -1224,7 +1621,7 @@ const CustomModal = () => {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.key}
-          scrollEnabled={name !== ""}
+          scrollEnabled={form.name !== ""}
           onScroll={handleScroll}
           scrollEventThrottle={16}
           renderItem={({ index }) => (index === 0 ? stageOne() : stageTwo())}
@@ -1248,7 +1645,6 @@ const CustomModal = () => {
             <TouchableOpacity
               onPress={() => {
                 handleAppyBottomSheetPress();
-                // bottomSheetRef.current?.close();
               }}
             >
               <LinearGradient
@@ -1644,6 +2040,56 @@ const styles = StyleSheet.create({
     color: "#2B2B2B",
     textAlign: "center",
   },
+  timeSelectorContainer: {
+    marginVertical: 10,
+    alignItems: "center",
+  },
+
+  timeButton: {
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    width: 120,
+    alignItems: "center",
+  },
+  timeText: {
+    fontSize: 18,
+    color: "#333",
+  },
+  timePickerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  timeInput: {
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#CCC",
+    borderRadius: 4,
+    width: 80,
+    alignItems: "center",
+  },
+  colon: { fontSize: 26, marginHorizontal: 10 },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#FFF",
+    marginHorizontal: 20,
+    borderRadius: 8,
+    padding: 16,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  modalItem: { padding: 10, borderBottomWidth: 1, borderBottomColor: "#EEE" },
+  modalItemText: { fontSize: 16, textAlign: "center" },
 });
 
 const defaultHabitsCreate = [
