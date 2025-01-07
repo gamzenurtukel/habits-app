@@ -39,7 +39,6 @@ import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
-import { Image } from "react-native";
 
 const { width } = Dimensions.get("screen");
 
@@ -169,104 +168,6 @@ const CustomModal = () => {
 
   const stageOne = () => {
     return (
-      // <View style={[styles.screen]}>
-      //   <ScrollView
-      //     style={styles.content}
-      //     contentContainerStyle={{ paddingBottom: 20 }}
-      //     showsVerticalScrollIndicator={false}
-      //   >
-      //     <View
-      //       style={{
-      //         paddingTop: 10,
-      //       }}
-      //     >
-      //       <Text style={styles.contentHeader}>
-      //         {/* {t("first_lets_find_your_new_habit")} */}
-      //         Choose a habit
-      //       </Text>
-      //       <Text style={styles.contentSubHeader}>
-      //         {/* {t("choose_from_the_list_below_or_create_a_custom_habit")} */}
-      //         Create a custom habit made just for you
-      //       </Text>
-      //     </View>
-      //     <View>
-      //       <View>
-      //         <Text style={styles.categoryTitle}>Custom</Text>
-      //         <View
-      //           style={{
-      //             flexDirection: "row",
-      //             flexWrap: "wrap",
-      //             marginBottom: 20,
-      //             marginLeft: 10,
-      //             marginRight: 10,
-      //           }}
-      //         >
-      //           <TouchableOpacity
-      //             style={[
-      //               styles.habitCard,
-      //               {
-      //                 width: "97%",
-      //                 justifyContent: "space-between",
-      //               },
-      //             ]}
-      //             onPress={() => {
-      //               handleTabPress(1);
-      //             }}
-      //           >
-      //             <View style={[styles.habitCard]}>
-      //               {/* <Text>
-      //                 <MaterialIcons name="add" size={24} color="#588157" />
-      //               </Text> */}
-      //               <Text style={styles.habitName}>Create a custom habit</Text>
-      //             </View>
-      //             <Text>
-      //               <MaterialIcons
-      //                 name="add-circle-outline"
-      //                 size={24}
-      //                 color="#588157"
-      //               />
-      //             </Text>
-      //           </TouchableOpacity>
-      //         </View>
-      //       </View>
-      //       {defaultHabitsCreate.map((category) => (
-      //         <View key={category.category}>
-      //           <Text style={styles.categoryTitle}>{category.category}</Text>
-      //           <View
-      //             style={{
-      //               flexDirection: "row",
-      //               flexWrap: "wrap",
-      //               marginBottom: 20,
-      //               paddingInline: 10,
-      //             }}
-      //           >
-      //             {category.habits.map((habit) => (
-      //               <TouchableOpacity
-      //                 key={habit.name}
-      //                 style={styles.habitCard}
-      //                 onPress={() => {
-      //                   setName(habit.name);
-      //                   handleTabPress(1);
-      //                   setIcon(habit.icon);
-      //                   setDescription(habit.description);
-      //                 }}
-      //               >
-      //                 <Text
-      //                   style={{
-      //                     fontSize: 14,
-      //                   }}
-      //                 >
-      //                   {habit.icon}
-      //                 </Text>
-      //                 <Text style={styles.habitName}>{habit.name}</Text>
-      //               </TouchableOpacity>
-      //             ))}
-      //           </View>
-      //         </View>
-      //       ))}
-      //     </View>
-      //   </ScrollView>
-      // </View>
       <View style={styles.screen}>
         <LinearGradient
           colors={["#AECDB0", "#E8F5E9"]}
@@ -458,109 +359,344 @@ const CustomModal = () => {
 
   const stageTwo = () => {
     return (
-      <View style={[styles.screen]}>
-        <ScrollView
-          style={styles.container2}
-          contentContainerStyle={{ paddingTop: 20 }}
-          showsVerticalScrollIndicator={false}
+      <View style={styles.screen}>
+        <LinearGradient
+          colors={["#AECDB0", "#E8F5E9"]}
+          style={{ flex: 1 }}
+          start={{ x: 0, y: 1 }}
+          end={{ x: 1, y: 0 }}
         >
-          {/* Kart */}
           <View
-            style={[
-              styles.card,
-              { backgroundColor: selectedColor || "#FF6B6B" },
-            ]}
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              padding: 10,
+            }}
           >
-            <Text style={styles.cardTitle}>{`${icon} ${name}`}</Text>
-            <Text style={styles.cardSubtitle}>{description}</Text>
-          </View>
-
-          {/* Renk Seçimi */}
-          <Text style={styles.sectionTitle}>
-            {t("lets_personalize_this_habit_for_your_routine")}
-          </Text>
-          <View style={styles.colorContainer}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.colorScrollView}
+            <TouchableOpacity
+              onPress={() => {
+                handleTabPress(0);
+                setName("");
+                setIcon("");
+                setDescription("");
+              }}
+              style={{ flexDirection: "row", alignItems: "center" }}
             >
-              {colors.map((color, index) => (
+              <MaterialIcons name="chevron-left" size={30} color="#588157" />
+              <Text style={{ color: "#588157" }}>Geri</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                router.back();
+              }}
+            >
+              <MaterialIcons name="close" size={30} color="#588157" />
+            </TouchableOpacity>
+          </View>
+          <ScrollView style={{ flex: 1, width: width }}>
+            <View style={{ width: "100%", padding: 20, alignItems: "center" }}>
+              {/* cart */}
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  paddingVertical: 20,
+                  paddingHorizontal: 5,
+                  backgroundColor: `${selectedColor}`,
+                  opacity: 0.8,
+                  justifyContent: "space-around",
+                  borderRadius: 15,
+                  width: 110,
+                  height: 120,
+                  gap: 10,
+                }}
+              >
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 50,
+                      color: "#588157",
+                      fontWeight: "500",
+                    }}
+                  >
+                    {icon}
+                  </Text>
+                </View>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: "#ffffff",
+                    fontWeight: "500",
+                  }}
+                >
+                  {name}
+                </Text>
+              </View>
+            </View>
+            {/* details container */}
+            <View style={{ paddingHorizontal: 20, flex: 1 }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "bold",
+                  marginTop: 20,
+                  color: "#588157",
+                }}
+              >
+                Habit Details
+              </Text>
+              <Text
+                style={{
+                  color: "#7D7D7D",
+                  fontSize: 10,
+                }}
+              >
+                Customize your habit details
+              </Text>
+            </View>
+            {/* icon & color */}
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-around",
+                paddingHorizontal: 60,
+                flex: 1,
+                gap: 20,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 15,
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setBottomSheetContent("icon");
+                    handlePresentModalPress();
+                  }}
+                >
+                  <Text
+                    style={{
+                      padding: 5,
+                      borderRadius: 15,
+                      backgroundColor: "gray",
+                      fontSize: 30,
+                      color: "#588157",
+                      fontWeight: "500",
+                      position: "relative",
+                      left: 55,
+                      top: 15,
+                      zIndex: 1,
+                      width: 30,
+                    }}
+                  >
+                    <MaterialIcons
+                      name="compare-arrows"
+                      size={20}
+                      color="white"
+                    />
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+
+                      backgroundColor: "#F0F0F0",
+                      borderRadius: 10,
+                      width: 70,
+                      height: 80,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 50,
+                        color: "#588157",
+                        fontWeight: "500",
+                      }}
+                    >
+                      {icon}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: "#588157",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Icon
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 15,
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    setBottomSheetContent("icon");
+                    handlePresentModalPress();
+                  }}
+                >
+                  <Text
+                    style={{
+                      padding: 5,
+                      borderRadius: 15,
+                      backgroundColor: "gray",
+                      fontSize: 30,
+                      color: "#588157",
+                      fontWeight: "500",
+                      position: "relative",
+                      left: 55,
+                      top: 15,
+                      zIndex: 1,
+                      width: 30,
+                    }}
+                  >
+                    <MaterialIcons
+                      name="compare-arrows"
+                      size={20}
+                      color="white"
+                    />
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "space-around",
+                      backgroundColor: `${selectedColor}`,
+                      borderRadius: 10,
+                      width: 70,
+                      height: 80,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 50,
+                        color: "#588157",
+                        fontWeight: "500",
+                      }}
+                    ></Text>
+                  </View>
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: "#588157",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Color
+                </Text>
+              </View>
+            </View>
+            {/* other informations */}
+            <View style={{ paddingHorizontal: 20, flex: 1 }}>
+              {["name", "description"].map((item, index) => (
                 <TouchableOpacity
                   key={index}
-                  onPress={() => setSelectedColor(color)}
-                  style={[
-                    styles.colorCircle,
-                    {
-                      backgroundColor: color,
-                      borderWidth: selectedColor === color ? 2 : 0,
-                    },
-                  ]}
-                />
+                  style={styles.optionRow}
+                  onPress={() => {
+                    handlePresentModalPress();
+                    setBottomSheetContent(item);
+                  }}
+                >
+                  <Text style={styles.optionLabel}>{t(`${item}`)}</Text>
+                  <Text style={styles.optionValue}>
+                    {{
+                      name: name,
+                      icon: icon,
+                      description: description,
+                    }[item] || "Belirlenmemiş"}
+                  </Text>
+                </TouchableOpacity>
               ))}
-            </ScrollView>
-          </View>
+              <View
+                style={{
+                  flexDirection: "row",
 
-          {["name", "icon", "description"].map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.optionRow}
-              onPress={() => {
-                handlePresentModalPress();
-                setBottomSheetContent(item);
-              }}
+                  flex: 1,
+                  gap: 20,
+                }}
+              >
+                {["repetition", "duration"].map((item, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    // style={styles.optionRow}
+                    style={{
+                      flexDirection: "column",
+                      paddingVertical: 12,
+                      borderBottomWidth: 1,
+                      borderBottomColor: "lightgray",
+                      width: "50%",
+                      gap: 8,
+                    }}
+                    onPress={() => {
+                      handlePresentModalPress();
+                      setBottomSheetContent(item);
+                    }}
+                  >
+                    <Text style={styles.optionLabel}>{t(`${item}`)}</Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Text style={styles.optionValue}>
+                        {item === "repetition"
+                          ? activeTabSheetRepetition === "daily"
+                            ? "Günlük"
+                            : activeTabSheetRepetition === "weekly"
+                            ? "Haftalık"
+                            : "Aylık"
+                          : item === "duration"
+                          ? activeTabSheetDuration === "startTime"
+                            ? `${startTime.hour}:${startTime.minute}`
+                            : `${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}`
+                          : "Belirlenmemiş"}
+                      </Text>
+                      <Text style={styles.optionValue}>
+                        <MaterialIcons name="arrow-drop-down" size={20} />
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              {/* Hatırlatıcı */}
+              <View style={styles.reminderRow}>
+                <Text style={styles.optionLabel}>{t("reminder")}</Text>
+                <Switch value={reminder} onValueChange={setReminder} />
+              </View>
+            </View>
+            {/* Kaydet Butonu */}
+            <LinearGradient
+              colors={["green", "#80B900"]}
+              start={{ x: 0, y: 1 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.applyButton}
             >
-              <Text style={styles.optionLabel}>{t(`${item}`)}</Text>
-              <Text style={styles.optionValue}>
-                {{
-                  name: name,
-                  icon: icon,
-                  description: description,
-                }[item] || "Belirlenmemiş"}
-              </Text>
-            </TouchableOpacity>
-          ))}
-
-          {/* Seçenekler */}
-          {["repetition", "duration"].map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.optionRow}
-              onPress={() => {
-                handlePresentModalPress();
-                setBottomSheetContent(item);
-              }}
-            >
-              <Text style={styles.optionLabel}>{t(`${item}`)}</Text>
-              <Text style={styles.optionValue}>
-                {item === "repetition"
-                  ? activeTabSheetRepetition === "daily"
-                    ? "Günlük"
-                    : activeTabSheetRepetition === "weekly"
-                    ? "Haftalık"
-                    : "Aylık"
-                  : item === "duration"
-                  ? activeTabSheetDuration === "startTime"
-                    ? `${startTime.hour}:${startTime.minute}`
-                    : `${startTime.hour}:${startTime.minute} - ${endTime.hour}:${endTime.minute}`
-                  : "Belirlenmemiş"}
-              </Text>
-            </TouchableOpacity>
-          ))}
-
-          {/* Hatırlatıcı */}
-          <View style={styles.reminderRow}>
-            <Text style={styles.optionLabel}>{t("reminder")}</Text>
-            <Switch value={reminder} onValueChange={setReminder} />
-          </View>
-          {/* Kaydet Butonu */}
-          <TouchableOpacity
-            style={styles.applyButton}
-            onPress={handleSaveChanges}
-          >
-            <Text style={styles.applyText}>Değişikleri Kaydet</Text>
-          </TouchableOpacity>
-        </ScrollView>
+              <TouchableOpacity
+                onPress={handleSaveChanges}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                <MaterialIcons name="check" size={24} color="#FFFFFF" />
+                <Text style={styles.applyText}>Değişikleri Kaydet</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </ScrollView>
+        </LinearGradient>
       </View>
     );
   };
@@ -1139,10 +1275,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#EEE",
+    borderBottomColor: "lightgray",
   },
   optionLabel: {
     fontSize: 16,
+    color: "#588157",
+    fontWeight: "600",
   },
   optionValue: {
     fontSize: 16,
@@ -1235,11 +1373,17 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   applyButton: {
-    backgroundColor: "#588157",
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 10,
+    // backgroundColor: "#588157",
+    // backgroundColor: "green",
+
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
     marginVertical: 20,
+    marginHorizontal: 20,
   },
   applyText: {
     color: "#fff",
