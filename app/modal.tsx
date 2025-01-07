@@ -25,7 +25,6 @@ import { useCreateHabitMutation } from "@/redux/services/habit";
 import { selectToken } from "@/redux/reducers/auth-reducer";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/app/store";
-import { set } from "zod";
 import {
   BottomSheetModal,
   BottomSheetView,
@@ -39,6 +38,8 @@ import { Overlay } from "@rneui/themed";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import { useTranslation } from "react-i18next";
+import { LinearGradient } from "expo-linear-gradient";
+import { Image } from "react-native";
 
 const { width } = Dimensions.get("screen");
 
@@ -70,119 +71,6 @@ const CustomModal = () => {
   const { width, height } = Dimensions.get("screen");
 
   const tabs = ["stageOne", "stageTwo"];
-
-  const colors = [
-    "#FF5733",
-    "#FFBD33",
-    "#C70039",
-    "#900C3F",
-    "#581845",
-    "#28B463",
-    "#1F77B4",
-    "#F39C12",
-    "#8E44AD",
-    "#3498DB",
-    "#16A085",
-    "#F1C40F",
-    "#D35400",
-    "#7D3C98",
-    "#27AE60",
-    "#2980B9",
-    "#F1948A",
-    "#5D6D7E",
-    "#8E44AD",
-    "#E74C3C",
-    "#2E4053",
-    "#16A085",
-    "#C39BD3",
-    "#D2691E",
-  ];
-
-  const icons = [
-    "🏋️‍♂️",
-    "🚴‍♂️",
-    "🏃‍♂️",
-    "🧘‍♂️",
-    "🚶‍♂️",
-    "🧗‍♂️",
-    "🏊‍♂️",
-    "🎨",
-    "🎸",
-    "🎮",
-    "📚",
-    "🎤",
-    "🎥",
-    "🍳",
-    "🌱",
-    "🧹",
-    "🧼",
-    "🚗",
-    "🚲",
-    "🚀",
-    "🛸",
-    "🚢",
-    "🚂",
-    "🚁",
-    "🛶",
-    "🚤",
-    "🚲",
-    "🛴",
-    "🚜",
-    "🚛",
-    "🚚",
-    "🚓",
-    "🚒",
-    "🚑",
-    "🚐",
-    "🚎",
-    "🚕",
-    "🚗",
-    "🚘",
-    "🚙",
-    "🚚",
-    "🚛",
-    "🚜",
-    "🏎️",
-    "🚲",
-    "🛵",
-    "🏍️",
-    "🚔",
-    "🚖",
-    "🚡",
-    "🚠",
-    "🚟",
-    "🚃",
-    "🚋",
-    "🚝",
-    "🚄",
-    "🚅",
-    "🚈",
-    "🚞",
-    "🚂",
-    "🚆",
-    "🚇",
-    "🚊",
-    "🚉",
-    "🚁",
-    "🛩️",
-    "🛫",
-    "🛬",
-    "🪂",
-    "🚀",
-    "🛸",
-    "🚲",
-    "🛴",
-    "🛹",
-    "🛵",
-    "🚏",
-    "🛤️",
-    "🛣️",
-    "🛢️",
-    "🛣️",
-    "🛤️",
-    "🛣️",
-    "🛢️",
-  ];
 
   const handleTabPress = (index: number) => {
     flatListRef.current?.scrollToOffset({ offset: index * width });
@@ -281,103 +169,280 @@ const CustomModal = () => {
 
   const stageOne = () => {
     return (
-      <View style={[styles.screen]}>
-        <ScrollView
-          style={styles.content}
-          contentContainerStyle={{ paddingBottom: 20 }}
-          showsVerticalScrollIndicator={false}
+      // <View style={[styles.screen]}>
+      //   <ScrollView
+      //     style={styles.content}
+      //     contentContainerStyle={{ paddingBottom: 20 }}
+      //     showsVerticalScrollIndicator={false}
+      //   >
+      //     <View
+      //       style={{
+      //         paddingTop: 10,
+      //       }}
+      //     >
+      //       <Text style={styles.contentHeader}>
+      //         {/* {t("first_lets_find_your_new_habit")} */}
+      //         Choose a habit
+      //       </Text>
+      //       <Text style={styles.contentSubHeader}>
+      //         {/* {t("choose_from_the_list_below_or_create_a_custom_habit")} */}
+      //         Create a custom habit made just for you
+      //       </Text>
+      //     </View>
+      //     <View>
+      //       <View>
+      //         <Text style={styles.categoryTitle}>Custom</Text>
+      //         <View
+      //           style={{
+      //             flexDirection: "row",
+      //             flexWrap: "wrap",
+      //             marginBottom: 20,
+      //             marginLeft: 10,
+      //             marginRight: 10,
+      //           }}
+      //         >
+      //           <TouchableOpacity
+      //             style={[
+      //               styles.habitCard,
+      //               {
+      //                 width: "97%",
+      //                 justifyContent: "space-between",
+      //               },
+      //             ]}
+      //             onPress={() => {
+      //               handleTabPress(1);
+      //             }}
+      //           >
+      //             <View style={[styles.habitCard]}>
+      //               {/* <Text>
+      //                 <MaterialIcons name="add" size={24} color="#588157" />
+      //               </Text> */}
+      //               <Text style={styles.habitName}>Create a custom habit</Text>
+      //             </View>
+      //             <Text>
+      //               <MaterialIcons
+      //                 name="add-circle-outline"
+      //                 size={24}
+      //                 color="#588157"
+      //               />
+      //             </Text>
+      //           </TouchableOpacity>
+      //         </View>
+      //       </View>
+      //       {defaultHabitsCreate.map((category) => (
+      //         <View key={category.category}>
+      //           <Text style={styles.categoryTitle}>{category.category}</Text>
+      //           <View
+      //             style={{
+      //               flexDirection: "row",
+      //               flexWrap: "wrap",
+      //               marginBottom: 20,
+      //               paddingInline: 10,
+      //             }}
+      //           >
+      //             {category.habits.map((habit) => (
+      //               <TouchableOpacity
+      //                 key={habit.name}
+      //                 style={styles.habitCard}
+      //                 onPress={() => {
+      //                   setName(habit.name);
+      //                   handleTabPress(1);
+      //                   setIcon(habit.icon);
+      //                   setDescription(habit.description);
+      //                 }}
+      //               >
+      //                 <Text
+      //                   style={{
+      //                     fontSize: 14,
+      //                   }}
+      //                 >
+      //                   {habit.icon}
+      //                 </Text>
+      //                 <Text style={styles.habitName}>{habit.name}</Text>
+      //               </TouchableOpacity>
+      //             ))}
+      //           </View>
+      //         </View>
+      //       ))}
+      //     </View>
+      //   </ScrollView>
+      // </View>
+      <View style={styles.screen}>
+        <LinearGradient
+          colors={["#AECDB0", "#E8F5E9"]}
+          style={{ flex: 1 }}
+          start={{ x: 0, y: 1 }}
+          end={{ x: 1, y: 0 }}
         >
           <View
             style={{
-              paddingTop: 10,
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              padding: 10,
             }}
           >
-            <Text style={styles.contentHeader}>
-              {t("first_lets_find_your_new_habit")}
-            </Text>
-            <Text style={styles.contentSubHeader}>
-              {t("choose_from_the_list_below_or_create_a_custom_habit")}
-            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                router.back();
+              }}
+            >
+              <MaterialIcons name="close" size={30} color="#588157" />
+            </TouchableOpacity>
           </View>
-          <View>
-            <View>
-              <Text style={styles.categoryTitle}>{t("be_unique")}</Text>
-              <View
+          <ScrollView style={{ flex: 1 }}>
+            <View
+              style={{ padding: 20, alignItems: "center", flex: 1, gap: 20 }}
+            >
+              <Text
                 style={{
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  marginBottom: 20,
-                  marginLeft: 10,
-                  marginRight: 10,
+                  fontSize: 30,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginTop: 20,
+                  color: "#588157",
                 }}
               >
-                <TouchableOpacity
-                  style={[
-                    styles.habitCard,
-                    {
-                      width: "100%",
-                      justifyContent: "space-between",
-                    },
-                  ]}
-                  onPress={() => {
-                    handleTabPress(1);
-                  }}
-                >
-                  <View style={[styles.habitCard]}>
-                    <Text>
-                      <MaterialIcons name="add" size={24} color="#588157" />
-                    </Text>
-                    <Text style={styles.habitName}>
-                      {t("create_your_own_habit")}
-                    </Text>
-                  </View>
-                  <Text>
-                    <MaterialIcons
-                      name="chevron-right"
-                      size={24}
-                      color="#588157"
-                    />
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                Choose a habit
+              </Text>
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "#7D7D7D",
+                }}
+              >
+                Create a custom habit made just for you
+              </Text>
             </View>
-            {defaultHabitsCreate.map((category) => (
-              <View key={category.category}>
-                <Text style={styles.categoryTitle}>{category.category}</Text>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    flexWrap: "wrap",
-                    marginBottom: 20,
-                    paddingInline: 10,
-                  }}
+            <View
+              style={{
+                justifyContent: "center",
+                flex: 1,
+                padding: 20,
+                gap: 12,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontWeight: "bold",
+                  color: "#588157",
+                }}
+              >
+                Custom
+              </Text>
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: 16,
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: 15,
+                  width: "100%",
+                }}
+                onPress={() => {
+                  handleTabPress(1);
+                }}
+              >
+                <Text
+                  style={{ fontSize: 14, color: "#588157", fontWeight: "500" }}
                 >
-                  {category.habits.map((habit) => (
-                    <TouchableOpacity
-                      key={habit.name}
-                      style={styles.habitCard}
-                      onPress={() => {
-                        setName(habit.name);
-                        handleTabPress(1);
-                        setIcon(habit.icon);
-                        setDescription(habit.description);
-                      }}
+                  Create a custom habit
+                </Text>
+                <MaterialIcons
+                  name="add-circle-outline"
+                  size={34}
+                  color="green"
+                />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                justifyContent: "center",
+                flex: 1,
+                // padding: 20,
+                gap: 12,
+              }}
+            >
+              {defaultHabitsCreate.map((category) => (
+                <View key={category.category}>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      color: "#588157",
+                      // padding: 20,
+                      paddingInline: 20,
+                    }}
+                  >
+                    {category.category}
+                  </Text>
+                  <View style={[styles.colorContainer, { paddingLeft: 20 }]}>
+                    <ScrollView
+                      horizontal
+                      showsHorizontalScrollIndicator={false}
+                      contentContainerStyle={[
+                        styles.colorScrollView,
+                        {
+                          flexDirection: "row",
+                          flexWrap: "wrap",
+                          justifyContent: "space-between",
+                          gap: 10,
+                        },
+                      ]}
                     >
-                      <Text
-                        style={{
-                          fontSize: 14,
-                        }}
-                      >
-                        {habit.icon}
-                      </Text>
-                      <Text style={styles.habitName}>{habit.name}</Text>
-                    </TouchableOpacity>
-                  ))}
+                      {category.habits.map((habit) => (
+                        <TouchableOpacity
+                          key={habit.name}
+                          style={{
+                            flexDirection: "column",
+                            alignItems: "center",
+                            paddingVertical: 20,
+                            paddingHorizontal: 5,
+                            backgroundColor: "#FFFFFF",
+                            opacity: 0.8 + Math.random() * 0.2,
+                            justifyContent: "space-around",
+                            borderRadius: 15,
+                            gap: 10,
+                            width: 100,
+                            height: 120,
+                          }}
+                          onPress={() => {
+                            setName(habit.name);
+                            handleTabPress(1);
+                            setIcon(habit.icon);
+                            setDescription(habit.description);
+                          }}
+                        >
+                          <View>
+                            <Text
+                              style={{
+                                fontSize: 40,
+                                color: "#588157",
+                                fontWeight: "500",
+                              }}
+                            >
+                              {habit.icon}
+                            </Text>
+                          </View>
+                          <Text
+                            style={{
+                              fontSize: 12,
+                              color: "#588157",
+                              fontWeight: "500",
+                            }}
+                          >
+                            {habit.name}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  </View>
                 </View>
-              </View>
-            ))}
-          </View>
-        </ScrollView>
+              ))}
+            </View>
+          </ScrollView>
+        </LinearGradient>
       </View>
     );
   };
@@ -518,25 +583,6 @@ const CustomModal = () => {
 
   return (
     <GestureHandlerRootView>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            handleTabPress(0);
-          }}
-        >
-          <MaterialIcons
-            name="chevron-left"
-            size={24}
-            color={activeTab === 0 ? "#E8F5E9" : "#588157"}
-          />
-        </TouchableOpacity>
-
-        <Text style={styles.headerText}>{t("create_a_new_habit")}</Text>
-        <TouchableOpacity onPress={() => router.back()}>
-          <MaterialIcons name="close" size={24} color="#588157" />
-        </TouchableOpacity>
-      </View>
-
       <BottomSheetModalProvider>
         <Animated.FlatList
           ref={flatListRef}
@@ -985,8 +1031,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
     width: "100%",
-    borderBottomColor: "#BCCCBB",
-    borderBottomWidth: 1,
   },
   headerText: {
     fontSize: 20,
@@ -1223,6 +1267,103 @@ const styles = StyleSheet.create({
     borderColor: "rgba(0, 0, 0, 0.1)",
     borderWidth: 1,
     color: "#333",
+  },
+
+  container1: {
+    flex: 1,
+    backgroundColor: "#F3F7E7",
+    padding: 20,
+  },
+  header1: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  title1: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#2B2B2B",
+  },
+  closeButton1: {
+    padding: 10,
+  },
+  closeButtonText1: {
+    fontSize: 18,
+    color: "#2B2B2B",
+  },
+  subtitle1: {
+    fontSize: 14,
+    color: "#7D7D7D",
+    marginBottom: 20,
+  },
+  customHabitContainer1: {
+    marginBottom: 20,
+  },
+  sectionTitle1: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#2B2B2B",
+    marginBottom: 10,
+  },
+  customInputWrapper1: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 5 },
+  },
+  customInput1: {
+    flex: 1,
+    fontSize: 16,
+    color: "#2B2B2B",
+  },
+  addButton1: {
+    backgroundColor: "#94C947",
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addButtonText1: {
+    fontSize: 20,
+    color: "#FFFFFF",
+  },
+  scrollContainer1: {
+    paddingBottom: 20,
+  },
+  category1: {
+    marginBottom: 20,
+  },
+  habitGrid1: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+  },
+  habitCard1: {
+    width: "10%",
+    backgroundColor: "#FFFFFF",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 5 },
+  },
+  habitEmoji1: {
+    fontSize: 24,
+    marginBottom: 5,
+  },
+  habitText1: {
+    fontSize: 14,
+    color: "#2B2B2B",
+    textAlign: "center",
   },
 });
 
@@ -1697,6 +1838,119 @@ const defaultHabitsCreate = [
       },
     ],
   },
+];
+
+const colors = [
+  "#FF5733",
+  "#FFBD33",
+  "#C70039",
+  "#900C3F",
+  "#581845",
+  "#28B463",
+  "#1F77B4",
+  "#F39C12",
+  "#8E44AD",
+  "#3498DB",
+  "#16A085",
+  "#F1C40F",
+  "#D35400",
+  "#7D3C98",
+  "#27AE60",
+  "#2980B9",
+  "#F1948A",
+  "#5D6D7E",
+  "#8E44AD",
+  "#E74C3C",
+  "#2E4053",
+  "#16A085",
+  "#C39BD3",
+  "#D2691E",
+];
+
+const icons = [
+  "🏋️‍♂️",
+  "🚴‍♂️",
+  "🏃‍♂️",
+  "🧘‍♂️",
+  "🚶‍♂️",
+  "🧗‍♂️",
+  "🏊‍♂️",
+  "🎨",
+  "🎸",
+  "🎮",
+  "📚",
+  "🎤",
+  "🎥",
+  "🍳",
+  "🌱",
+  "🧹",
+  "🧼",
+  "🚗",
+  "🚲",
+  "🚀",
+  "🛸",
+  "🚢",
+  "🚂",
+  "🚁",
+  "🛶",
+  "🚤",
+  "🚲",
+  "🛴",
+  "🚜",
+  "🚛",
+  "🚚",
+  "🚓",
+  "🚒",
+  "🚑",
+  "🚐",
+  "🚎",
+  "🚕",
+  "🚗",
+  "🚘",
+  "🚙",
+  "🚚",
+  "🚛",
+  "🚜",
+  "🏎️",
+  "🚲",
+  "🛵",
+  "🏍️",
+  "🚔",
+  "🚖",
+  "🚡",
+  "🚠",
+  "🚟",
+  "🚃",
+  "🚋",
+  "🚝",
+  "🚄",
+  "🚅",
+  "🚈",
+  "🚞",
+  "🚂",
+  "🚆",
+  "🚇",
+  "🚊",
+  "🚉",
+  "🚁",
+  "🛩️",
+  "🛫",
+  "🛬",
+  "🪂",
+  "🚀",
+  "🛸",
+  "🚲",
+  "🛴",
+  "🛹",
+  "🛵",
+  "🚏",
+  "🛤️",
+  "🛣️",
+  "🛢️",
+  "🛣️",
+  "🛤️",
+  "🛣️",
+  "🛢️",
 ];
 
 export default CustomModal;
