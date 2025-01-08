@@ -100,19 +100,23 @@ const CustomModal = () => {
 
   const selectedHabitgetById = async (id: string) => {
     try {
+      console.log("selectedHabitgetById içine girdi");
+
       const response = await refetchHabitGetById();
 
-      if (response?.data?.isSuccessful) {
+      console.log("response", response);
 
+      if (response?.data?.statusCode === 200) {
+        console.log("statusCode 200 içine girdi");
         const habitData = response.data.data;
         setForm({
-          name: habitData.name,
-          description: habitData.description,
-          isReminder: habitData.isReminder,
-          icon: habitData.details.icon,
+          name: habitData.name || "",
+          description: habitData.description || "",
+          isReminder: habitData.isReminder || false,
+          icon: habitData.details.icon ,
           color: habitData.details.color,
-          periodType: habitData.details.periodType,
-          periodCount: habitData.details.periodCount,
+          periodType: habitData.details.periodType || 1,
+          periodCount: habitData.details.periodCount || 1,
           startTime: {
             hour: habitData.details.startTime?.split(":")[0] || "00",
             minute: habitData.details.startTime?.split(":")[1] || "00",
@@ -125,13 +129,13 @@ const CustomModal = () => {
           daysOfMonthly: habitData.details.daysOfMonthly || [],
         });
         setDraft({
-          name: habitData.name,
-          description: habitData.description,
-          isReminder: habitData.isReminder,
+          name: habitData.name || "",
+          description: habitData.description || "",
+          isReminder: habitData.isReminder || false,
           icon: habitData.details.icon,
           color: habitData.details.color,
-          periodType: habitData.details.periodType,
-          periodCount: habitData.details.periodCount,
+          periodType: habitData.details.periodType || 1,
+          periodCount: habitData.details.periodCount || 1,
           startTime: {
             hour: habitData.details.startTime?.split(":")[0] || "00",
             minute: habitData.details.startTime?.split(":")[1] || "00",
@@ -144,27 +148,23 @@ const CustomModal = () => {
           daysOfMonthly: habitData.details.daysOfMonthly || [],
         });
       }
-
     } catch (error) {
       console.log("habitGetById error", error);
     }
   };
 
-  useEffect(() => {
-    if (params.id) {
-      setActiveTab(1);
-      selectedHabitgetById(params.id as string);
-    }
-  }, [params.id]);
-
-
-
-
-
   const handleTabPress = (index: number) => {
     flatListRef.current?.scrollToOffset({ offset: index * width });
     setActiveTab(index);
   };
+
+  useEffect(() => {
+    if (params.id) {
+      console.log("use effect içine girdi")
+      handleTabPress(1);
+      selectedHabitgetById(params.id as string);
+    }
+  }, [params.id]);
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (event.nativeEvent.contentOffset.x === 0) {
@@ -1690,10 +1690,10 @@ const CustomModal = () => {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.key}
-          scrollEnabled={form.name !== ""}
+          // scrollEnabled={form.name !== ""}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-          renderItem={({ index }) => (index === 0 ? stageOne() : stageTwo())}
+          renderItem={({ index }) => (index === 1 || params.id ?  stageTwo(): stageOne() )}
         />
 
         <BottomSheetModal
