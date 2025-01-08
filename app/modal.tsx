@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -20,7 +20,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { useCreateHabitMutation } from "@/redux/services/habit";
+import { useCreateHabitMutation, useHabitGetByIdQuery } from "@/redux/services/habit";
 import { selectToken } from "@/redux/reducers/auth-reducer";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/app/store";
@@ -33,6 +33,7 @@ import { Picker } from "@react-native-picker/picker";
 import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
 import { IHabitCreate } from "@/types/habit";
+import { useLocalSearchParams } from "expo-router"
 
 const { width } = Dimensions.get("screen");
 
@@ -78,12 +79,87 @@ const CustomModal = () => {
 
   const [createHabit] = useCreateHabitMutation();
 
+
   const token = useSelector((state: RootState) => selectToken(state));
   const { t } = useTranslation();
+  const params = useLocalSearchParams();
+
+  console.log("params", params.id);
+
+  const {
+    data: habitGetById,
+    error: errorHabitGetById,
+    isLoading: isLoadingHabitGetById,
+    isSuccess: isSuccessHabitGetById,
+    refetch: refetchHabitGetById,
+  } = useHabitGetByIdQuery(params.id as string);
 
   const { width, height } = Dimensions.get("screen");
 
   const tabs = ["stageOne", "stageTwo"];
+
+  const selectedHabitgetById = async (id: string) => {
+    try {
+      const response = await refetchHabitGetById();
+
+      if (response?.data?.isSuccessful) {
+
+        const habitData = response.data.data;
+        setForm({
+          name: habitData.name,
+          description: habitData.description,
+          isReminder: habitData.isReminder,
+          icon: habitData.details.icon,
+          color: habitData.details.color,
+          periodType: habitData.details.periodType,
+          periodCount: habitData.details.periodCount,
+          startTime: {
+            hour: habitData.details.startTime?.split(":")[0] || "00",
+            minute: habitData.details.startTime?.split(":")[1] || "00",
+          },
+          endTime: {
+            hour: habitData.details.endTime?.split(":")[0] || "00",
+            minute: habitData.details.endTime?.split(":")[1] || "00",
+          },
+          daysOfWeeks: habitData.details.daysOfWeeks || [],
+          daysOfMonthly: habitData.details.daysOfMonthly || [],
+        });
+        setDraft({
+          name: habitData.name,
+          description: habitData.description,
+          isReminder: habitData.isReminder,
+          icon: habitData.details.icon,
+          color: habitData.details.color,
+          periodType: habitData.details.periodType,
+          periodCount: habitData.details.periodCount,
+          startTime: {
+            hour: habitData.details.startTime?.split(":")[0] || "00",
+            minute: habitData.details.startTime?.split(":")[1] || "00",
+          },
+          endTime: {
+            hour: habitData.details.endTime?.split(":")[0] || "00",
+            minute: habitData.details.endTime?.split(":")[1] || "00",
+          },
+          daysOfWeeks: habitData.details.daysOfWeeks || [],
+          daysOfMonthly: habitData.details.daysOfMonthly || [],
+        });
+      }
+
+    } catch (error) {
+      console.log("habitGetById error", error);
+    }
+  };
+
+  useEffect(() => {
+    if (params.id) {
+      setActiveTab(1);
+      selectedHabitgetById(params.id as string);
+    }
+  }, [params.id]);
+
+
+
+
 
   const handleTabPress = (index: number) => {
     flatListRef.current?.scrollToOffset({ offset: index * width });
@@ -736,15 +812,15 @@ const CustomModal = () => {
                           ? activeTabSheetRepetition === "daily"
                             ? "Günlük"
                             : activeTabSheetRepetition === "weekly"
-                            ? "Haftalık"
-                            : "Aylık"
+                              ? "Haftalık"
+                              : "Aylık"
                           : item === "duration"
-                          ? activeTabSheetDuration === "startTime"
-                            ? `${form.startTime.hour.padStart(
+                            ? activeTabSheetDuration === "startTime"
+                              ? `${form.startTime.hour.padStart(
                                 2,
                                 "0"
                               )}:${form.startTime.minute.padStart(2, "0")}`
-                            : `${form.startTime.hour.padStart(
+                              : `${form.startTime.hour.padStart(
                                 2,
                                 "0"
                               )}:${form.startTime.minute.padStart(
@@ -754,7 +830,7 @@ const CustomModal = () => {
                                 2,
                                 "0"
                               )}:${form.endTime.minute.padStart(2, "0")}`
-                          : "Belirlenmemiş"}
+                            : "Belirlenmemiş"}
                       </Text>
                       <Text style={styles.optionValue}>
                         <MaterialIcons name="arrow-drop-down" size={20} />
@@ -906,8 +982,8 @@ const CustomModal = () => {
         ...prevDraft,
         daysOfMonthly: isDaySelected
           ? prevDraft.daysOfMonthly.filter(
-              (day) => day?.dayOfMonth !== dayIndex
-            )
+            (day) => day?.dayOfMonth !== dayIndex
+          )
           : [...prevDraft.daysOfMonthly, { dayOfMonth: dayIndex }],
       };
     });
@@ -1245,19 +1321,19 @@ const CustomModal = () => {
       >
         {label === "hour"
           ? Array.from({ length: 24 }, (_, i) => i.toString()).map((hour) => (
-              <Picker.Item
-                key={hour}
-                label={hour.padStart(2, "0")}
-                value={hour}
-              />
-            ))
+            <Picker.Item
+              key={hour}
+              label={hour.padStart(2, "0")}
+              value={hour}
+            />
+          ))
           : Array.from({ length: 60 }, (_, i) => i.toString()).map((minute) => (
-              <Picker.Item
-                key={minute}
-                label={minute.padStart(2, "0")}
-                value={minute}
-              />
-            ))}
+            <Picker.Item
+              key={minute}
+              label={minute.padStart(2, "0")}
+              value={minute}
+            />
+          ))}
       </Picker>
     );
   };
