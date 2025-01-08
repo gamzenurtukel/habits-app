@@ -32,12 +32,12 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
+import { IHabitCreate } from "@/types/habit";
 
 const { width } = Dimensions.get("screen");
 
 const CustomModal = () => {
   const router = useRouter();
-  const [reminder, setReminder] = useState(false);
   const flatListRef = useRef<FlatList<{ key: string }>>(null);
   const [activeTab, setActiveTab] = useState(0);
   const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -51,6 +51,7 @@ const CustomModal = () => {
   const [form, setForm] = useState({
     name: "",
     description: "",
+    isReminder: false,
     icon: "",
     color: "",
     periodType: 1,
@@ -64,6 +65,7 @@ const CustomModal = () => {
   const [draft, setDraft] = useState({
     name: "",
     description: "",
+    isReminder: false,
     icon: "",
     color: "",
     periodType: 1,
@@ -94,6 +96,7 @@ const CustomModal = () => {
       setForm({
         name: "",
         description: "",
+        isReminder: false,
         icon: "",
         color: "",
         periodType: 1,
@@ -112,6 +115,7 @@ const CustomModal = () => {
       setDraft({
         name: "",
         description: "",
+        isReminder: false,
         icon: "",
         color: "",
         periodType: 1,
@@ -138,77 +142,74 @@ const CustomModal = () => {
   // console.log("token", token);
   const handleSaveChanges = async () => {
     console.log("token", token);
-    const habitData = {
-      name: "test",
-      description: "test",
-      isReminder: reminder,
+    const habitData: IHabitCreate = {
+      name: form.name,
+      description: form.description,
+      isReminder: form.isReminder,
       details: {
-        color: "#FF6B6B",
-        icon: "🧘‍♂️",
-        periodType: 1,
-        periodCount: 1,
-        startTime: null,
-        endTime: null,
+        color: form.color || "#FF6B6B",
+        icon: form.icon,
+        periodType: form.periodType,
+        periodCount: form.periodCount,
+        startTime: `${form.startTime.hour.padStart(
+          2,
+          "0"
+        )}:${form.startTime.minute.padStart(2, "0")}:00`,
+        endTime: `${form.endTime.hour.padStart(
+          2,
+          "0"
+        )}:${form.endTime.minute.padStart(2, "0")}:00`,
       },
     };
 
+    if (form.periodType === 2) {
+      habitData.details.daysOfWeeks = draft.daysOfWeeks;
+    }
+
+    if (form.periodType === 3) {
+      habitData.details.daysOfMonthly = draft.daysOfMonthly;
+    }
+
+    console.log("habitData", JSON.stringify(habitData));
+
     createHabit(habitData)
-      .then((response) => console.log("Başarılı:", response))
-      .catch((error) => console.error("Hata:", error));
-
-    // try {
-    //   const result = await createHabit({
-    //     name: name,
-    //     description: description,
-    //     isReminder: false,
-    //     details: {
-    //       color: selectedColor || "#FF6B6B",
-    //       icon: icon,
-    //       periodType: 1,
-    //       periodCount: 1,
-    //       startTime: "2021-09-01T00:00:00",
-    //       endTime: "2021-09-01T00:00:00",
-    //     },
-    //   })
-    //     .then((res) => {
-    //       console.log("result then", result);
-    //       console.log("Alışkanlık başarıyla oluşturuldu!", res);
-
-    //       Toast.show({
-    //         type: "success",
-    //         position: "bottom",
-    //         text1: "Alışkanlık başarıyla oluşturuldu!",
-    //         visibilityTime: 3000,
-    //         autoHide: true,
-    //         bottomOffset: 50,
-    //       });
-
-    //       setTimeout(() => {
-    //         router.back();
-    //       }, 2000);
-    //     })
-    //     .catch((error) => {
-    //       console.log("alışkanlık oluşturma başarısız", error);
-    //       Toast.show({
-    //         type: "error",
-    //         position: "bottom",
-    //         text1: "Alışkanlık oluşturulurken hata oluştu",
-    //         visibilityTime: 3000,
-    //         autoHide: true,
-    //         bottomOffset: 50,
-    //       });
-    //     });
-    // } catch (error) {
-    //   console.log("Alışkanlık oluşturulurken hata oluştu", error);
-    //   Toast.show({
-    //     type: "error",
-    //     position: "bottom",
-    //     text1: "Alışkanlık oluşturulurken hata oluştu",
-    //     visibilityTime: 3000,
-    //     autoHide: true,
-    //     bottomOffset: 50,
-    //   });
-    // }
+      .then((response) => {
+        if (response?.data?.isSuccessful) {
+          console.log("Alışkanlık başarıyla oluşturuldu!", response.data);
+          Toast.show({
+            type: "success",
+            position: "bottom",
+            text1: "Alışkanlık başarıyla oluşturuldu!",
+            visibilityTime: 3000,
+            autoHide: true,
+            bottomOffset: 50,
+          });
+          setTimeout(() => {
+            router.back();
+          }, 2000);
+        } else {
+          console.log("alışkanlık oluşturma başarısız then", response);
+          Toast.show({
+            type: "error",
+            position: "bottom",
+            text1: "Alışkanlık oluşturulurken hata oluştu",
+            visibilityTime: 3000,
+            autoHide: true,
+            bottomOffset: 50,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log("alışkanlık oluşturma başarısız catch", error);
+        Toast.show({
+          type: "error",
+          position: "bottom",
+          text1: "Alışkanlık oluşturulurken hata oluştu",
+          visibilityTime: 3000,
+          autoHide: true,
+          bottomOffset: 50,
+        });
+      });
   };
 
   const stageOne = () => {
@@ -439,6 +440,7 @@ const CustomModal = () => {
                 setForm({
                   name: "",
                   description: "",
+                  isReminder: false,
                   icon: "",
                   color: "",
                   periodType: 1,
@@ -451,6 +453,7 @@ const CustomModal = () => {
                 setDraft({
                   name: "",
                   description: "",
+                  isReminder: false,
                   icon: "",
                   color: "",
                   periodType: 1,
@@ -764,7 +767,13 @@ const CustomModal = () => {
               {/* Hatırlatıcı */}
               <View style={styles.reminderRow}>
                 <Text style={styles.optionLabel}>{t("reminder")}</Text>
-                <Switch value={reminder} onValueChange={setReminder} />
+                <Switch
+                  value={form.isReminder}
+                  onValueChange={(value) => {
+                    setForm({ ...form, isReminder: value });
+                    setDraft({ ...draft, isReminder: value });
+                  }}
+                />
               </View>
             </View>
             {/* Kaydet Butonu */}
