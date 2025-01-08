@@ -1,11 +1,21 @@
+export interface dayOfWeek {
+  dayOfWeek: number;
+}
+
+export interface dayOfMonth {
+  dayOfMonth: number;
+}
+
 export interface details {
   color: string;
-  endTime: Date | null;
+  endTime: string | null;
   icon: string;
   id?: string;
   periodCount: number;
   periodType: number;
-  startTime: Date | null;
+  startTime: string | null;
+  daysOfWeeks?: dayOfWeek[];
+  daysOfMonthly?: dayOfMonth[];
 }
 
 export interface IHabit {
