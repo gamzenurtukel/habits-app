@@ -163,11 +163,11 @@ const CustomModal = () => {
     };
 
     if (form.periodType === 2) {
-      habitData.details.daysOfWeeks = draft.daysOfWeeks;
+      habitData.details.daysOfWeeks = form.daysOfWeeks;
     }
 
     if (form.periodType === 3) {
-      habitData.details.daysOfMonthly = draft.daysOfMonthly;
+      habitData.details.daysOfMonthly = form.daysOfMonthly;
     }
 
     console.log("habitData", JSON.stringify(habitData));
