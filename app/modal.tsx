@@ -52,8 +52,8 @@ const CustomModal = () => {
     name: "",
     description: "",
     isReminder: false,
-    icon: "",
-    color: "",
+    icon: "🏃",
+    color: "#28B463",
     periodType: 1,
     periodCount: 1,
     startTime: { hour: "00", minute: "00" } as { hour: string; minute: string },
@@ -66,8 +66,8 @@ const CustomModal = () => {
     name: "",
     description: "",
     isReminder: false,
-    icon: "",
-    color: "",
+    icon: "🏃",
+    color: "#28B463",
     periodType: 1,
     periodCount: 1,
     startTime: { hour: "00", minute: "00" } as { hour: string; minute: string },
@@ -97,8 +97,8 @@ const CustomModal = () => {
         name: "",
         description: "",
         isReminder: false,
-        icon: "",
-        color: "",
+        icon: "🏃",
+        color: "#28B463",
         periodType: 1,
         periodCount: 1,
         startTime: { hour: "00", minute: "00" } as {
@@ -116,8 +116,8 @@ const CustomModal = () => {
         name: "",
         description: "",
         isReminder: false,
-        icon: "",
-        color: "",
+        icon: "🏃",
+        color: "#28B463",
         periodType: 1,
         periodCount: 1,
         startTime: { hour: "00", minute: "00" } as {
@@ -147,8 +147,8 @@ const CustomModal = () => {
       description: form.description,
       isReminder: form.isReminder,
       details: {
-        color: form.color || "#FF6B6B",
-        icon: form.icon,
+        color: form.color || "#28B463",
+        icon: form.icon || "🏃",
         periodType: form.periodType,
         periodCount: form.periodCount,
         startTime: `${form.startTime.hour.padStart(
@@ -356,20 +356,19 @@ const CustomModal = () => {
                             height: 120,
                           }}
                           onPress={() => {
-                            // setName(habit.name);
                             handleTabPress(1);
-                            // setIcon(habit.icon);
-                            // setDescription(habit.description);
                             setForm({
                               ...form,
                               name: habit.name,
                               icon: habit.icon,
+                              color: "#28B463",
                               description: habit.description,
                             });
                             setDraft({
                               ...draft,
                               name: habit.name,
                               icon: habit.icon,
+                              color: "#28B463",
                               description: habit.description,
                             });
                           }}
@@ -441,8 +440,8 @@ const CustomModal = () => {
                   name: "",
                   description: "",
                   isReminder: false,
-                  icon: "",
-                  color: "",
+                  icon: "🏃",
+                  color: "#28B463",
                   periodType: 1,
                   periodCount: 1,
                   startTime: { hour: "00", minute: "00" },
@@ -454,8 +453,8 @@ const CustomModal = () => {
                   name: "",
                   description: "",
                   isReminder: false,
-                  icon: "",
-                  color: "",
+                  icon: "🏃",
+                  color: "#28B463",
                   periodType: 1,
                   periodCount: 1,
                   startTime: { hour: "00", minute: "00" },
@@ -486,7 +485,7 @@ const CustomModal = () => {
                   alignItems: "center",
                   paddingVertical: 20,
                   paddingHorizontal: 5,
-                  backgroundColor: `${form.color || "#FFFFFF"}`,
+                  backgroundColor: `${form.color || "#28B463"}`,
                   opacity: 0.8,
                   justifyContent: "space-around",
                   borderRadius: 15,
@@ -1554,21 +1553,6 @@ const CustomModal = () => {
           <Text style={styles.applyText}>Uygula</Text>
         </Pressable>
       </View>
-      {/* <LinearGradient
-        colors={["green", "#80B900"]}
-        start={{ x: 0, y: 1 }}
-        end={{ x: 1, y: 0 }}
-        style={styles.applyButton}
-        key={"apply-3"}
-      >
-        <Pressable
-          onPress={() => {
-            bottomSheetRef.current?.close();
-          }}
-        >
-          <Text style={styles.applyText}>Apply</Text>
-        </Pressable>
-      </LinearGradient> */}
     </View>
   );
 
