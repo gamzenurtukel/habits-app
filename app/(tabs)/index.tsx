@@ -403,7 +403,10 @@ export default function HomeScreen() {
                                       backgroundColor: "#DDE5DD",
                                     }}
                                     onPress={() => {
-                                      console.log("Düzenleye tıklandı:", habit);
+                                      router.push({
+                                        pathname: "/modal",
+                                        params: { id: habit.id },
+                                      });
                                     }}
                                   >
                                     <Ionicons
