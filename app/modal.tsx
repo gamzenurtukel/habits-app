@@ -20,7 +20,11 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import { useCreateHabitMutation, useHabitGetByIdQuery } from "@/redux/services/habit";
+import {
+  useCreateHabitMutation,
+  useHabitGetByIdQuery,
+  useUpdateHabitMutation,
+} from "@/redux/services/habit";
 import { selectToken } from "@/redux/reducers/auth-reducer";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/app/store";
@@ -32,8 +36,8 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
-import { IHabitCreate } from "@/types/habit";
-import { useLocalSearchParams } from "expo-router"
+import { dayOfWeek, IHabitCreate, IHabitUpdate } from "@/types/habit";
+import { useLocalSearchParams } from "expo-router";
 
 const { width } = Dimensions.get("screen");
 
@@ -78,7 +82,7 @@ const CustomModal = () => {
   });
 
   const [createHabit] = useCreateHabitMutation();
-
+  const [updateHabit] = useUpdateHabitMutation();
 
   const token = useSelector((state: RootState) => selectToken(state));
   const { t } = useTranslation();
@@ -113,7 +117,7 @@ const CustomModal = () => {
           name: habitData.name || "",
           description: habitData.description || "",
           isReminder: habitData.isReminder || false,
-          icon: habitData.details.icon ,
+          icon: habitData.details.icon,
           color: habitData.details.color,
           periodType: habitData.details.periodType || 1,
           periodCount: habitData.details.periodCount || 1,
@@ -160,7 +164,7 @@ const CustomModal = () => {
 
   useEffect(() => {
     if (params.id) {
-      console.log("use effect içine girdi")
+      console.log("use effect içine girdi");
       handleTabPress(1);
       selectedHabitgetById(params.id as string);
     }
@@ -216,76 +220,231 @@ const CustomModal = () => {
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   // console.log("token", token);
+  // const handleSaveChanges = async () => {
+  //   console.log("token", token);
+  //   const habitData: IHabitCreate | IHabitUpdate = {
+  //     name: form.name,
+  //     description: form.description,
+  //     isReminder: form.isReminder,
+  //     details: {
+  //       color: form.color || "#28B463",
+  //       icon: form.icon || "🏃",
+  //       periodType: form.periodType,
+  //       periodCount: form.periodCount,
+  //       startTime: `${form.startTime.hour.padStart(
+  //         2,
+  //         "0"
+  //       )}:${form.startTime.minute.padStart(2, "0")}:00`,
+  //       endTime: `${form.endTime.hour.padStart(
+  //         2,
+  //         "0"
+  //       )}:${form.endTime.minute.padStart(2, "0")}:00`,
+  //     },
+  //   };
+
+  //   if (form.periodType === 2) {
+  //     habitData.details.daysOfWeeks = form.daysOfWeeks;
+  //   }
+
+  //   if (form.periodType === 3) {
+  //     habitData.details.daysOfMonthly = form.daysOfMonthly;
+  //   }
+  //   if (params.id) {
+  //     (habitData as IHabitUpdate).id = params.id as string;
+  //   }
+
+  //   console.log("habitData", JSON.stringify(habitData));
+  //   params.id
+  //     ? editHabitHandler(habitData as IHabitUpdate)
+  //     : createHabitHandler(habitData as IHabitCreate);
+  // };
+
+  // const createHabitHandler = async (habitData: IHabitCreate) => {
+  //   createHabit(habitData)
+  //     .then((response) => {
+  //       if (response?.data?.isSuccessful) {
+  //         console.log("Alışkanlık başarıyla oluşturuldu!", response.data);
+  //         Toast.show({
+  //           type: "success",
+  //           position: "bottom",
+  //           text1: "Alışkanlık başarıyla oluşturuldu!",
+  //           visibilityTime: 3000,
+  //           autoHide: true,
+  //           bottomOffset: 50,
+  //         });
+  //         setTimeout(() => {
+  //           router.back();
+  //         }, 2000);
+  //       } else {
+  //         console.log("alışkanlık oluşturma başarısız then", response);
+  //         Toast.show({
+  //           type: "error",
+  //           position: "bottom",
+  //           text1: "Alışkanlık oluşturulurken hata oluştu",
+  //           visibilityTime: 3000,
+  //           autoHide: true,
+  //           bottomOffset: 50,
+  //         });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log("alışkanlık oluşturma başarısız catch", error);
+  //       Toast.show({
+  //         type: "error",
+  //         position: "bottom",
+  //         text1: "Alışkanlık oluşturulurken hata oluştu",
+  //         visibilityTime: 3000,
+  //         autoHide: true,
+  //         bottomOffset: 50,
+  //       });
+  //     });
+  // };
+
+  // const editHabitHandler = async (habitData: IHabitUpdate) => {
+  //   updateHabit(habitData)
+  //     .then((response) => {
+  //       if (response?.data?.isSuccessful) {
+  //         console.log("Alışkanlık başarıyla güncellendi!", response.data);
+  //         Toast.show({
+  //           type: "success",
+  //           position: "bottom",
+  //           text1: "Alışkanlık başarıyla güncellendi!",
+  //           visibilityTime: 3000,
+  //           autoHide: true,
+  //           bottomOffset: 50,
+  //         });
+  //         setTimeout(() => {
+  //           router.back();
+  //         }, 2000);
+  //       } else {
+  //         console.log("alışkanlık güncelleme başarısız then", response);
+  //         Toast.show({
+  //           type: "error",
+  //           position: "bottom",
+  //           text1: "Alışkanlık güncellenirken hata oluştu",
+  //           visibilityTime: 3000,
+  //           autoHide: true,
+  //           bottomOffset: 50,
+  //         });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log("alışkanlık güncelleme başarısız catch", error);
+  //       Toast.show({
+  //         type: "error",
+  //         position: "bottom",
+  //         text1: "Alışkanlık güncellenirken hata oluştu",
+  //         visibilityTime: 3000,
+  //         autoHide: true,
+  //         bottomOffset: 50,
+  //       });
+  //     });
+  // };
+
   const handleSaveChanges = async () => {
-    console.log("token", token);
-    const habitData: IHabitCreate = {
-      name: form.name,
-      description: form.description,
-      isReminder: form.isReminder,
-      details: {
-        color: form.color || "#28B463",
-        icon: form.icon || "🏃",
-        periodType: form.periodType,
-        periodCount: form.periodCount,
-        startTime: `${form.startTime.hour.padStart(
-          2,
-          "0"
-        )}:${form.startTime.minute.padStart(2, "0")}:00`,
-        endTime: `${form.endTime.hour.padStart(
-          2,
-          "0"
-        )}:${form.endTime.minute.padStart(2, "0")}:00`,
-      },
-    };
+    try {
+      console.log("token", token);
+      const habitData: IHabitCreate | IHabitUpdate = {
+        name: form.name,
+        description: form.description,
+        isReminder: form.isReminder,
+        details: {
+          color: form.color || "#28B463",
+          icon: form.icon || "🏃",
+          periodType: form.periodType,
+          periodCount: form.periodCount,
+          startTime: `${form.startTime.hour.padStart(
+            2,
+            "0"
+          )}:${form.startTime.minute.padStart(2, "0")}:00`,
+          endTime: `${form.endTime.hour.padStart(
+            2,
+            "0"
+          )}:${form.endTime.minute.padStart(2, "0")}:00`,
+        },
+      };
 
-    if (form.periodType === 2) {
-      habitData.details.daysOfWeeks = form.daysOfWeeks;
+      if (form.periodType === 2) {
+        habitData.details.daysOfWeeks = form.daysOfWeeks;
+      }
+
+      if (form.periodType === 3) {
+        habitData.details.daysOfMonthly = form.daysOfMonthly;
+      }
+      if (params.id) {
+        (habitData as IHabitUpdate).id = params.id as string;
+      }
+
+      console.log("habitData", JSON.stringify(habitData));
+
+      params.id
+        ? await handleHabitUpdate(habitData as IHabitUpdate)
+        : await handleHabitCreate(habitData as IHabitCreate);
+    } catch (error) {
+      console.error("handleSaveChanges error", error);
+      showToast("error", "İşlem sırasında bir hata oluştu");
     }
+  };
 
-    if (form.periodType === 3) {
-      habitData.details.daysOfMonthly = form.daysOfMonthly;
+  const handleHabitCreate = async (habitData: IHabitCreate) => {
+    try {
+      const response = await createHabit(habitData);
+
+      if (response?.data?.isSuccessful) {
+        console.log("Alışkanlık başarıyla oluşturuldu!", response.data);
+        showToast("success", "Alışkanlık başarıyla oluşturuldu!");
+        navigateBack();
+      } else {
+        console.error("Alışkanlık oluşturma başarısız", response);
+        showToast(
+          "error",
+          (response?.data?.errors ? response.data.errors[0] : null) ||
+            "Alışkanlık oluşturulurken hata oluştu"
+        );
+      }
+    } catch (error) {
+      console.error("Alışkanlık oluşturma başarısız", error);
+      showToast("error", "Alışkanlık oluşturulurken hata oluştu");
     }
+  };
 
-    console.log("habitData", JSON.stringify(habitData));
+  const handleHabitUpdate = async (habitData: IHabitUpdate) => {
+    try {
+      const response = await updateHabit(habitData);
 
-    createHabit(habitData)
-      .then((response) => {
-        if (response?.data?.isSuccessful) {
-          console.log("Alışkanlık başarıyla oluşturuldu!", response.data);
-          Toast.show({
-            type: "success",
-            position: "bottom",
-            text1: "Alışkanlık başarıyla oluşturuldu!",
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
-          setTimeout(() => {
-            router.back();
-          }, 2000);
-        } else {
-          console.log("alışkanlık oluşturma başarısız then", response);
-          Toast.show({
-            type: "error",
-            position: "bottom",
-            text1: "Alışkanlık oluşturulurken hata oluştu",
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
-        }
-      })
-      .catch((error) => {
-        console.log("alışkanlık oluşturma başarısız catch", error);
-        Toast.show({
-          type: "error",
-          position: "bottom",
-          text1: "Alışkanlık oluşturulurken hata oluştu",
-          visibilityTime: 3000,
-          autoHide: true,
-          bottomOffset: 50,
-        });
-      });
+      if (response?.data?.isSuccessful) {
+        console.log("Alışkanlık başarıyla güncellendi!", response.data);
+        showToast("success", "Alışkanlık başarıyla güncellendi!");
+        navigateBack();
+      } else {
+        console.error("Alışkanlık güncelleme başarısız", response);
+        showToast(
+          "error",
+          (response?.data?.errors ? response.data.errors[0] : null) ||
+            "Alışkanlık güncellenirken hata oluştu"
+        );
+      }
+    } catch (error) {
+      console.error("Alışkanlık güncelleme başarısız", error);
+      showToast("error", "Alışkanlık güncellenirken hata oluştu");
+    }
+  };
+
+  const showToast = (type: string, message: string) => {
+    Toast.show({
+      type,
+      position: "bottom",
+      text1: message,
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 50,
+    });
+  };
+
+  const navigateBack = () => {
+    setTimeout(() => {
+      router.back();
+    }, 2000);
   };
 
   const stageOne = () => {
@@ -505,45 +664,47 @@ const CustomModal = () => {
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "space-between",
+              justifyContent: params.id ? "flex-end" : "space-between",
               padding: 10,
             }}
           >
-            <TouchableOpacity
-              onPress={() => {
-                handleTabPress(0);
-                setForm({
-                  name: "",
-                  description: "",
-                  isReminder: false,
-                  icon: "🏃",
-                  color: "#28B463",
-                  periodType: 1,
-                  periodCount: 1,
-                  startTime: { hour: "00", minute: "00" },
-                  endTime: { hour: "00", minute: "00" },
-                  daysOfWeeks: [] as { dayOfWeek: number }[],
-                  daysOfMonthly: [] as { dayOfMonth: number }[],
-                });
-                setDraft({
-                  name: "",
-                  description: "",
-                  isReminder: false,
-                  icon: "🏃",
-                  color: "#28B463",
-                  periodType: 1,
-                  periodCount: 1,
-                  startTime: { hour: "00", minute: "00" },
-                  endTime: { hour: "00", minute: "00" },
-                  daysOfWeeks: [] as { dayOfWeek: number }[],
-                  daysOfMonthly: [] as { dayOfMonth: number }[],
-                });
-              }}
-              style={{ flexDirection: "row", alignItems: "center" }}
-            >
-              <MaterialIcons name="chevron-left" size={30} color="#588157" />
-              <Text style={{ color: "#588157" }}>Geri</Text>
-            </TouchableOpacity>
+            {!params.id && (
+              <TouchableOpacity
+                onPress={() => {
+                  handleTabPress(0);
+                  setForm({
+                    name: "",
+                    description: "",
+                    isReminder: false,
+                    icon: "🏃",
+                    color: "#28B463",
+                    periodType: 1,
+                    periodCount: 1,
+                    startTime: { hour: "00", minute: "00" },
+                    endTime: { hour: "00", minute: "00" },
+                    daysOfWeeks: [] as { dayOfWeek: number }[],
+                    daysOfMonthly: [] as { dayOfMonth: number }[],
+                  });
+                  setDraft({
+                    name: "",
+                    description: "",
+                    isReminder: false,
+                    icon: "🏃",
+                    color: "#28B463",
+                    periodType: 1,
+                    periodCount: 1,
+                    startTime: { hour: "00", minute: "00" },
+                    endTime: { hour: "00", minute: "00" },
+                    daysOfWeeks: [] as { dayOfWeek: number }[],
+                    daysOfMonthly: [] as { dayOfMonth: number }[],
+                  });
+                }}
+                style={{ flexDirection: "row", alignItems: "center" }}
+              >
+                <MaterialIcons name="chevron-left" size={30} color="#588157" />
+                <Text style={{ color: "#588157" }}>Geri</Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               onPress={() => {
                 router.back();
@@ -812,15 +973,15 @@ const CustomModal = () => {
                           ? activeTabSheetRepetition === "daily"
                             ? "Günlük"
                             : activeTabSheetRepetition === "weekly"
-                              ? "Haftalık"
-                              : "Aylık"
+                            ? "Haftalık"
+                            : "Aylık"
                           : item === "duration"
-                            ? activeTabSheetDuration === "startTime"
-                              ? `${form.startTime.hour.padStart(
+                          ? activeTabSheetDuration === "startTime"
+                            ? `${form.startTime.hour.padStart(
                                 2,
                                 "0"
                               )}:${form.startTime.minute.padStart(2, "0")}`
-                              : `${form.startTime.hour.padStart(
+                            : `${form.startTime.hour.padStart(
                                 2,
                                 "0"
                               )}:${form.startTime.minute.padStart(
@@ -830,7 +991,7 @@ const CustomModal = () => {
                                 2,
                                 "0"
                               )}:${form.endTime.minute.padStart(2, "0")}`
-                            : "Belirlenmemiş"}
+                          : "Belirlenmemiş"}
                       </Text>
                       <Text style={styles.optionValue}>
                         <MaterialIcons name="arrow-drop-down" size={20} />
@@ -982,8 +1143,8 @@ const CustomModal = () => {
         ...prevDraft,
         daysOfMonthly: isDaySelected
           ? prevDraft.daysOfMonthly.filter(
-            (day) => day?.dayOfMonth !== dayIndex
-          )
+              (day) => day?.dayOfMonth !== dayIndex
+            )
           : [...prevDraft.daysOfMonthly, { dayOfMonth: dayIndex }],
       };
     });
@@ -1321,19 +1482,19 @@ const CustomModal = () => {
       >
         {label === "hour"
           ? Array.from({ length: 24 }, (_, i) => i.toString()).map((hour) => (
-            <Picker.Item
-              key={hour}
-              label={hour.padStart(2, "0")}
-              value={hour}
-            />
-          ))
+              <Picker.Item
+                key={hour}
+                label={hour.padStart(2, "0")}
+                value={hour}
+              />
+            ))
           : Array.from({ length: 60 }, (_, i) => i.toString()).map((minute) => (
-            <Picker.Item
-              key={minute}
-              label={minute.padStart(2, "0")}
-              value={minute}
-            />
-          ))}
+              <Picker.Item
+                key={minute}
+                label={minute.padStart(2, "0")}
+                value={minute}
+              />
+            ))}
       </Picker>
     );
   };
@@ -1691,9 +1852,12 @@ const CustomModal = () => {
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.key}
           // scrollEnabled={form.name !== ""}
+          scrollEnabled={params.id ? true : false}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-          renderItem={({ index }) => (index === 1 || params.id ?  stageTwo(): stageOne() )}
+          renderItem={({ index }) =>
+            index === 1 || params.id ? stageTwo() : stageOne()
+          }
         />
 
         <BottomSheetModal
