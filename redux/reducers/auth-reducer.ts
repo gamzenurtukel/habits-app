@@ -32,7 +32,6 @@ export const authSlice = createSlice({
 
   extraReducers: (builder) => {
     builder.addMatcher(login.matchFulfilled, (state, action) => {
-      console.log("login extra reducer gamzeee", action.payload);
       state.token = action.payload.data.accessToken;
       state.isAuthenticated = true;
       state.user = action.payload.data.refreshToken;
