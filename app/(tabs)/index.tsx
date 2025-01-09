@@ -25,9 +25,15 @@ import {
   useDeleteHabitMutation,
   useHabitActionListQuery,
   useHabitGetListQuery,
+  useUpdateActionHabitMutation,
 } from "@/redux/services/habit";
 import { IHabit } from "@/types/habit";
 import Toast from "react-native-toast-message";
+import {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 const { width } = Dimensions.get("screen");
 
@@ -59,6 +65,7 @@ export default function HomeScreen() {
     isUninitialized: isUninitializedHabitsActionList,
   } = useHabitActionListQuery(selectedDate);
   const [deleteHabit] = useDeleteHabitMutation();
+  const [updateActionHabit] = useUpdateActionHabitMutation();
 
   const reFetchHabitAction = async () => {
     try {
@@ -202,6 +209,39 @@ export default function HomeScreen() {
           type: "error",
           position: "bottom",
           text1: "Alışkanlık silinemedi!",
+          visibilityTime: 3000,
+          autoHide: true,
+          bottomOffset: 50,
+        });
+      }
+    });
+  };
+
+  const handleStatusUpdate = (id: string, status: number) => {
+    console.log("Habit id to update:", id);
+    const newStatus = status === 1 ? 2 : 1;
+    console.log("New status:", newStatus);
+    updateActionHabit({ id, statusEnum: newStatus }).then((response) => {
+      console.log("Response:", response);
+      if (response?.data?.isSuccessful) {
+        console.log("Habit updated successfully:", response);
+        Toast.show({
+          type: "success",
+          position: "bottom",
+          text1: "Alışkanlık başarıyla güncellendi!",
+          visibilityTime: 3000,
+          autoHide: true,
+          bottomOffset: 50,
+        });
+
+        reFetchHabitAction();
+
+        setLongPressedIndex(null);
+      } else {
+        Toast.show({
+          type: "error",
+          position: "bottom",
+          text1: "Alışkanlık güncellenemedi!",
           visibilityTime: 3000,
           autoHide: true,
           bottomOffset: 50,
@@ -354,7 +394,30 @@ export default function HomeScreen() {
                                     longPressedIndex === index
                                       ? "#EFEFEF"
                                       : "#fff",
+
                                   gap: 10,
+                                  transform: [
+                                    // { rotateZ: `${rotation.value}deg` },
+                                    // {
+                                    //   scale:
+                                    //     longPressedIndex === index ? 1.05 : 1,
+                                    // },
+                                    {
+                                      rotateZ:
+                                        longPressedIndex === index
+                                          ? "-2deg"
+                                          : "0deg",
+                                    },
+                                    {
+                                      scale:
+                                        longPressedIndex === index ? 0.95 : 1,
+                                    },
+                                  ],
+                                  animationDuration: "1000ms",
+                                  animationTimingFunction: "ease-in-out",
+                                  animationFillMode: "both",
+                                  animationDelay: "0s",
+                                  animationIterationCount: 1,
                                 },
                               ]}
                               onLongPress={() => handleLongPress(index)}
@@ -388,7 +451,7 @@ export default function HomeScreen() {
                                 </Text>
                               </View>
 
-                              {/* delete edit buttons */}
+                              {/* delete edit status buttons */}
                               {longPressedIndex === index ? (
                                 <View
                                   style={{
@@ -401,18 +464,37 @@ export default function HomeScreen() {
                                       padding: 5,
                                       borderRadius: 20,
                                       backgroundColor: "#DDE5DD",
+                                      marginRight: 10,
+                                    }}
+                                    onPress={() =>
+                                      handleStatusUpdate(habit.id, habit.status)
+                                    }
+                                  >
+                                    <Ionicons
+                                      name="checkmark"
+                                      size={20}
+                                      color="#588157"
+                                    />
+                                  </TouchableOpacity>
+
+                                  <TouchableOpacity
+                                    style={{
+                                      padding: 5,
+                                      borderRadius: 20,
+                                      backgroundColor: "#CCE5E5",
                                     }}
                                     onPress={() => {
                                       router.push({
                                         pathname: "/modal",
                                         params: { id: habit.id },
                                       });
+                                      setLongPressedIndex(null);
                                     }}
                                   >
                                     <Ionicons
                                       name="pencil"
                                       size={20}
-                                      color="#588157"
+                                      color="teal"
                                     />
                                   </TouchableOpacity>
                                   <TouchableOpacity
