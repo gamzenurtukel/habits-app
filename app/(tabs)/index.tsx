@@ -260,7 +260,10 @@ export default function HomeScreen() {
               <Text style={styles.date}>
                 {today.clone().format("dddd, MMMM D")}
               </Text>
-              <Pressable style={styles.calendarIcon} onPress={() => router.push("../calendar")}>
+              <Pressable
+                style={styles.calendarIcon}
+                onPress={() => router.push("/(calendar)/calendar")}
+              >
                 <Ionicons name="calendar-outline" size={24} color="green" />
               </Pressable>
             </View>
