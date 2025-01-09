@@ -107,6 +107,9 @@ export default function RootLayout() {
                   name="(settings)"
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen name="calendar" options={{
+                  headerShown: false,
+                }} />
                 <Stack.Screen name="+not-found" />
                 <Stack.Screen
                   name="modal"
@@ -122,6 +125,7 @@ export default function RootLayout() {
                     headerShown: false,
                   }}
                 />
+
               </Stack>
               <StatusBar style="auto" />
               <Toast />
