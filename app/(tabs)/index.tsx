@@ -260,7 +260,7 @@ export default function HomeScreen() {
               <Text style={styles.date}>
                 {today.clone().format("dddd, MMMM D")}
               </Text>
-              <Pressable style={styles.calendarIcon}>
+              <Pressable style={styles.calendarIcon} onPress={() => router.push("../calendar")}>
                 <Ionicons name="calendar-outline" size={24} color="green" />
               </Pressable>
             </View>
@@ -397,11 +397,6 @@ export default function HomeScreen() {
 
                                   gap: 10,
                                   transform: [
-                                    // { rotateZ: `${rotation.value}deg` },
-                                    // {
-                                    //   scale:
-                                    //     longPressedIndex === index ? 1.05 : 1,
-                                    // },
                                     {
                                       rotateZ:
                                         longPressedIndex === index
