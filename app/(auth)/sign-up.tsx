@@ -16,6 +16,7 @@ import { Link, Stack } from "expo-router";
 import { signUpDataSchema } from "@/lib/validations/sign-up-validation";
 import { useRegisterMutation } from "@/redux/services/auth";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 const SignUpScreen = () => {
   const [name, setName] = useState("");
@@ -27,6 +28,8 @@ const SignUpScreen = () => {
   const [register] = useRegisterMutation();
 
   const router = useRouter();
+
+  const { t } = useTranslation();
 
   const handleSingUp = async () => {
     try {
@@ -63,7 +66,7 @@ const SignUpScreen = () => {
           Toast.show({
             type: "success",
             position: "top",
-            text1: "Kayıt başarılı!",
+            text1: t("sign_up_success"),
             visibilityTime: 3000,
             autoHide: true,
             bottomOffset: 50,
@@ -77,7 +80,7 @@ const SignUpScreen = () => {
           Toast.show({
             type: "error",
             position: "bottom",
-            text1: "Kayıt sırasında hata oluştu",
+            text1: t("an_error_occurred_while_sign_up"),
             visibilityTime: 3000,
             autoHide: true,
             bottomOffset: 50,
@@ -88,7 +91,7 @@ const SignUpScreen = () => {
       Toast.show({
         type: "error",
         position: "bottom",
-        text1: "Kayıt sırasında hata oluştu",
+        text1: t("an_error_occurred_while_sign_up"),
         visibilityTime: 3000,
         autoHide: true,
         bottomOffset: 50,
@@ -128,10 +131,10 @@ const SignUpScreen = () => {
             </View>
             <View style={styles.content}>
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>Ad</Text>
+                <Text style={styles.label}>{t("name")}</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Adınızı girin"
+                  placeholder={t("enter_your_name")}
                   value={name}
                   onChangeText={setName}
                   secureTextEntry
@@ -139,10 +142,10 @@ const SignUpScreen = () => {
                 />
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>Soyad</Text>
+                <Text style={styles.label}>{t("surname")}</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Soyadınız girin"
+                  placeholder={t("enter_your_surname")}
                   value={surname}
                   onChangeText={setSurname}
                   secureTextEntry
@@ -150,10 +153,10 @@ const SignUpScreen = () => {
                 />
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>Telefon</Text>
+                <Text style={styles.label}>{t("phone")}</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Telefon numaranızı girin"
+                  placeholder={t("enter_your_phone")}
                   value={phone}
                   onChangeText={setPhone}
                   keyboardType="phone-pad"
@@ -163,10 +166,10 @@ const SignUpScreen = () => {
               </View>
 
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>E-posta</Text>
+                <Text style={styles.label}>{t("email")}</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="E-postanızı girin"
+                  placeholder={t("enter_your_email")}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -176,10 +179,10 @@ const SignUpScreen = () => {
               </View>
 
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>Şifre</Text>
+                <Text style={styles.label}>{t("password")}</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Şifrenizi girin"
+                  placeholder={t("enter_your_password")}
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry
@@ -188,14 +191,13 @@ const SignUpScreen = () => {
               </View>
 
               <TouchableOpacity onPress={handleSingUp} style={styles.button}>
-                <Text style={styles.buttonText}>Kayıt Ol</Text>
+                <Text style={styles.buttonText}>{t("sign_up")}</Text>
               </TouchableOpacity>
-
               <TouchableOpacity style={styles.linkContainer}>
                 <Text style={styles.text}>
-                  Zaten hesabınız var mı?{" "}
+                  {t("already_have_an_account")}{" "}
                   <Link href="/(auth)/sign-in">
-                    <Text style={styles.boldText}>Giriş Yap</Text>
+                    <Text style={styles.boldText}>{t("sign_in")}</Text>
                   </Link>
                 </Text>
               </TouchableOpacity>
