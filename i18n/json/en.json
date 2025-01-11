@@ -57,5 +57,21 @@
   "total_days": "Total Days",
   "total_habits": "Total Habits",
   "active_habits": "Active Habits",
-  "passive_habits": "Passive Habits"
+  "passive_habits": "Passive Habits",
+  "settings": "Settings",
+  "sign_out": "Sign Out",
+  "account": "Account",
+  "change_password": "Change Password",
+  "notifications": "Notifications",
+  "aplication": "Aplication",
+  "language": "Language",
+  "about": "About",
+  "support": "Support",
+  "privacy_policy": "Privacy Policy",
+  "terms_of_use": "Terms of Use",
+  "help": "Help",
+  "feedback": "Feedback",
+  "report_bug": "Report Bug",
+  "logout_success": "Logout Success!",
+  "an_error_occurred_while_logout": "An error occurred while logging out!"
 }

@@ -57,5 +57,21 @@
   "total_days": "Toplam Gün",
   "total_habits": "Toplam Alışkanlık",
   "active_habits": "Aktif Alışkanlık",
-  "passive_habits": "Pasif Alışkanlık"
+  "passive_habits": "Pasif Alışkanlık",
+  "settings": "Ayarlar",
+  "sign_out": "Çıkış Yap",
+  "account": "Hesap",
+  "change_password": "Şifre Değiştir",
+  "notifications": "Bildirimler",
+  "aplication": "Uygulama",
+  "language": "Dil",
+  "about": "Hakkında",
+  "support": "Destek",
+  "privacy_policy": "Gizlilik Politikası",
+  "terms_of_use": "Kullanım Koşulları",
+  "help": "Yardım",
+  "feedback": "Geribildirim",
+  "report_bug": "Hata Bildir",
+  "logout_success": "Çıkış Başarılı!",
+  "an_error_occurred_while_logout": "Çıkış sırasında bir hata oluştu!"
 }
