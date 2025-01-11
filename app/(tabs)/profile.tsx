@@ -1,83 +1,196 @@
-import {
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
-import {  Link, Stack } from "expo-router";
+import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { useNavigation } from "@react-navigation/native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { router, Link } from "expo-router";
+import { useGetProfileInfoQuery } from "@/redux/services/habit";
+import LoadingScreen from "../loading";
 
 export default function ProfileScreen() {
-    const navigation = useNavigation();
-    return (
-        <SafeAreaView style={styles.container}>
-            <Stack.Screen options={{ headerShown: false }} />
-            <View style={styles.container}>
-                <View style={styles.card}>
-                   <View style={{flex:1, flexDirection:"row" ,justifyContent:"space-between",alignItems:"center"}} >
-                   <View style={styles.cardProfile}>
-                        <Image
-                            source={{ uri: "https://via.placeholder.com/150" }}
-                            style={styles.reactLogo}
-                        />
-                        <Text>John Doe</Text>
-                    </View>
-                    {/* <TouchableOpacity onPress={()=>
-                        navigation.navigate(
-                            "/settings" as never
-                        )
-                    }>
-                        <MaterialIcons name="settings" size={24} color="#588157" />
-                    </TouchableOpacity> */}
-                    <Link href="/(settings)/settings" >
-                        <MaterialIcons name="settings" size={24} color="#588157" />
-                    </Link>
-                   </View>
-                </View>
+  const {
+    data: getProfileInfo,
+    isLoading: getProfileInfoIsLoading,
+    isSuccess: getProfileInfoIsSuccess,
+    isError: getProfileInfoIsError,
+    isFetching: getProfileInfoIsFetching,
+  } = useGetProfileInfoQuery();
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {getProfileInfoIsLoading ? (
+        LoadingScreen()
+      ) : getProfileInfoIsError ? (
+        <Text>Error..</Text>
+      ) : getProfileInfoIsSuccess ? (
+        <View>
+          <View style={styles.profileCard}>
+            <Image
+              source={{ uri: "https://via.placeholder.com/150" }}
+              style={styles.profileImage}
+            />
+            <Text style={styles.userName}>
+              {getProfileInfo.data.userName.toLocaleUpperCase()}
+            </Text>
+            <Text style={styles.subscriptionStatus}>
+              {getProfileInfo.data.isSubscribed
+                ? "Premium Subscriber"
+                : "Free Subscriber"}
+            </Text>
+            <TouchableOpacity
+              style={styles.settingsButton}
+              onPress={() => router.push("/settings")}
+            >
+              <MaterialIcons
+                name="settings"
+                style={styles.settingsIcon}
+                color="#588157"
+              />
+            </TouchableOpacity>
+          </View>
+          {!getProfileInfo.data.isSubscribed && (
+            <View
+              style={{
+                flexDirection: "row",
+                backgroundColor: "green",
+                borderRadius: 10,
+                padding: 10,
+                marginBottom: 10,
+                shadowColor: "#333",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3,
+                gap: 3,
+                alignItems: "flex-end",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 13,
+                }}
+              >
+                👑
+              </Text>
+              <Text
+                style={{
+                  color: "#FFFFFF",
+                  fontSize: 12,
+                  fontWeight: "600",
+                }}
+              >
+                Subscribe to unlock more features
+              </Text>
             </View>
-        </SafeAreaView>
-    );
+          )}
+          <View style={styles.statsContainer}>
+            <View style={styles.statBox}>
+              <Text style={styles.emoji}>📅</Text>
+              <Text style={styles.statNumber}>
+                {getProfileInfo.data.totalDays}
+              </Text>
+              <Text style={styles.statLabel}>Total Days</Text>
+            </View>
+            <View style={styles.statBox}>
+              <Text style={styles.emoji}>📊</Text>
+              <Text style={styles.statNumber}>
+                {getProfileInfo.data.totalHabits}
+              </Text>
+              <Text style={styles.statLabel}>Total Habits</Text>
+            </View>
+            <View style={styles.statBox}>
+              <Text style={styles.emoji}>🔥</Text>
+              <Text style={styles.statNumber}>
+                {getProfileInfo.data.activeHabits}
+              </Text>
+              <Text style={styles.statLabel}>Active Habits</Text>
+            </View>
+            <View style={styles.statBox}>
+              <Text style={styles.emoji}>⏸️</Text>
+              <Text style={styles.statNumber}>
+                {getProfileInfo.data.passiveHabits}
+              </Text>
+              <Text style={styles.statLabel}>Passive Habits</Text>
+            </View>
+          </View>
+        </View>
+      ) : null}
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: "#E8F5E9",
-        // flex: 1,
-        height: "100%",
-        // padding: 10,
-    },
-    reactLogo: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-    },
-    card: {
-        backgroundColor: "#E8F5E9",
-        padding: 15,
-        borderRadius: 10,
-        margin: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        height: 100,
-    },
-    cardProfile: {
-        flexDirection: "row",
-        alignItems: "center",
-        // justifyContent: "space-between",
-        gap: 10,
-        color: "#333",
-        
-
-    },
-
-
-})
+  container: {
+    flex: 1,
+    backgroundColor: "#E8F5E9",
+    padding: 20,
+  },
+  profileCard: {
+    alignItems: "center",
+    marginBottom: 20,
+    position: "relative",
+  },
+  profileImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10,
+  },
+  userName: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  subscriptionStatus: {
+    fontSize: 16,
+    color: "#757575",
+  },
+  settingsButton: {
+    position: "absolute",
+    top: -5,
+    right: 0,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    padding: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  settingsIcon: {
+    fontSize: 20,
+  },
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+    marginTop: 20,
+  },
+  statBox: {
+    width: "45%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+    padding: 15,
+    alignItems: "center",
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  emoji: {
+    fontSize: 28,
+    marginBottom: 10,
+  },
+  statNumber: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#588157",
+  },
+  statLabel: {
+    fontSize: 14,
+    color: "#757575",
+    textAlign: "center",
+  },
+});
