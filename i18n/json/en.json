@@ -35,5 +35,7 @@
   "dont_have_an_account": "Don't have an account?",
   "sign_up": "Sign Up",
   "sing_in_success": "Sign In Success !",
-  "an_error_occurred_while_singin_in": "An error occurred while signing in !"
+  "an_error_occurred_while_singin_in": "An error occurred while signing in !",
+  "enter_your_email": "Enter your email",
+  "enter_your_password": "Enter your password"
 }
