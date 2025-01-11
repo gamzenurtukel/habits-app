@@ -46,5 +46,9 @@
   "enter_your_phone": "Enter your phone",
   "already_have_an_account": "Already have an account?",
   "sign_up_success": "Sign Up Success!",
-  "an_error_occurred_while_sign_up": "An error occurred while signing up!"
+  "an_error_occurred_while_sign_up": "An error occurred while signing up!",
+  "completed": "Completed",
+  "incompleted": "Incompleted",
+  "failed": "Failed",
+  "tab_today": "TODAY"
 }
