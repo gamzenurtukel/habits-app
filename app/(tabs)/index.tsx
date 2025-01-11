@@ -35,7 +35,7 @@ import {
   withTiming,
 } from "react-native-reanimated";
 
-const { width } = Dimensions.get("screen");
+const { width, height } = Dimensions.get("screen");
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -711,8 +711,8 @@ const styles = StyleSheet.create({
   container2: {
     padding: 5,
     width: "95%",
-    // width: "90%",
-    // paddingHorizontal: 10,
+    marginBottom: 20,
+    height: height - 600,
   },
   habitListCardActive: {
     backgroundColor: "#f0f0f0",
