@@ -6,6 +6,7 @@ import {
   IHabitCreate,
   IHabitUpdate,
   IHabitUpdateAction,
+  IProfileInfo,
 } from "@/types/habit";
 
 const habitApi = api.injectEndpoints({
@@ -94,6 +95,12 @@ const habitApi = api.injectEndpoints({
         }),
       }
     ),
+    getProfileInfo: build.query<IServerResponse<IProfileInfo>, void>({
+      query: () => ({
+        method: "GET",
+        url: "/Habit/Api/HabitAction/GetSummary",
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -106,6 +113,7 @@ export const {
   useUpdateHabitMutation,
   useDeleteHabitMutation,
   useUpdateActionHabitMutation,
+  useGetProfileInfoQuery,
 } = habitApi;
 export const {
   endpoints: {
@@ -116,5 +124,6 @@ export const {
     updateHabit,
     deleteHabit,
     updateActionHabit,
+    getProfileInfo,
   },
 } = habitApi;
