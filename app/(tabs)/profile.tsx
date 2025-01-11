@@ -26,99 +26,97 @@ export default function ProfileScreen() {
       ) : getProfileInfoIsError ? (
         <Text>Error..</Text>
       ) : getProfileInfoIsSuccess ? (
-        <SafeAreaView style={styles.container}>
-          <View>
-            <View style={styles.profileCard}>
-              <Image
-                source={{ uri: "https://via.placeholder.com/150" }}
-                style={styles.profileImage}
+        <View style={styles.container}>
+          <View style={styles.profileCard}>
+            <Image
+              source={{ uri: "https://via.placeholder.com/150" }}
+              style={styles.profileImage}
+            />
+            <Text style={styles.userName}>
+              {getProfileInfo.data.userName.toLocaleUpperCase()}
+            </Text>
+            <Text style={styles.subscriptionStatus}>
+              {getProfileInfo.data.isSubscribed
+                ? "Premium Subscriber"
+                : "Free Subscriber"}
+            </Text>
+            <TouchableOpacity
+              style={styles.settingsButton}
+              onPress={() => router.push("/settings")}
+            >
+              <MaterialIcons
+                name="settings"
+                style={styles.settingsIcon}
+                color="#588157"
               />
-              <Text style={styles.userName}>
-                {getProfileInfo.data.userName.toLocaleUpperCase()}
-              </Text>
-              <Text style={styles.subscriptionStatus}>
-                {getProfileInfo.data.isSubscribed
-                  ? "Premium Subscriber"
-                  : "Free Subscriber"}
-              </Text>
-              <TouchableOpacity
-                style={styles.settingsButton}
-                onPress={() => router.push("/settings")}
-              >
-                <MaterialIcons
-                  name="settings"
-                  style={styles.settingsIcon}
-                  color="#588157"
-                />
-              </TouchableOpacity>
-            </View>
-            {!getProfileInfo.data.isSubscribed && (
-              <View
+            </TouchableOpacity>
+          </View>
+          {!getProfileInfo.data.isSubscribed && (
+            <View
+              style={{
+                flexDirection: "row",
+                backgroundColor: "green",
+                borderRadius: 10,
+                padding: 10,
+                marginBottom: 10,
+                shadowColor: "#333",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3,
+                gap: 3,
+                alignItems: "flex-end",
+              }}
+            >
+              <Text
                 style={{
-                  flexDirection: "row",
-                  backgroundColor: "green",
-                  borderRadius: 10,
-                  padding: 10,
-                  marginBottom: 10,
-                  shadowColor: "#333",
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.1,
-                  shadowRadius: 4,
-                  elevation: 3,
-                  gap: 3,
-                  alignItems: "flex-end",
+                  fontSize: 13,
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 13,
-                  }}
-                >
-                  👑
-                </Text>
-                <Text
-                  style={{
-                    color: "#FFFFFF",
-                    fontSize: 12,
-                    fontWeight: "600",
-                  }}
-                >
-                  Subscribe to unlock more features
-                </Text>
-              </View>
-            )}
-            <View style={styles.statsContainer}>
-              <View style={styles.statBox}>
-                <Text style={styles.emoji}>📅</Text>
-                <Text style={styles.statNumber}>
-                  {getProfileInfo.data.totalDays}
-                </Text>
-                <Text style={styles.statLabel}>Total Days</Text>
-              </View>
-              <View style={styles.statBox}>
-                <Text style={styles.emoji}>📊</Text>
-                <Text style={styles.statNumber}>
-                  {getProfileInfo.data.totalHabits}
-                </Text>
-                <Text style={styles.statLabel}>Total Habits</Text>
-              </View>
-              <View style={styles.statBox}>
-                <Text style={styles.emoji}>🔥</Text>
-                <Text style={styles.statNumber}>
-                  {getProfileInfo.data.activeHabits}
-                </Text>
-                <Text style={styles.statLabel}>Active Habits</Text>
-              </View>
-              <View style={styles.statBox}>
-                <Text style={styles.emoji}>⏸️</Text>
-                <Text style={styles.statNumber}>
-                  {getProfileInfo.data.passiveHabits}
-                </Text>
-                <Text style={styles.statLabel}>Passive Habits</Text>
-              </View>
+                👑
+              </Text>
+              <Text
+                style={{
+                  color: "#FFFFFF",
+                  fontSize: 12,
+                  fontWeight: "600",
+                }}
+              >
+                Subscribe to unlock more features
+              </Text>
+            </View>
+          )}
+          <View style={styles.statsContainer}>
+            <View style={styles.statBox}>
+              <Text style={styles.emoji}>📅</Text>
+              <Text style={styles.statNumber}>
+                {getProfileInfo.data.totalDays}
+              </Text>
+              <Text style={styles.statLabel}>Total Days</Text>
+            </View>
+            <View style={styles.statBox}>
+              <Text style={styles.emoji}>📊</Text>
+              <Text style={styles.statNumber}>
+                {getProfileInfo.data.totalHabits}
+              </Text>
+              <Text style={styles.statLabel}>Total Habits</Text>
+            </View>
+            <View style={styles.statBox}>
+              <Text style={styles.emoji}>🔥</Text>
+              <Text style={styles.statNumber}>
+                {getProfileInfo.data.activeHabits}
+              </Text>
+              <Text style={styles.statLabel}>Active Habits</Text>
+            </View>
+            <View style={styles.statBox}>
+              <Text style={styles.emoji}>⏸️</Text>
+              <Text style={styles.statNumber}>
+                {getProfileInfo.data.passiveHabits}
+              </Text>
+              <Text style={styles.statLabel}>Passive Habits</Text>
             </View>
           </View>
-        </SafeAreaView>
+        </View>
       ) : null}
     </SafeAreaView>
   );
