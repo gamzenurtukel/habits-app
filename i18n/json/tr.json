@@ -34,8 +34,17 @@
   "forgot_password": "Şifremi Unuttum?",
   "dont_have_an_account": "Hesabınız yok mu?",
   "sign_up": "Kayıt Ol",
-  "sing_in_success": "Giriş Başarılı !",
-  "an_error_occurred_while_singin_in": "Giriş sırısında bir hata oluştu !",
+  "sing_in_success": "Giriş Başarılı!",
+  "an_error_occurred_while_singin_in": "Giriş sırısında bir hata oluştu!",
   "enter_your_email": "E-postanızı giriniz",
-  "enter_your_password": "Şifrenizi giriniz"
+  "enter_your_password": "Şifrenizi giriniz",
+  "name": "Ad",
+  "surname": "Soyad",
+  "phone": "Telefon",
+  "enter_your_name": "Adınızı giriniz",
+  "enter_your_surname": "Soyadınızı giriniz",
+  "enter_your_phone": "Telefon numaranızı giriniz",
+  "already_have_an_account": "Zaten bir hesabınız var mı?",
+  "sign_up_success": "Kayıt Başarılı!",
+  "an_error_occurred_while_sign_up": "Kayıt sırasında bir hata oluştu!"
 }

@@ -34,8 +34,17 @@
   "forgot_password": "Forgot Password?",
   "dont_have_an_account": "Don't have an account?",
   "sign_up": "Sign Up",
-  "sing_in_success": "Sign In Success !",
-  "an_error_occurred_while_singin_in": "An error occurred while signing in !",
+  "sing_in_success": "Sign In Success!",
+  "an_error_occurred_while_singin_in": "An error occurred while signing in!",
   "enter_your_email": "Enter your email",
-  "enter_your_password": "Enter your password"
+  "enter_your_password": "Enter your password",
+  "name": "Name",
+  "surname": "Surname",
+  "phone": "Phone",
+  "enter_your_name": "Enter your name",
+  "enter_your_surname": "Enter your surname",
+  "enter_your_phone": "Enter your phone",
+  "already_have_an_account": "Already have an account?",
+  "sign_up_success": "Sign Up Success!",
+  "an_error_occurred_while_sign_up": "An error occurred while signing up!"
 }
