@@ -63,7 +63,7 @@ const SignInScreen = () => {
           Toast.show({
             type: "success",
             position: "bottom",
-            text1: "Giriş başarılı!",
+            text1: t("sing_in_success"),
             visibilityTime: 3000,
             autoHide: true,
             bottomOffset: 50,
@@ -78,7 +78,7 @@ const SignInScreen = () => {
           Toast.show({
             type: "error",
             position: "bottom",
-            text1: "Giriş sırasında hata oluştu",
+            text1: t("an_error_occurred_while_singin_in"),
             visibilityTime: 3000,
             autoHide: true,
             bottomOffset: 50,
@@ -89,7 +89,7 @@ const SignInScreen = () => {
       Toast.show({
         type: "error",
         position: "bottom",
-        text1: "Giriş sırasında hata oluştu",
+        text1: t("an_error_occurred_while_singin_in"),
         visibilityTime: 3000,
         autoHide: true,
         bottomOffset: 50,
