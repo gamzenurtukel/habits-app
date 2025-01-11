@@ -29,11 +29,9 @@ import {
 } from "@/redux/services/habit";
 import { IHabit } from "@/types/habit";
 import Toast from "react-native-toast-message";
-import {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-} from "react-native-reanimated";
+import "moment/locale/tr";
+import "moment/locale/en-gb";
+import i18n from "@/i18n/i18nextConfig";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -47,6 +45,9 @@ export default function HomeScreen() {
   const today = moment(date);
   const [selectedDate, setSelectedDate] = useState(today.toISOString());
   const [longPressedIndex, setLongPressedIndex] = useState<number | null>(null);
+
+  const currentLanguage = i18n.language;
+  moment.locale(currentLanguage);
 
   const {
     data: habitGetList,
@@ -143,7 +144,7 @@ export default function HomeScreen() {
   }) => {
     const itemMoment = moment(item.day);
     const dayName = itemMoment.isSame(today, "day")
-      ? "TODAY"
+      ? t("tab_today")
       : itemMoment.format("ddd").toUpperCase();
     const dayNumber = itemMoment.date();
 
@@ -391,11 +392,11 @@ export default function HomeScreen() {
                           }}
                         >
                           {status === 1
-                            ? t("pending")
+                            ? t("incompleted")
                             : status === 2
                             ? t("completed")
                             : t("failed")}{" "}
-                          {`(${habitActionList[status]?.length})`}
+                          {`(${habitActionList[status]?.length || 0})`}
                         </Text>
                         {habitActionList[status]?.map(
                           (habit: any, index: number) => (
@@ -540,10 +541,10 @@ export default function HomeScreen() {
                                   ]}
                                 >
                                   {habit.status === 1
-                                    ? "Pending"
+                                    ? t("incompleted")
                                     : habit.status === 2
-                                    ? "Completed"
-                                    : "Failed"}
+                                    ? t("completed")
+                                    : t("failed")}
                                 </Text>
                               )}
                             </TouchableOpacity>
