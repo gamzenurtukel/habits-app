@@ -7,12 +7,15 @@ import {
   TouchableOpacity,
   StyleSheet,
   Pressable,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { Link, Stack } from "expo-router";
 import { useLoginMutation } from "@/redux/services/auth";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 const SignInScreen = () => {
@@ -30,7 +33,6 @@ const SignInScreen = () => {
       const resultValidation = signInDataSchema.safeParse(formData);
 
       if (!resultValidation.success) {
-
         resultValidation.error.issues.forEach((issue) => {
           console.log("issue", issue.message);
           Toast.show({
@@ -49,35 +51,35 @@ const SignInScreen = () => {
         username: email,
         password: password,
         rememberMe: rememberMe,
-      }).then((res) => {
-        console.log("result", result);
-        console.log("Giriş başarılı:", res);
+      })
+        .then((res) => {
+          console.log("result", result);
+          console.log("Giriş başarılı:", res);
 
-        Toast.show({
-          type: "success",
-          position: "bottom",
-          text1: "Giriş başarılı!",
-          visibilityTime: 3000,
-          autoHide: true,
-          bottomOffset: 50,
-        });
+          Toast.show({
+            type: "success",
+            position: "bottom",
+            text1: "Giriş başarılı!",
+            visibilityTime: 3000,
+            autoHide: true,
+            bottomOffset: 50,
+          });
 
-        setTimeout(() => {
-          router.push("/(tabs)");
-        }, 2000);
-      }
-      ).catch((error) => {
-        console.log("giriş başarısız", error);
-        Toast.show({
-          type: "error",
-          position: "bottom",
-          text1: "Giriş sırasında hata oluştu",
-          visibilityTime: 3000,
-          autoHide: true,
-          bottomOffset: 50,
+          setTimeout(() => {
+            router.push("/(tabs)");
+          }, 2000);
+        })
+        .catch((error) => {
+          console.log("giriş başarısız", error);
+          Toast.show({
+            type: "error",
+            position: "bottom",
+            text1: "Giriş sırasında hata oluştu",
+            visibilityTime: 3000,
+            autoHide: true,
+            bottomOffset: 50,
+          });
         });
-      }
-      );
     } catch (error) {
       console.log("giriş başarısız", error);
       Toast.show({
@@ -94,69 +96,84 @@ const SignInScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
-      <View style={styles.container}>
-        <View style={styles.backgroundGradient} />
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.container}>
+            <View style={styles.backgroundGradient} />
 
-        <View style={styles.content}>
-          <Text style={styles.title}>Habits App</Text>
+            <View style={styles.content}>
+              <Text style={styles.title}>Habits App</Text>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>E-posta</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="E-postanızı girin"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              placeholderTextColor="#B0B0B0"
-            />
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>E-posta</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="E-postanızı girin"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  placeholderTextColor="#B0B0B0"
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Şifre</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Şifrenizi girin"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  placeholderTextColor="#B0B0B0"
+                />
+              </View>
+              <View style={styles.checkboxContainer}>
+                <Pressable
+                  role="checkbox"
+                  aria-checked={rememberMe}
+                  style={[
+                    styles.checkboxBase,
+                    rememberMe && styles.checkboxChecked,
+                  ]}
+                  onPress={() => setRememberMe(!rememberMe)}
+                >
+                  {rememberMe && (
+                    <Ionicons name="checkmark" size={18} color="white" />
+                  )}
+                </Pressable>
+                <Text style={styles.checkboxLabel}>{`Remember Me`}</Text>
+              </View>
+
+              <TouchableOpacity onPress={handleSingIn} style={styles.button}>
+                <Text style={styles.buttonText}>Giriş Yap</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.linkContainer}>
+                <Text style={styles.linkText}>Şifremi Unuttum</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.linkContainer}>
+                <Text style={styles.text}>
+                  Henüz hesabınız yok mu?{" "}
+                  <Link href="/(auth)/sign-up">
+                    <Text style={styles.boldText}>Kayıt Ol</Text>
+                  </Link>
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Şifre</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Şifrenizi girin"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              placeholderTextColor="#B0B0B0"
-            />
-          </View>
-          <View style={styles.checkboxContainer}>
-            <Pressable
-              role="checkbox"
-              aria-checked={rememberMe}
-              style={[styles.checkboxBase, rememberMe && styles.checkboxChecked]}
-              onPress={() => setRememberMe(!rememberMe)}>
-              {rememberMe && <Ionicons name="checkmark" size={20} color="white" />}
-            </Pressable>
-            <Text style={styles.checkboxLabel}>{`Remember Me`}</Text>
-          </View>
-
-          <TouchableOpacity onPress={handleSingIn} style={styles.button}>
-            <Text style={styles.buttonText}>Giriş Yap</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.linkContainer}>
-            <Text style={styles.linkText}>Şifremi Unuttum</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.linkContainer}>
-            <Text style={styles.text}>
-              Henüz hesabınız yok mu?{" "}
-              <Link href="/(auth)/sign-up">
-                <Text style={styles.boldText}>Kayıt Ol</Text>
-              </Link>
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -238,26 +255,24 @@ const styles = StyleSheet.create({
   checkboxBase: {
     width: 20,
     height: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 4,
     borderWidth: 2,
     borderColor: "#1B5E20",
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   checkboxChecked: {
     backgroundColor: "#1B5E20",
   },
   checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
-
   },
   checkboxLabel: {
     fontSize: 16,
     color: "#1B5E20",
-
   },
 });
 
