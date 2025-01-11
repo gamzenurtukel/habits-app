@@ -17,6 +17,7 @@ import { signUpDataSchema } from "@/lib/validations/sign-up-validation";
 import { useRegisterMutation } from "@/redux/services/auth";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { Ionicons } from "@expo/vector-icons";
 
 const SignUpScreen = () => {
   const [name, setName] = useState("");
@@ -24,6 +25,7 @@ const SignUpScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const [register] = useRegisterMutation();
 
@@ -126,7 +128,6 @@ const SignUpScreen = () => {
                 source={require("../../assets/images/habitz_logo.png")}
                 style={{ width: 80, height: 80 }}
               />
-
               <Text style={styles.title}>Habitz</Text>
             </View>
             <View style={styles.content}>
@@ -137,7 +138,6 @@ const SignUpScreen = () => {
                   placeholder={t("enter_your_name")}
                   value={name}
                   onChangeText={setName}
-                  secureTextEntry
                   placeholderTextColor="#B0B0B0"
                 />
               </View>
@@ -148,7 +148,6 @@ const SignUpScreen = () => {
                   placeholder={t("enter_your_surname")}
                   value={surname}
                   onChangeText={setSurname}
-                  secureTextEntry
                   placeholderTextColor="#B0B0B0"
                 />
               </View>
@@ -160,11 +159,9 @@ const SignUpScreen = () => {
                   value={phone}
                   onChangeText={setPhone}
                   keyboardType="phone-pad"
-                  secureTextEntry
                   placeholderTextColor="#B0B0B0"
                 />
               </View>
-
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>{t("email")}</Text>
                 <TextInput
@@ -177,19 +174,29 @@ const SignUpScreen = () => {
                   placeholderTextColor="#B0B0B0"
                 />
               </View>
-
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>{t("password")}</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder={t("enter_your_password")}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  placeholderTextColor="#B0B0B0"
-                />
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    style={[styles.input, styles.passwordInput]}
+                    placeholder={t("enter_your_password")}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!isPasswordVisible} // Şifre görünürlüğünü kontrol et
+                    placeholderTextColor="#B0B0B0"
+                  />
+                  <TouchableOpacity
+                    onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                    style={styles.visibilityToggle}
+                  >
+                    <Ionicons
+                      name={isPasswordVisible ? "eye-off" : "eye"}
+                      size={24}
+                      color="#B0B0B0"
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
-
               <TouchableOpacity onPress={handleSingUp} style={styles.button}>
                 <Text style={styles.buttonText}>{t("sign_up")}</Text>
               </TouchableOpacity>
@@ -283,6 +290,18 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: "bold",
     color: "#1B5E20",
+  },
+  passwordContainer: {
+    position: "relative",
+  },
+  passwordInput: {
+    paddingRight: 50,
+  },
+  visibilityToggle: {
+    position: "absolute",
+    right: 10,
+    top: "50%",
+    transform: [{ translateY: -12 }],
   },
 });
 
