@@ -5,6 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -51,35 +55,34 @@ const SignUpScreen = () => {
         phoneNumber: phone,
         surname,
         countryId: 1,
-      }).then((res) => {
-        console.log("result", result);
-        console.log("Kayıt başarılı:", res);
+      })
+        .then((res) => {
+          console.log("result", result);
+          console.log("Kayıt başarılı:", res);
 
-        Toast.show({
-          type: "success",
-          position: "top",
-          text1: "Kayıt başarılı!",
-          visibilityTime: 3000,
-          autoHide: true,
-          bottomOffset: 50,
+          Toast.show({
+            type: "success",
+            position: "top",
+            text1: "Kayıt başarılı!",
+            visibilityTime: 3000,
+            autoHide: true,
+            bottomOffset: 50,
+          });
+          setTimeout(() => {
+            router.push("/(auth)/sign-in");
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("Kayıt sırasında hata oluştu:", error);
+          Toast.show({
+            type: "error",
+            position: "bottom",
+            text1: "Kayıt sırasında hata oluştu",
+            visibilityTime: 3000,
+            autoHide: true,
+            bottomOffset: 50,
+          });
         });
-        setTimeout(() => {
-          router.push("/(auth)/sign-in");
-        }, 2000);
-
-      }
-      ).catch((error) => {
-        console.error("Kayıt sırasında hata oluştu:", error);
-        Toast.show({
-          type: "error",
-          position: "bottom",
-          text1: "Kayıt sırasında hata oluştu",
-          visibilityTime: 3000,
-          autoHide: true,
-          bottomOffset: 50,
-        });
-      }
-      );
     } catch (error) {
       console.error("Kayıt sırasında hata oluştu:", error);
       Toast.show({
@@ -96,114 +99,135 @@ const SignUpScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
-      <View style={styles.container}>
-        <View style={styles.backgroundGradient} />
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+            }}
+          >
+            <View style={styles.backgroundGradient} />
+            <View
+              style={{
+                alignItems: "center",
+              }}
+            >
+              <Image
+                source={require("../../assets/images/habitz_logo.png")}
+                style={{ width: 80, height: 80 }}
+              />
 
-        <View style={styles.content}>
-          <Text style={styles.title}>Habits App</Text>
+              <Text style={styles.title}>Habitz</Text>
+            </View>
+            <View style={styles.content}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Ad</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Adınızı girin"
+                  value={name}
+                  onChangeText={setName}
+                  secureTextEntry
+                  placeholderTextColor="#B0B0B0"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Soyad</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Soyadınız girin"
+                  value={surname}
+                  onChangeText={setSurname}
+                  secureTextEntry
+                  placeholderTextColor="#B0B0B0"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Telefon</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Telefon numaranızı girin"
+                  value={phone}
+                  onChangeText={setPhone}
+                  keyboardType="phone-pad"
+                  secureTextEntry
+                  placeholderTextColor="#B0B0B0"
+                />
+              </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Ad</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Adınızı girin"
-              value={name}
-              onChangeText={setName}
-              secureTextEntry
-              placeholderTextColor="#B0B0B0"
-            />
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>E-posta</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="E-postanızı girin"
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  placeholderTextColor="#B0B0B0"
+                />
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Şifre</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Şifrenizi girin"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  placeholderTextColor="#B0B0B0"
+                />
+              </View>
+
+              <TouchableOpacity onPress={handleSingUp} style={styles.button}>
+                <Text style={styles.buttonText}>Kayıt Ol</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.linkContainer}>
+                <Text style={styles.text}>
+                  Zaten hesabınız var mı?{" "}
+                  <Link href="/(auth)/sign-in">
+                    <Text style={styles.boldText}>Giriş Yap</Text>
+                  </Link>
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Soyad</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Soyadınız girin"
-              value={surname}
-              onChangeText={setSurname}
-              secureTextEntry
-              placeholderTextColor="#B0B0B0"
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Telefon</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Telefon numaranızı girin"
-              value={phone}
-              onChangeText={setPhone}
-              keyboardType="phone-pad"
-              secureTextEntry
-              placeholderTextColor="#B0B0B0"
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>E-posta</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="E-postanızı girin"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              placeholderTextColor="#B0B0B0"
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Şifre</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Şifrenizi girin"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              placeholderTextColor="#B0B0B0"
-            />
-          </View>
-
-          <TouchableOpacity onPress={handleSingUp} style={styles.button}>
-            <Text style={styles.buttonText}>Kayıt Ol</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.linkContainer}>
-            <Text style={styles.text}>
-              Zaten hesabınız var mı?{" "}
-              <Link href="/(auth)/sign-in">
-                <Text style={styles.boldText}>Giriş Yap</Text>
-              </Link>
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#E8F5E9",
+    justifyContent: "center",
   },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "#588157",
     borderBottomLeftRadius: 100,
     borderBottomRightRadius: 100,
-    height: "75%",
+    height: "80%",
   },
   content: {
-    flex: 1,
-    justifyContent: "center",
+    flexDirection: "column",
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 36,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontSize: 40,
+    fontWeight: "600",
     color: "#FFFFFF",
-    marginBottom: 30,
     textShadowColor: "gray",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 10,
