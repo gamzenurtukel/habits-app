@@ -277,7 +277,7 @@ export default function CalendarScreen() {
           </Text>
           <ScrollView
             style={{
-              height: height * 0.5,
+              height: height - 530,
               paddingBottom: 60,
               marginTop: 16,
             }}
