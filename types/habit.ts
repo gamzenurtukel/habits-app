@@ -52,3 +52,12 @@ export interface IHabitUpdateAction {
   id: string;
   statusEnum: number;
 }
+
+export interface IProfileInfo {
+  userName: string;
+  isSubscribed: boolean;
+  totalDays: number;
+  totalHabits: number;
+  activeHabits: number;
+  passiveHabits: number;
+}
