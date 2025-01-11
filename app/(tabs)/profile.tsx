@@ -5,6 +5,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { router, Link } from "expo-router";
 import { useGetProfileInfoQuery } from "@/redux/services/habit";
 import LoadingScreen from "../loading";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileScreen() {
   const {
@@ -14,6 +15,8 @@ export default function ProfileScreen() {
     isError: getProfileInfoIsError,
     isFetching: getProfileInfoIsFetching,
   } = useGetProfileInfoQuery();
+
+  const { t } = useTranslation();
 
   return (
     <SafeAreaView
@@ -37,8 +40,8 @@ export default function ProfileScreen() {
             </Text>
             <Text style={styles.subscriptionStatus}>
               {getProfileInfo.data.isSubscribed
-                ? "Premium Subscriber"
-                : "Free Subscriber"}
+                ? t("premium_subscriber")
+                : t("free_subscriber")}
             </Text>
             <TouchableOpacity
               style={styles.settingsButton}
@@ -82,7 +85,7 @@ export default function ProfileScreen() {
                   fontWeight: "600",
                 }}
               >
-                Subscribe to unlock more features
+                {t("premium_subscriber_description")}
               </Text>
             </View>
           )}
@@ -92,28 +95,28 @@ export default function ProfileScreen() {
               <Text style={styles.statNumber}>
                 {getProfileInfo.data.totalDays}
               </Text>
-              <Text style={styles.statLabel}>Total Days</Text>
+              <Text style={styles.statLabel}>{t("total_days")}</Text>
             </View>
             <View style={styles.statBox}>
               <Text style={styles.emoji}>📊</Text>
               <Text style={styles.statNumber}>
                 {getProfileInfo.data.totalHabits}
               </Text>
-              <Text style={styles.statLabel}>Total Habits</Text>
+              <Text style={styles.statLabel}>{t("total_habits")}</Text>
             </View>
             <View style={styles.statBox}>
               <Text style={styles.emoji}>🔥</Text>
               <Text style={styles.statNumber}>
                 {getProfileInfo.data.activeHabits}
               </Text>
-              <Text style={styles.statLabel}>Active Habits</Text>
+              <Text style={styles.statLabel}>{t("active_habits")}</Text>
             </View>
             <View style={styles.statBox}>
               <Text style={styles.emoji}>⏸️</Text>
               <Text style={styles.statNumber}>
                 {getProfileInfo.data.passiveHabits}
               </Text>
-              <Text style={styles.statLabel}>Passive Habits</Text>
+              <Text style={styles.statLabel}>{t("passive_habits")}</Text>
             </View>
           </View>
         </View>
