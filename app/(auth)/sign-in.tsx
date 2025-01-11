@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -104,12 +105,29 @@ const SignInScreen = () => {
           contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.container}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              gap: 50,
+            }}
+          >
             <View style={styles.backgroundGradient} />
+            <View
+              style={{
+                alignItems: "center",
+              }}
+            >
+              <Text>
+                <Image
+                  source={require("../../assets/images/habitz_logo.png")}
+                  style={{ width: 80, height: 80 }}
+                />
+              </Text>
+              <Text style={styles.title}>Habitz</Text>
+            </View>
 
             <View style={styles.content}>
-              <Text style={styles.title}>Habits App</Text>
-
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>E-posta</Text>
                 <TextInput
@@ -179,28 +197,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#E8F5E9",
+    justifyContent: "center",
   },
   backgroundGradient: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "#588157",
     borderBottomLeftRadius: 100,
     borderBottomRightRadius: 100,
-    height: "56%",
+    height: "61%",
   },
   content: {
-    flex: 1,
-    justifyContent: "center",
+    flexDirection: "column",
+
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 36,
-    fontWeight: "bold",
+    fontSize: 40,
+    fontWeight: "600",
     textAlign: "center",
     color: "#FFFFFF",
-    marginBottom: 30,
-    textShadowColor: "gray",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 10,
   },
   inputContainer: {
     marginBottom: 20,
