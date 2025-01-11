@@ -18,6 +18,7 @@ import { Link, Stack } from "expo-router";
 import { useLoginMutation } from "@/redux/services/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 const SignInScreen = () => {
   const [email, setEmail] = useState("");
@@ -25,6 +26,8 @@ const SignInScreen = () => {
   const [rememberMe, setRememberMe] = useState(false);
 
   const router = useRouter();
+
+  const { t } = useTranslation();
 
   const [login] = useLoginMutation();
 
@@ -129,7 +132,10 @@ const SignInScreen = () => {
 
             <View style={styles.content}>
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>E-posta</Text>
+                <Text style={styles.label}>
+                  {t("email")}
+                  {/* E-posta */}
+                </Text>
                 <TextInput
                   style={styles.input}
                   placeholder="E-postanızı girin"
@@ -142,7 +148,7 @@ const SignInScreen = () => {
               </View>
 
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>Şifre</Text>
+                <Text style={styles.label}>{t("password")}</Text>
                 <TextInput
                   style={styles.input}
                   placeholder="Şifrenizi girin"
@@ -166,22 +172,24 @@ const SignInScreen = () => {
                     <Ionicons name="checkmark" size={18} color="white" />
                   )}
                 </Pressable>
-                <Text style={styles.checkboxLabel}>{`Remember Me`}</Text>
+                <Text style={styles.checkboxLabel}>{`${t(
+                  "remember_me"
+                )}`}</Text>
               </View>
 
               <TouchableOpacity onPress={handleSingIn} style={styles.button}>
-                <Text style={styles.buttonText}>Giriş Yap</Text>
+                <Text style={styles.buttonText}>{t("sign_in")}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.linkContainer}>
-                <Text style={styles.linkText}>Şifremi Unuttum</Text>
+                <Text style={styles.linkText}>{t("forgot_password")}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.linkContainer}>
                 <Text style={styles.text}>
-                  Henüz hesabınız yok mu?{" "}
+                  {t("dont_have_an_account")}{" "}
                   <Link href="/(auth)/sign-up">
-                    <Text style={styles.boldText}>Kayıt Ol</Text>
+                    <Text style={styles.boldText}>{t("sign_up")}</Text>
                   </Link>
                 </Text>
               </TouchableOpacity>
