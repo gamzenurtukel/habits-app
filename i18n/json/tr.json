@@ -114,5 +114,9 @@
   "set_the_description_of_the_habit": "Alışkanlığın açıklamasını belirleyin",
   "set_the_color_of_the_habit": "Alışkanlığın rengini belirleyin",
   "apply": "Uygula",
-  "back": "Geri"
+  "back": "Geri",
+  "page_not_found": "Sayfa Bulunamadı",
+  "opps_page_not_found": "Hata! Sayfa bulunamadı",
+  "the_page_you_are_looking_for_does_not_exist_or_has_been_moved": "Aramakta olduğunuz sayfa mevcut değil veya taşındı.",
+  "go_back_to_home_page": "Ana sayfaya geri dön"
 }
