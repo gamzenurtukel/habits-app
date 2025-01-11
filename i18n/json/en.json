@@ -33,5 +33,7 @@
   "sign_in": "Sign In",
   "forgot_password": "Forgot Password?",
   "dont_have_an_account": "Don't have an account?",
-  "sign_up": "Sign Up"
+  "sign_up": "Sign Up",
+  "sing_in_success": "Sign In Success !",
+  "an_error_occurred_while_singin_in": "An error occurred while signing in !"
 }

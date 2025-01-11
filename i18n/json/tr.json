@@ -33,5 +33,7 @@
   "sign_in": "Giriş Yap",
   "forgot_password": "Şifremi Unuttum?",
   "dont_have_an_account": "Hesabınız yok mu?",
-  "sign_up": "Kayıt Ol"
+  "sign_up": "Kayıt Ol",
+  "sing_in_success": "Giriş Başarılı !",
+  "an_error_occurred_while_singin_in": "Giriş sırısında bir hata oluştu !"
 }
