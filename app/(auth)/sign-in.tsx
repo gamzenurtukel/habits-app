@@ -24,6 +24,7 @@ const SignInScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const router = useRouter();
 
@@ -149,14 +150,34 @@ const SignInScreen = () => {
 
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>{t("password")}</Text>
-                <TextInput
+                {/* <TextInput
                   style={styles.input}
                   placeholder={t("enter_your_password")}
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry
                   placeholderTextColor="#B0B0B0"
-                />
+                /> */}
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    style={[styles.input, styles.passwordInput]}
+                    placeholder={t("enter_your_password")}
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry={!isPasswordVisible} // Şifre görünürlüğünü kontrol et
+                    placeholderTextColor="#B0B0B0"
+                  />
+                  <TouchableOpacity
+                    onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                    style={styles.visibilityToggle}
+                  >
+                    <Ionicons
+                      name={isPasswordVisible ? "eye-off" : "eye"}
+                      size={24}
+                      color="#B0B0B0"
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
               <View style={styles.checkboxContainer}>
                 <Pressable
@@ -295,6 +316,18 @@ const styles = StyleSheet.create({
   checkboxLabel: {
     fontSize: 16,
     color: "#1B5E20",
+  },
+  passwordContainer: {
+    position: "relative",
+  },
+  passwordInput: {
+    paddingRight: 50, // Toggle ikonu için boşluk bırak
+  },
+  visibilityToggle: {
+    position: "absolute",
+    right: 10,
+    top: "50%",
+    transform: [{ translateY: -12 }],
   },
 });
 
