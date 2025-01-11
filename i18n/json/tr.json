@@ -50,5 +50,12 @@
   "completed": "Tamamlandı",
   "incompleted": "Tamamlanmadı",
   "failed": "Başarısız",
-  "tab_today": "BUGÜN"
+  "tab_today": "BUGÜN",
+  "premium_subscriber": "Premium Abone",
+  "free_subscriber": "Ücretsiz Abone",
+  "premium_subscriber_description": "Premium abone olun ve daha fazla özellikten yararlanın.",
+  "total_days": "Toplam Gün",
+  "total_habits": "Toplam Alışkanlık",
+  "active_habits": "Aktif Alışkanlık",
+  "passive_habits": "Pasif Alışkanlık"
 }

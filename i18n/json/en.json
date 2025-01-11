@@ -50,5 +50,12 @@
   "completed": "Completed",
   "incompleted": "Incompleted",
   "failed": "Failed",
-  "tab_today": "TODAY"
+  "tab_today": "TODAY",
+  "premium_subscriber": "Premium Subscriber",
+  "free_subscriber": "Free Subscriber",
+  "premium_subscriber_description": "Become a premium subscriber and enjoy more features.",
+  "total_days": "Total Days",
+  "total_habits": "Total Habits",
+  "active_habits": "Active Habits",
+  "passive_habits": "Passive Habits"
 }
