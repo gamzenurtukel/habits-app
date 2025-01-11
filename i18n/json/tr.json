@@ -26,5 +26,12 @@
   "today": "Bugün",
   "profile": "Profil",
   "your_daily_goal_progress": "Günlük hedef ilerlemeniz",
-  "progress_bar": "{current} / {total} alışkanlık tamamlandı"
+  "progress_bar": "{current} / {total} alışkanlık tamamlandı",
+  "email": "E-posta",
+  "password": "Şifre",
+  "remember_me": "Beni Hatırla",
+  "sign_in": "Giriş Yap",
+  "forgot_password": "Şifremi Unuttum?",
+  "dont_have_an_account": "Hesabınız yok mu?",
+  "sign_up": "Kayıt Ol"
 }

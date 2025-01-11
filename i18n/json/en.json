@@ -26,5 +26,12 @@
   "today": "Today",
   "profile": "Profile",
   "your_daily_goal_progress": "Your daily goal progress",
-  "progress_bar": "{current} of {total} habits completed"
+  "progress_bar": "{current} of {total} habits completed",
+  "email": "Email",
+  "password": "Password",
+  "remember_me": "Remember Me",
+  "sign_in": "Sign In",
+  "forgot_password": "Forgot Password?",
+  "dont_have_an_account": "Don't have an account?",
+  "sign_up": "Sign Up"
 }
