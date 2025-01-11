@@ -150,14 +150,6 @@ const SignInScreen = () => {
 
               <View style={styles.inputContainer}>
                 <Text style={styles.label}>{t("password")}</Text>
-                {/* <TextInput
-                  style={styles.input}
-                  placeholder={t("enter_your_password")}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  placeholderTextColor="#B0B0B0"
-                /> */}
                 <View style={styles.passwordContainer}>
                   <TextInput
                     style={[styles.input, styles.passwordInput]}
@@ -321,7 +313,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   passwordInput: {
-    paddingRight: 50, // Toggle ikonu için boşluk bırak
+    paddingRight: 50,
   },
   visibilityToggle: {
     position: "absolute",
