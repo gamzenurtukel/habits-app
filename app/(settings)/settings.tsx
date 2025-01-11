@@ -5,60 +5,67 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import Toast from "react-native-toast-message";
 import { useLogoutMutation } from "@/redux/services/auth";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 
 export default function SettingsScreen() {
   const [logout] = useLogoutMutation();
 
   const router = useRouter();
 
+  const { t } = useTranslation();
+
   const settingsData = [
     {
-      title: "Hesap",
+      title: t("account"),
       data: [
         {
-          title: "Profil",
+          title: t("profile"),
           icon: "person",
         },
         {
-          title: "Şifre Değiştir",
+          title: t("change_password"),
           icon: "lock",
         },
         {
-          title: "Bildirimler",
+          title: t("notifications"),
           icon: "notifications",
         },
       ],
     },
     {
-      title: "Uygulama",
+      title: t("aplication"),
       data: [
         {
-          title: "Tema",
-          icon: "palette",
-        },
-        {
-          title: "Dil",
+          title: t("language"),
           icon: "language",
         },
         {
-          title: "Hakkında",
+          title: t("about"),
           icon: "info",
+        },
+        {
+          title: t("terms_of_use"),
+          icon: "description",
+        },
+        {
+          title: t("privacy_policy"),
+          icon: "privacy-tip",
         },
       ],
     },
     {
-      title: "Destek",
+      title: t("support"),
       data: [
         {
-          title: "Yardım",
+          title: t("help"),
           icon: "help",
         },
         {
-          title: "Geri Bildirim",
+          title: t("feedback"),
           icon: "feedback",
         },
         {
-          title: "Hata Bildir",
+          title: t("report_bug"),
           icon: "bug-report",
         },
       ],
@@ -121,7 +128,7 @@ export default function SettingsScreen() {
               alignItems: "center",
             }}
           >
-            <Text style={styles.headerText}>Settings</Text>
+            <Text style={styles.headerText}>{t("settings")}</Text>
           </View>
         </View>
         <View style={styles.content}>
@@ -160,7 +167,7 @@ export default function SettingsScreen() {
             </View>
           ))}
           <TouchableOpacity style={styles.button} onPress={handleSignOut}>
-            <Text style={styles.buttonText}>Çıkış Yap</Text>
+            <Text style={styles.buttonText}>{t("sign_out")}</Text>
           </TouchableOpacity>
         </View>
       </View>
