@@ -47,7 +47,7 @@ export default function HomeScreen() {
   const [longPressedIndex, setLongPressedIndex] = useState<number | null>(null);
 
   const currentLanguage = i18n.language;
-  moment.locale(currentLanguage);
+  moment.locale(currentLanguage === "tr" ? "tr" : "en-gb");
 
   const {
     data: habitGetList,
