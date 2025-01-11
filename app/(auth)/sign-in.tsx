@@ -138,7 +138,7 @@ const SignInScreen = () => {
                 </Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="E-postanızı girin"
+                  placeholder={t("enter_your_email")}
                   value={email}
                   onChangeText={setEmail}
                   keyboardType="email-address"
@@ -151,7 +151,7 @@ const SignInScreen = () => {
                 <Text style={styles.label}>{t("password")}</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="Şifrenizi girin"
+                  placeholder={t("enter_your_password")}
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry
@@ -216,7 +216,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flexDirection: "column",
-
     paddingHorizontal: 20,
   },
   title: {
