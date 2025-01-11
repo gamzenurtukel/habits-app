@@ -219,128 +219,6 @@ const CustomModal = () => {
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
-  // console.log("token", token);
-  // const handleSaveChanges = async () => {
-  //   console.log("token", token);
-  //   const habitData: IHabitCreate | IHabitUpdate = {
-  //     name: form.name,
-  //     description: form.description,
-  //     isReminder: form.isReminder,
-  //     details: {
-  //       color: form.color || "#28B463",
-  //       icon: form.icon || "🏃",
-  //       periodType: form.periodType,
-  //       periodCount: form.periodCount,
-  //       startTime: `${form.startTime.hour.padStart(
-  //         2,
-  //         "0"
-  //       )}:${form.startTime.minute.padStart(2, "0")}:00`,
-  //       endTime: `${form.endTime.hour.padStart(
-  //         2,
-  //         "0"
-  //       )}:${form.endTime.minute.padStart(2, "0")}:00`,
-  //     },
-  //   };
-
-  //   if (form.periodType === 2) {
-  //     habitData.details.daysOfWeeks = form.daysOfWeeks;
-  //   }
-
-  //   if (form.periodType === 3) {
-  //     habitData.details.daysOfMonthly = form.daysOfMonthly;
-  //   }
-  //   if (params.id) {
-  //     (habitData as IHabitUpdate).id = params.id as string;
-  //   }
-
-  //   console.log("habitData", JSON.stringify(habitData));
-  //   params.id
-  //     ? editHabitHandler(habitData as IHabitUpdate)
-  //     : createHabitHandler(habitData as IHabitCreate);
-  // };
-
-  // const createHabitHandler = async (habitData: IHabitCreate) => {
-  //   createHabit(habitData)
-  //     .then((response) => {
-  //       if (response?.data?.isSuccessful) {
-  //         console.log("Alışkanlık başarıyla oluşturuldu!", response.data);
-  //         Toast.show({
-  //           type: "success",
-  //           position: "bottom",
-  //           text1: "Alışkanlık başarıyla oluşturuldu!",
-  //           visibilityTime: 3000,
-  //           autoHide: true,
-  //           bottomOffset: 50,
-  //         });
-  //         setTimeout(() => {
-  //           router.back();
-  //         }, 2000);
-  //       } else {
-  //         console.log("alışkanlık oluşturma başarısız then", response);
-  //         Toast.show({
-  //           type: "error",
-  //           position: "bottom",
-  //           text1: "Alışkanlık oluşturulurken hata oluştu",
-  //           visibilityTime: 3000,
-  //           autoHide: true,
-  //           bottomOffset: 50,
-  //         });
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log("alışkanlık oluşturma başarısız catch", error);
-  //       Toast.show({
-  //         type: "error",
-  //         position: "bottom",
-  //         text1: "Alışkanlık oluşturulurken hata oluştu",
-  //         visibilityTime: 3000,
-  //         autoHide: true,
-  //         bottomOffset: 50,
-  //       });
-  //     });
-  // };
-
-  // const editHabitHandler = async (habitData: IHabitUpdate) => {
-  //   updateHabit(habitData)
-  //     .then((response) => {
-  //       if (response?.data?.isSuccessful) {
-  //         console.log("Alışkanlık başarıyla güncellendi!", response.data);
-  //         Toast.show({
-  //           type: "success",
-  //           position: "bottom",
-  //           text1: "Alışkanlık başarıyla güncellendi!",
-  //           visibilityTime: 3000,
-  //           autoHide: true,
-  //           bottomOffset: 50,
-  //         });
-  //         setTimeout(() => {
-  //           router.back();
-  //         }, 2000);
-  //       } else {
-  //         console.log("alışkanlık güncelleme başarısız then", response);
-  //         Toast.show({
-  //           type: "error",
-  //           position: "bottom",
-  //           text1: "Alışkanlık güncellenirken hata oluştu",
-  //           visibilityTime: 3000,
-  //           autoHide: true,
-  //           bottomOffset: 50,
-  //         });
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log("alışkanlık güncelleme başarısız catch", error);
-  //       Toast.show({
-  //         type: "error",
-  //         position: "bottom",
-  //         text1: "Alışkanlık güncellenirken hata oluştu",
-  //         visibilityTime: 3000,
-  //         autoHide: true,
-  //         bottomOffset: 50,
-  //       });
-  //     });
-  // };
-
   const handleSaveChanges = async () => {
     try {
       console.log("token", token);
@@ -485,7 +363,7 @@ const CustomModal = () => {
                   color: "#588157",
                 }}
               >
-                Choose a habit
+                {t("choose_a_habit")}
               </Text>
               <Text
                 style={{
@@ -493,7 +371,7 @@ const CustomModal = () => {
                   color: "#7D7D7D",
                 }}
               >
-                Create a custom habit made just for you
+                {t("create_a_custom_habit_made_just_for_you")}
               </Text>
             </View>
             <View
@@ -511,7 +389,7 @@ const CustomModal = () => {
                   color: "#588157",
                 }}
               >
-                Custom
+                {t("custom")}
               </Text>
               <TouchableOpacity
                 style={{
@@ -530,7 +408,7 @@ const CustomModal = () => {
                 <Text
                   style={{ fontSize: 14, color: "#588157", fontWeight: "500" }}
                 >
-                  Create a custom habit
+                  {t("create_a_custom_habit")}
                 </Text>
                 <MaterialIcons
                   name="add-circle-outline"
@@ -702,7 +580,7 @@ const CustomModal = () => {
                 style={{ flexDirection: "row", alignItems: "center" }}
               >
                 <MaterialIcons name="chevron-left" size={30} color="#588157" />
-                <Text style={{ color: "#588157" }}>Geri</Text>
+                <Text style={{ color: "#588157" }}>{t("back")}</Text>
               </TouchableOpacity>
             )}
             <TouchableOpacity
@@ -763,7 +641,7 @@ const CustomModal = () => {
                   color: "#588157",
                 }}
               >
-                Habit Details
+                {t("habit_details")}
               </Text>
               <Text
                 style={{
@@ -771,7 +649,7 @@ const CustomModal = () => {
                   fontSize: 10,
                 }}
               >
-                Customize your habit details
+                {t("customize_your_habit_details")}
               </Text>
             </View>
             {/* icon & color */}
@@ -848,7 +726,7 @@ const CustomModal = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  Icon
+                  {t("icon")}
                 </Text>
               </View>
               <View
@@ -912,7 +790,7 @@ const CustomModal = () => {
                     fontWeight: "bold",
                   }}
                 >
-                  Color
+                  {t("color")}
                 </Text>
               </View>
             </View>
@@ -932,7 +810,7 @@ const CustomModal = () => {
                     {{
                       name: form.name,
                       description: form.description,
-                    }[item] || "Belirlenmemiş"}
+                    }[item] || t("not_specified")}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -971,10 +849,10 @@ const CustomModal = () => {
                       <Text style={styles.optionValue}>
                         {item === "repetition"
                           ? activeTabSheetRepetition === "daily"
-                            ? "Günlük"
+                            ? t("daily")
                             : activeTabSheetRepetition === "weekly"
-                            ? "Haftalık"
-                            : "Aylık"
+                            ? t("weekly")
+                            : t("monthly")
                           : item === "duration"
                           ? activeTabSheetDuration === "startTime"
                             ? `${form.startTime.hour.padStart(
@@ -991,7 +869,7 @@ const CustomModal = () => {
                                 2,
                                 "0"
                               )}:${form.endTime.minute.padStart(2, "0")}`
-                          : "Belirlenmemiş"}
+                          : t("not_specified")}
                       </Text>
                       <Text style={styles.optionValue}>
                         <MaterialIcons name="arrow-drop-down" size={20} />
@@ -1030,7 +908,9 @@ const CustomModal = () => {
                 }}
               >
                 <MaterialIcons name="check" size={24} color="#FFFFFF" />
-                <Text style={styles.applyText}>Değişikleri Kaydet</Text>
+                <Text style={styles.applyText}>
+                  {params.id ? t("update") : t("save")}
+                </Text>
               </TouchableOpacity>
             </LinearGradient>
           </ScrollView>
@@ -1075,7 +955,7 @@ const CustomModal = () => {
             marginBottom: 10,
           }}
         >
-          Her
+          {t("every")}
         </Text>
         <Picker
           selectedValue={draft.periodCount.toString()}
@@ -1101,7 +981,7 @@ const CustomModal = () => {
             marginBottom: 10,
           }}
         >
-          gün
+          {t("days")}
         </Text>
       </View>
       <Text
@@ -1113,7 +993,7 @@ const CustomModal = () => {
           textAlign: "center",
         }}
       >
-        {draft.periodCount} gün boyunca her gün tekrarla
+        {t("repeat_every_day_for_days", { count: draft.periodCount })}
       </Text>
     </View>
   );
@@ -1167,7 +1047,7 @@ const CustomModal = () => {
             marginBottom: 10,
           }}
         >
-          Her
+          {t("every")}
         </Text>
         <Picker
           selectedValue={draft.periodCount.toString()}
@@ -1193,7 +1073,7 @@ const CustomModal = () => {
             marginBottom: 10,
           }}
         >
-          Hafta
+          {t("weeks")}
         </Text>
       </View>
       <View>
@@ -1205,7 +1085,7 @@ const CustomModal = () => {
             marginBottom: 10,
           }}
         >
-          Hangi günler tekrarlasın?
+          {t("which_days_should_it_be_repeated")}
         </Text>
         <View
           style={{
@@ -1214,36 +1094,42 @@ const CustomModal = () => {
             alignItems: "center",
           }}
         >
-          {["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"].map(
-            (day, index) => (
-              <Pressable
-                key={day}
-                onPress={() => handleDayPress(index)}
+          {[
+            t("monday"),
+            t("tuesday"),
+            t("wednesday"),
+            t("thursday"),
+            t("friday"),
+            t("saturday"),
+            t("sunday"),
+          ].map((day, index) => (
+            <Pressable
+              key={day}
+              onPress={() => handleDayPress(index)}
+              style={{
+                borderRadius: 10,
+                width: 40,
+                height: 40,
+                alignItems: "center",
+                justifyContent: "center",
+                margin: 5,
+                backgroundColor: draft.daysOfWeeks.some(
+                  (selectedDay) => selectedDay?.dayOfWeek === index
+                )
+                  ? "#D1E7DD"
+                  : "#F0F0F0",
+              }}
+            >
+              <Text
                 style={{
-                  borderRadius: 10,
-                  width: 40,
-                  height: 40,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: 5,
-                  backgroundColor: draft.daysOfWeeks.some(
-                    (selectedDay) => selectedDay?.dayOfWeek === index
-                  )
-                    ? "#D1E7DD"
-                    : "#F0F0F0",
+                  fontWeight: "500",
+                  fontSize: 10,
                 }}
               >
-                <Text
-                  style={{
-                    fontWeight: "500",
-                    fontSize: 10,
-                  }}
-                >
-                  {day}
-                </Text>
-              </Pressable>
-            )
-          )}
+                {day}
+              </Text>
+            </Pressable>
+          ))}
         </View>
       </View>
       <Text
@@ -1255,7 +1141,7 @@ const CustomModal = () => {
           textAlign: "center",
         }}
       >
-        {draft.periodCount} haftada bir seçtiğiniz gün(ler)de tekrarla
+        {t("repeat_every_week_for_weeks", { count: draft.periodCount })}
       </Text>
     </View>
   );
@@ -1277,7 +1163,7 @@ const CustomModal = () => {
             marginBottom: 10,
           }}
         >
-          Her
+          {t("every")}
         </Text>
         <Picker
           selectedValue={draft.periodCount.toString()}
@@ -1303,7 +1189,7 @@ const CustomModal = () => {
             marginBottom: 10,
           }}
         >
-          Ay
+          {t("months")}
         </Text>
       </View>
       <View>
@@ -1315,7 +1201,7 @@ const CustomModal = () => {
             marginBottom: 10,
           }}
         >
-          Hangi günler tekrarlasın?
+          {t("which_days_should_it_be_repeated")}
         </Text>
         <View
           style={{
@@ -1353,17 +1239,6 @@ const CustomModal = () => {
           ))}
         </View>
       </View>
-      {/* <Text
-        style={{
-          fontSize: 12,
-          fontWeight: "500",
-          color: "#333",
-          marginTop: 10,
-          textAlign: "center",
-        }}
-      >
-        {draft.periodCount} haftada bir seçtiğiniz gün(ler)de tekrarla
-      </Text> */}
     </View>
   );
 
@@ -1391,7 +1266,7 @@ const CustomModal = () => {
           marginBottom: 10,
         }}
       >
-        Alışkanlık tekrarlanma sıklığını belirleyin
+        {t("set_the_frequency_of_habit_repetition")}
       </Text>
       <View style={styles.tabContainer3}>
         <Pressable
@@ -1416,7 +1291,7 @@ const CustomModal = () => {
               activeTabSheetRepetition === "daily" && styles.activeTabText3,
             ]}
           >
-            Günlük
+            {t("daily")}
           </Text>
         </Pressable>
         <Pressable
@@ -1440,7 +1315,7 @@ const CustomModal = () => {
               activeTabSheetRepetition === "weekly" && styles.activeTabText3,
             ]}
           >
-            Haftalık
+            {t("weekly")}
           </Text>
         </Pressable>
         <Pressable
@@ -1464,7 +1339,7 @@ const CustomModal = () => {
               activeTabSheetRepetition === "monthly" && styles.activeTabText3,
             ]}
           >
-            Aylık
+            {t("monthly")}
           </Text>
         </Pressable>
       </View>
@@ -1525,7 +1400,7 @@ const CustomModal = () => {
               activeTabSheetDuration === "startTime" && styles.activeTabText3,
             ]}
           >
-            Başlangıç Zamanı
+            {t("start_time")}
           </Text>
         </Pressable>
         <Pressable
@@ -1541,7 +1416,7 @@ const CustomModal = () => {
               activeTabSheetDuration === "timeRange" && styles.activeTabText3,
             ]}
           >
-            Zaman Aralığı
+            {t("time_range")}
           </Text>
         </Pressable>
       </View>
@@ -1552,7 +1427,7 @@ const CustomModal = () => {
           paddingVertical: 10,
         }}
       >
-        Başlangıç Zamanı
+        {t("start_time")}
       </Text>
       <View
         style={[
@@ -1607,7 +1482,7 @@ const CustomModal = () => {
               paddingVertical: 10,
             }}
           >
-            Bitiş Zamanı
+            {t("end_time")}
           </Text>
 
           <View
@@ -1659,12 +1534,10 @@ const CustomModal = () => {
   // name
   const renderName = () => (
     <View style={styles.container3}>
-      <Text style={styles.title}>
-        {t("please_enter_the_name_of_the_habit")}
-      </Text>
+      <Text style={styles.title}>{t("set_the_name_of_the_habit")}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Name"
+        placeholder={t("example_run")}
         value={draft.name}
         autoFocus={true}
         onChangeText={(text) => setDraft({ ...draft, name: text })}
@@ -1675,12 +1548,10 @@ const CustomModal = () => {
   // description
   const renderDescription = () => (
     <View style={styles.container3}>
-      <Text style={styles.title}>
-        {t("please_enter_the_description_of_the_habit")}
-      </Text>
+      <Text style={styles.title}>{t("set_the_description_of_the_habit")}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Description"
+        placeholder={t("example_run_5_km")}
         value={draft.description}
         onChangeText={(text) => setDraft({ ...draft, description: text })}
       />
@@ -1693,7 +1564,7 @@ const CustomModal = () => {
       <View style={styles.inputContainer}>
         <Text style={styles.inputLabel}>
           {/* {t("please_enter_the_icon_of_the_habit")} */}
-          Alışkanlık simgesi seçin
+          {t("set_the_icon_of_the_habit")}
         </Text>
       </View>
 
@@ -1749,7 +1620,7 @@ const CustomModal = () => {
   // color
   const renderColor = () => (
     <View style={styles.container3}>
-      <Text style={styles.title}>Choose a color</Text>
+      <Text style={styles.title}>{t("set_the_color_of_the_habit")}</Text>
       <View style={styles.colorContainer}>
         <FlatList
           data={colors}
@@ -1781,14 +1652,6 @@ const CustomModal = () => {
             </Pressable>
           )}
         />
-        <Pressable
-          style={styles.applyButton}
-          onPress={() => {
-            bottomSheetRef.current?.close();
-          }}
-        >
-          <Text style={styles.applyText}>Uygula</Text>
-        </Pressable>
       </View>
     </View>
   );
@@ -1887,7 +1750,7 @@ const CustomModal = () => {
                 style={styles.applyButton}
                 key={"apply"}
               >
-                <Text style={styles.applyText}>Apply</Text>
+                <Text style={styles.applyText}>{t("apply")}</Text>
               </LinearGradient>
             </TouchableOpacity>
           </BottomSheetView>
@@ -2083,7 +1946,7 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 20,
   },
   title: {
-    fontSize: 20,
+    fontSize: 12,
     fontWeight: "bold",
     marginBottom: 10,
   },
