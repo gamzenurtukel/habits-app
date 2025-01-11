@@ -283,33 +283,44 @@ export default function HomeScreen() {
               style={styles.habitCards}
             >
               <TouchableOpacity
-                style={[styles.addHabitCard, { cursor: "pointer" }]}
+                style={[styles.addHabitCard, { marginRight: 7 }]}
                 onPress={() => router.push("/modal")}
               >
                 <Ionicons name="add" size={28} color="green" />
                 <Text style={styles.addHabitText}>{t("add_habit")}</Text>
               </TouchableOpacity>
 
-              {allHabitsList?.map((habit, index: number) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.habitCard,
-                    { backgroundColor: habit.details.color },
-                  ]}
-                >
-                  <Text style={styles.habitText}>{habit.details.icon}</Text>
-                  <Text style={styles.habitText}>{habit.name}</Text>
-                  <Text style={styles.habitText}>
-                    {habit.details.periodCount}{" "}
-                    {habit.details.periodType === 1
-                      ? t("day")
-                      : habit.details.periodType === 2
-                      ? t("week")
-                      : t("month")}
-                  </Text>
-                </View>
-              ))}
+              <View
+                style={{
+                  flexDirection: "row",
+                  gap: 7,
+                  // backgroundColor: "red",
+                  // width: "100%",
+                  // justifyContent: "space-between",
+                  // alignItems: "center",
+                }}
+              >
+                {allHabitsList?.map((habit, index: number) => (
+                  <View
+                    key={index}
+                    style={[
+                      styles.habitCard,
+                      { backgroundColor: habit.details.color },
+                    ]}
+                  >
+                    <Text style={{ fontSize: 24 }}>{habit.details.icon}</Text>
+                    <Text style={styles.habitText}>{habit.name}</Text>
+                    <Text style={styles.habitText}>
+                      {habit.details.periodCount}{" "}
+                      {habit.details.periodType === 1
+                        ? t("day")
+                        : habit.details.periodType === 2
+                        ? t("week")
+                        : t("month")}
+                    </Text>
+                  </View>
+                ))}
+              </View>
             </ScrollView>
 
             {/* Daily Progress */}
@@ -572,15 +583,19 @@ const styles = StyleSheet.create({
   editButton: { color: "green", fontSize: 16 },
   habitCards: { flexDirection: "row", marginBottom: 24 },
   addHabitCard: {
-    // backgroundColor: "#e5f9e7",
     backgroundColor: "#E0E0E0",
-    borderColor: "#e5f9e7",
-    borderWidth: 1,
-    padding: 16,
-    borderRadius: 8,
+    flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
-    width: 100,
+    paddingVertical: 20,
+    paddingHorizontal: 5,
+    borderRadius: 10,
+    width: 110,
+    height: 120,
+    shadowColor: "#e5f9e7",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   addHabitText: {
     marginTop: 8,
@@ -588,12 +603,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   habitCard: {
-    padding: 16,
-    borderRadius: 8,
+    flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
-    width: 100,
-    marginHorizontal: 8,
+    paddingVertical: 20,
+    paddingHorizontal: 5,
+
+    justifyContent: "space-around",
+    borderRadius: 10,
+    width: 110,
+    height: 120,
+    gap: 10,
   },
   habitText: { color: "white", fontWeight: "600" },
   progressText: {
