@@ -118,5 +118,7 @@
   "page_not_found": "Page Not Found",
   "opps_page_not_found": "Opps! Page not found",
   "the_page_you_are_looking_for_does_not_exist_or_has_been_moved": "The page you are looking for does not exist or has been moved.",
-  "go_back_to_home_page": "Go back to home page"
+  "go_back_to_home_page": "Go back to home page",
+  "habits_of_the_day": "Habits of the Day",
+  "completion_rate": "Completion Rate"
 }
