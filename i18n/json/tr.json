@@ -120,5 +120,10 @@
   "the_page_you_are_looking_for_does_not_exist_or_has_been_moved": "Aramakta olduğunuz sayfa mevcut değil veya taşındı.",
   "go_back_to_home_page": "Ana sayfaya geri dön",
   "habits_of_the_day": "Günün Alışkanlıkları",
-  "completion_rate": "Tamamlanma Oranı"
+  "completion_rate": "Tamamlanma Oranı",
+  "an_error_occurred_while_processing": "İşlem sırasında bir hata oluştu!",
+  "habit_successfully_created": "Alışkanlık başarıyla oluşturuldu!",
+  "an_error_occurred_while_creating_habit": "Alışkanlık oluşturulurken bir hata oluştu!",
+  "habit_successfully_updated": "Alışkanlık başarıyla güncellendi!",
+  "an_error_occurred_while_updating_habit": "Alışkanlık güncellenirken bir hata oluştu!"
 }

@@ -120,5 +120,10 @@
   "the_page_you_are_looking_for_does_not_exist_or_has_been_moved": "The page you are looking for does not exist or has been moved.",
   "go_back_to_home_page": "Go back to home page",
   "habits_of_the_day": "Habits of the Day",
-  "completion_rate": "Completion Rate"
+  "completion_rate": "Completion Rate",
+  "an_error_occurred_while_processing": "An error occurred while processing!",
+  "habit_successfully_created": "Habit successfully created!",
+  "an_error_occurred_while_creating_habit": "An error occurred while creating habit!",
+  "habit_successfully_updated": "Habit successfully updated!",
+  "an_error_occurred_while_updating_habit": "An error occurred while updating habit!"
 }
