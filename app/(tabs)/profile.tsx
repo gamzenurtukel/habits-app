@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { router, Link } from "expo-router";
 import { useGetProfileInfoQuery } from "@/redux/services/habit";
 import LoadingScreen from "../loading";
@@ -31,10 +31,24 @@ export default function ProfileScreen() {
       ) : getProfileInfoIsSuccess ? (
         <View style={styles.container}>
           <View style={styles.profileCard}>
-            <Image
-              source={{ uri: "https://via.placeholder.com/150" }}
-              style={styles.profileImage}
-            />
+            <View
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 50,
+                backgroundColor: "#588157",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 10,
+                shadowColor: "#333",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3,
+              }}
+            >
+              <Ionicons name="person" size={60} color="#FFFFFF" />
+            </View>
             <Text style={styles.userName}>
               {getProfileInfo.data.userName.toLocaleUpperCase()}
             </Text>
