@@ -260,7 +260,7 @@ const CustomModal = () => {
         : await handleHabitCreate(habitData as IHabitCreate);
     } catch (error) {
       console.error("handleSaveChanges error", error);
-      showToast("error", "İşlem sırasında bir hata oluştu");
+      showToast("error", t("an_error_occurred_while_processing"));
     }
   };
 
@@ -270,19 +270,19 @@ const CustomModal = () => {
 
       if (response?.data?.isSuccessful) {
         console.log("Alışkanlık başarıyla oluşturuldu!", response.data);
-        showToast("success", "Alışkanlık başarıyla oluşturuldu!");
+        showToast("success", t("habit_successfully_created"));
         navigateBack();
       } else {
         console.error("Alışkanlık oluşturma başarısız", response);
         showToast(
           "error",
           (response?.data?.errors ? response.data.errors[0] : null) ||
-            "Alışkanlık oluşturulurken hata oluştu"
+            t("an_error_occurred_while_creating_habit")
         );
       }
     } catch (error) {
       console.error("Alışkanlık oluşturma başarısız", error);
-      showToast("error", "Alışkanlık oluşturulurken hata oluştu");
+      showToast("error", t("an_error_occurred_while_creating_habit"));
     }
   };
 
@@ -292,19 +292,19 @@ const CustomModal = () => {
 
       if (response?.data?.isSuccessful) {
         console.log("Alışkanlık başarıyla güncellendi!", response.data);
-        showToast("success", "Alışkanlık başarıyla güncellendi!");
+        showToast("success", t("habit_successfully_updated"));
         navigateBack();
       } else {
         console.error("Alışkanlık güncelleme başarısız", response);
         showToast(
           "error",
           (response?.data?.errors ? response.data.errors[0] : null) ||
-            "Alışkanlık güncellenirken hata oluştu"
+            t("an_error_occurred_while_updating_habit")
         );
       }
     } catch (error) {
       console.error("Alışkanlık güncelleme başarısız", error);
-      showToast("error", "Alışkanlık güncellenirken hata oluştu");
+      showToast("error", t("an_error_occurred_while_updating_habit"));
     }
   };
 
