@@ -23,6 +23,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { CircularProgress } from "react-native-circular-progress";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useHabitActionListQuery } from "@/redux/services/habit";
+import "moment/locale/tr";
+import "moment/locale/en-gb";
+import i18n from "@/i18n/i18nextConfig";
+import { useTranslation } from "react-i18next";
 
 const { width: screenWidth, height: height } = Dimensions.get("screen");
 
@@ -31,6 +35,11 @@ export default function CalendarScreen() {
   const [habitActionList, setHabitActionList] = useState<any[]>([]);
 
   const bottomSheetRef = useRef<BottomSheetModal>(null);
+
+  const { t } = useTranslation();
+
+  const currentLanguage = i18n.language;
+  moment.locale(currentLanguage === "tr" ? "tr" : "en-gb");
 
   const today = moment();
   const startMonth = moment().subtract(8, "months").startOf("month");
@@ -149,7 +158,15 @@ export default function CalendarScreen() {
       </LinearGradient>
 
       <View style={styles.daysHeader}>
-        {["Pzt", "Sal", "Çar", "Per", "Cum", "Cts", "Paz"].map((day, i) => (
+        {[
+          t("monday"),
+          t("tuesday"),
+          t("wednesday"),
+          t("thursday"),
+          t("friday"),
+          t("saturday"),
+          t("sunday"),
+        ].map((day, i) => (
           <Text key={i} style={styles.dayName}>
             {day}
           </Text>
@@ -201,7 +218,7 @@ export default function CalendarScreen() {
     >
       <View style={styles.container}>
         <Text style={styles.title}>
-          {moment(selectedDate).clone().locale("tr").format("LL")}
+          {moment(selectedDate).clone().format("LL")}
           {/* <Text style={styles.subtitle}>summary</Text> */}
         </Text>
         {/* Progress*/}
@@ -231,7 +248,9 @@ export default function CalendarScreen() {
                     0) * 100}
                   %
                 </Text>
-                <Text style={styles.completionText}>Completion rate</Text>
+                <Text style={styles.completionText}>
+                  {t("completion_rate")}
+                </Text>
               </View>
             )}
           </CircularProgress>
@@ -258,10 +277,10 @@ export default function CalendarScreen() {
                 </Text>
                 <Text style={styles.statLabel}>
                   {status === 1
-                    ? "pending"
+                    ? t("incompleted")
                     : status === 2
-                    ? "completed"
-                    : "failed"}
+                    ? t("completed")
+                    : t("failed")}
                 </Text>
               </View>
             ))}
@@ -273,7 +292,7 @@ export default function CalendarScreen() {
           <Text style={styles.bestHabitTitle}>
             {/* <MaterialIcons name="ad-units" size={20} color="#FFD700" /> */}
             <Text style={styles.highlight}>🏆</Text>
-            Habits of the day
+            {t("habits_of_the_day")}
           </Text>
           <ScrollView
             style={{
@@ -293,11 +312,11 @@ export default function CalendarScreen() {
                   }}
                 >
                   {status === 1
-                    ? "pending"
+                    ? t("incompleted")
                     : status === 2
-                    ? "completed"
-                    : "failed"}
-                  {`(${habitActionList[status]?.length})`}
+                    ? t("completed")
+                    : t("failed")}{" "}
+                  {`(${habitActionList[status]?.length || 0})`}
                 </Text>
                 <View
                   style={{
