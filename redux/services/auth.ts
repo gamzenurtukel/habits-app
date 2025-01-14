@@ -45,7 +45,6 @@ const authApi = api.injectEndpoints({
         name: string;
         surname: string;
         email: string;
-        phoneNumber: string;
         countryId: number;
         password: string;
       }
