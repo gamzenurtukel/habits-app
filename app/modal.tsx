@@ -2159,7 +2159,7 @@ const CustomModal = () => {
                             paddingVertical: 20,
                             paddingHorizontal: 5,
                             backgroundColor: "#FFFFFF",
-                            opacity: 0.8 + Math.random() * 0.2,
+                            // opacity: 0.8 + Math.random() * 0.2,
                             justifyContent: "space-around",
                             borderRadius: 15,
                             gap: 10,
@@ -2220,6 +2220,19 @@ const CustomModal = () => {
                               daysOfWeeks: habit.details?.daysOfWeeks || [],
                               daysOfMonthly: habit.details?.daysOfMonthly || [],
                             });
+                            setActiveTabSheetDuration(
+                              habit.details.startTime?.split(":")[0] &&
+                                habit.details.endTime?.split(":")[0] !== "00"
+                                ? "timeRange"
+                                : "startTime"
+                            );
+                            setActiveTabSheetRepetition(
+                              habit.details.periodType === 1
+                                ? "daily"
+                                : habit.details.periodType === 2
+                                ? "weekly"
+                                : "monthly"
+                            );
                           }}
                         >
                           <View>
