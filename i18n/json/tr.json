@@ -34,8 +34,8 @@
   "forgot_password": "Şifremi Unuttum?",
   "dont_have_an_account": "Hesabınız yok mu?",
   "sign_up": "Kayıt Ol",
-  "sing_in_success": "Giriş Başarılı!",
-  "an_error_occurred_while_singin_in": "Giriş sırısında bir hata oluştu!",
+  "sign_in_success": "Giriş Başarılı!",
+  "an_error_occurred_while_signin_in": "Giriş sırısında bir hata oluştu!",
   "enter_your_email": "E-postanızı giriniz",
   "enter_your_password": "Şifrenizi giriniz",
   "name": "Ad",
@@ -391,5 +391,8 @@
     "clean_teeth_description": "Dişlerini fırçala"
   },
   "sign_out_success": "Çıkış Başarılı!",
-  "an_error_occurred_while_sign_out": "Çıkış sırasında bir hata oluştu!"
+  "an_error_occurred_while_sign_out": "Çıkış sırasında bir hata oluştu!",
+  "email_invalid": "Lütfen geçerli bir e-posta adresi giriniz",
+  "password_min_length_6": "Şifreniz en az 6 karakter olmalıdır",
+  "password_max_length_20": "Şifreniz en fazla 20 karakter olmalıdır"
 }

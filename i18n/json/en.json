@@ -34,8 +34,8 @@
   "forgot_password": "Forgot Password?",
   "dont_have_an_account": "Don't have an account?",
   "sign_up": "Sign Up",
-  "sing_in_success": "Sign In Success!",
-  "an_error_occurred_while_singin_in": "An error occurred while signing in!",
+  "sign_in_success": "Sign In Success!",
+  "an_error_occurred_while_signin_in": "An error occurred while signing in!",
   "enter_your_email": "Enter your email",
   "enter_your_password": "Enter your password",
   "name": "Name",
@@ -395,5 +395,8 @@
     "clean_teeth_description": "Brush your teeth"
   },
   "sign_out_success": "Sign Out Success!",
-  "an_error_occurred_while_sign_out": "An error occurred while signing out!"
+  "an_error_occurred_while_sign_out": "An error occurred while signing out!",
+  "email_invalid": "Email is invalid or already in use",
+  "password_min_length_6": "Your password must be at least 6 characters",
+  "password_max_length_20": "Your password must be at most 20 characters"
 }
