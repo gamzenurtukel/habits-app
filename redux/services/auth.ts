@@ -1,59 +1,32 @@
+import { IServerResponse } from "@/types/server";
 import { api } from "./api";
+import { ILogin, IRegister } from "@/types/auth";
 
 const authApi = api.injectEndpoints({
   endpoints: (build) => ({
-    login: build.mutation<
-      any,
-      {
-        username: string;
-        password: string;
-        rememberMe: boolean;
-      }
-    >({
+    login: build.mutation<IServerResponse<any>, ILogin>({
       query: (body) => ({
         method: "POST",
         url: "/Nexus/Api/User/Login",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
         body: body,
       }),
     }),
-    forgotPassword: build.mutation<any, any>({
-      query: (body) => ({
-        method: "POST",
-        url: "/Nexus/Api/User/ForgotPassword",
-        body: body,
-      }),
-    }),
-    // logout: build.mutation<any, any>({
-    //   query: (body) => ({
-    //     method: "POST",
-    //     url: "/Nexus/Api/User/Logout",
-    //     // body: body,
-    //   }),
-    // }),
-    logout: build.mutation({
+    logout: build.mutation<IServerResponse<any>, void>({
       query: () => ({
         method: "POST",
         url: "/Nexus/Api/User/Logout",
       }),
     }),
-    register: build.mutation<
-      any,
-      {
-        name: string;
-        surname: string;
-        email: string;
-        countryId: number;
-        password: string;
-      }
-    >({
+    forgotPassword: build.mutation<IServerResponse<any>, string>({
+      query: (email) => ({
+        method: "POST",
+        url: "/Nexus/Api/User/ForgotPassword",
+        body: { email },
+      }),
+    }),
+    register: build.mutation<IServerResponse<any>, IRegister>({
       query: (body) => ({
         method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
         url: "/Nexus/Api/User/Register",
         body: body,
       }),
@@ -67,7 +40,6 @@ export const {
   useForgotPasswordMutation,
   useRegisterMutation,
 } = authApi;
-
 export const {
-  endpoints: { login, logout, forgotPassword, register },
+  endpoints: { login, logout, forgotPassword },
 } = authApi;
