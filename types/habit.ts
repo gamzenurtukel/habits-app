@@ -49,8 +49,8 @@ export interface IHabitUpdate {
 }
 
 export interface IHabitUpdateAction {
-  id: string;
-  statusEnum: number;
+  habitId: string;
+  status: number;
 }
 
 export interface IProfileInfo {
