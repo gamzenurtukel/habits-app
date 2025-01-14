@@ -222,7 +222,7 @@ export default function HomeScreen() {
     console.log("Habit id to update:", id);
     const newStatus = status === 1 ? 2 : 1;
     console.log("New status:", newStatus);
-    updateActionHabit({ id, statusEnum: newStatus }).then((response) => {
+    updateActionHabit({ habitId: id, status: newStatus }).then((response) => {
       console.log("Response:", response);
       if (response?.data?.isSuccessful) {
         console.log("Habit updated successfully:", response);
