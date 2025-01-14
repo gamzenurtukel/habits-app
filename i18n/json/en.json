@@ -393,5 +393,7 @@
     "stretch_description": "Stretch upon waking",
     "clean_teeth": "Brush your teeth",
     "clean_teeth_description": "Brush your teeth"
-  }
+  },
+  "sign_out_success": "Sign Out Success!",
+  "an_error_occurred_while_sign_out": "An error occurred while signing out!"
 }

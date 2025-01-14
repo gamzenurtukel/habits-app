@@ -389,5 +389,7 @@
     "stretch_description": "Esneyerek uyan",
     "clean_teeth": "Dişlerini fırçala",
     "clean_teeth_description": "Dişlerini fırçala"
-  }
+  },
+  "sign_out_success": "Çıkış Başarılı!",
+  "an_error_occurred_while_sign_out": "Çıkış sırasında bir hata oluştu!"
 }
