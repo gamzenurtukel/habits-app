@@ -74,42 +74,36 @@ export default function SettingsScreen() {
 
   const handleSignOut = async () => {
     try {
-      const result = await logout({})
-        .then((res) => {
-          console.log("Çıkış Başarılı", result);
-          console.log("Çıkış Başarılı", res);
-          Toast.show({
-            type: "success",
-            position: "bottom",
-            text1: "Çıkış Başarılı",
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
-          router.push("/(auth)/sign-in");
-        })
-        .catch((error) => {
-          console.log("Çıkış Yapılamadı", error);
-          Toast.show({
-            type: "error",
-            position: "bottom",
-            text1: "Çıkış Yapılamadı",
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
-        });
+      const result = await logout();
+
+      if (!result.data?.isSuccessful) {
+        const errorMessage =
+          result?.error &&
+          "data" in result.error &&
+          Array.isArray((result.error as any).data.errors)
+            ? (result.error as any).data.errors[0]
+            : t("an_error_occurred_while_sign_out");
+
+        showToast("error", errorMessage);
+        return;
+      }
+      showToast("success", t("sign_out_success"));
+      router.push("/(auth)/sign-in");
     } catch (error) {
-      console.log("Çıkış Yapılamadı", error);
-      Toast.show({
-        type: "error",
-        position: "bottom",
-        text1: "Çıkış Yapılamadı",
-        visibilityTime: 3000,
-        autoHide: true,
-        bottomOffset: 50,
-      });
+      console.log("error sign out", error);
+      showToast("error", t("an_error_occurred_while_sign_out"));
     }
+  };
+
+  const showToast = (type: "success" | "error", message: string) => {
+    Toast.show({
+      type,
+      position: "bottom",
+      text1: message,
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 50,
+    });
   };
 
   return (
