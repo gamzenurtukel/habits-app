@@ -2844,13 +2844,13 @@ const CustomModal = () => {
           }}
         >
           {[
+            t("sunday"),
             t("monday"),
             t("tuesday"),
             t("wednesday"),
             t("thursday"),
             t("friday"),
             t("saturday"),
-            t("sunday"),
           ].map((day, index) => (
             <Pressable
               key={day}
