@@ -32,70 +32,52 @@ const SignInScreen = () => {
 
   const [login] = useLoginMutation();
 
-  const handleSingIn = async () => {
+  const handleSignIn = async () => {
     try {
       const formData = { email, password, rememberMe };
-      const resultValidation = signInDataSchema.safeParse(formData);
+      const validation = signInDataSchema.safeParse(formData);
 
-      if (!resultValidation.success) {
-        resultValidation.error.issues.forEach((issue) => {
-          console.log("issue", issue.message);
-          Toast.show({
-            type: "error",
-            position: "bottom",
-            text1: issue.message,
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
+      if (!validation.success) {
+        validation.error.issues.forEach((issue) => {
+          showToast("error", t(issue.message));
         });
         return;
       }
 
       const result = await login({
         username: email,
-        password: password,
-        rememberMe: rememberMe,
-      })
-        .then((res) => {
-          console.log("result", result);
-          console.log("Giriş başarılı:", res);
-
-          Toast.show({
-            type: "success",
-            position: "bottom",
-            text1: t("sing_in_success"),
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
-
-          setTimeout(() => {
-            router.push("/(tabs)");
-          }, 2000);
-        })
-        .catch((error) => {
-          console.log("giriş başarısız", error);
-          Toast.show({
-            type: "error",
-            position: "bottom",
-            text1: t("an_error_occurred_while_singin_in"),
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
-        });
-    } catch (error) {
-      console.log("giriş başarısız", error);
-      Toast.show({
-        type: "error",
-        position: "bottom",
-        text1: t("an_error_occurred_while_singin_in"),
-        visibilityTime: 3000,
-        autoHide: true,
-        bottomOffset: 50,
+        password,
+        rememberMe,
       });
+
+      if (!result.data?.isSuccessful) {
+        const errorMessage =
+          result?.error &&
+          "data" in result.error &&
+          Array.isArray((result.error as any).data.errors)
+            ? (result.error as any).data.errors[0]
+            : t("an_error_occurred_while_signing_in");
+        showToast("error", errorMessage);
+        return;
+      }
+
+      showToast("success", t("sign_in_success"));
+      setTimeout(() => router.push("/(tabs)"), 2000);
+    } catch (error) {
+      console.error("Sign-in error:", error);
+      showToast("error", t("an_error_occurred_while_signin_in"));
     }
+  };
+
+  const showToast = (type: "success" | "error", message: string) => {
+    Toast.show({
+      type,
+      position: "bottom",
+      text1: message,
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 50,
+    });
   };
 
   return (
@@ -190,7 +172,7 @@ const SignInScreen = () => {
                 )}`}</Text>
               </View>
 
-              <TouchableOpacity onPress={handleSingIn} style={styles.button}>
+              <TouchableOpacity onPress={handleSignIn} style={styles.button}>
                 <Text style={styles.buttonText}>{t("sign_in")}</Text>
               </TouchableOpacity>
 
