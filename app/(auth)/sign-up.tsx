@@ -24,7 +24,6 @@ const SignUpScreen = () => {
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const [register] = useRegisterMutation();
@@ -35,7 +34,7 @@ const SignUpScreen = () => {
 
   const handleSingUp = async () => {
     try {
-      const formData = { email, password, name, phone, surname };
+      const formData = { email, password, name, surname };
 
       const resultValidation = signUpDataSchema.safeParse(formData);
 
@@ -57,7 +56,6 @@ const SignUpScreen = () => {
         email,
         password,
         name,
-        phoneNumber: phone,
         surname,
         countryId: 1,
       })
@@ -152,17 +150,6 @@ const SignUpScreen = () => {
                 />
               </View>
               <View style={styles.inputContainer}>
-                <Text style={styles.label}>{t("phone")}</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder={t("enter_your_phone")}
-                  value={phone}
-                  onChangeText={setPhone}
-                  keyboardType="phone-pad"
-                  placeholderTextColor="#B0B0B0"
-                />
-              </View>
-              <View style={styles.inputContainer}>
                 <Text style={styles.label}>{t("email")}</Text>
                 <TextInput
                   style={styles.input}
@@ -227,7 +214,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#588157",
     borderBottomLeftRadius: 100,
     borderBottomRightRadius: 100,
-    height: "80%",
+    height: "74%",
   },
   content: {
     flexDirection: "column",
