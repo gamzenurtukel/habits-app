@@ -18,7 +18,7 @@
       "teamID": "CX7WP93J6C"
     },
     "android": {
-      "package" : "com.habitzpro.habittracker",
+      "package": "com.habitzpro.habittracker",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -60,6 +60,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "03b04d50-ae14-4692-bc59-3e1f74974342"
+      }
     }
   }
 }
