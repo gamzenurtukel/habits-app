@@ -1966,18 +1966,21 @@ const CustomModal = () => {
     try {
       const response = await createHabit(habitData);
 
-      if (response?.data?.isSuccessful) {
-        console.log("Alışkanlık başarıyla oluşturuldu!", response.data);
-        showToast("success", t("habit_successfully_created"));
-        navigateBack();
-      } else {
+      if (!response?.data?.isSuccessful) {
         console.error("Alışkanlık oluşturma başarısız", response);
         showToast(
           "error",
-          (response?.data?.errors ? response.data.errors[0] : null) ||
-            t("an_error_occurred_while_creating_habit")
+          response?.error &&
+            "data" in response.error &&
+            Array.isArray((response.error as any).data.errors)
+            ? (response.error as any).data.errors[0]
+            : t("an_error_occurred_while_creating_habit")
         );
+        return;
       }
+      console.log("Alışkanlık başarıyla oluşturuldu!", response.data);
+      showToast("success", t("habit_successfully_created"));
+      navigateBack();
     } catch (error) {
       console.error("Alışkanlık oluşturma başarısız", error);
       showToast("error", t("an_error_occurred_while_creating_habit"));
@@ -1988,20 +1991,23 @@ const CustomModal = () => {
     try {
       const response = await updateHabit(habitData);
 
-      if (response?.data?.isSuccessful) {
-        console.log("Alışkanlık başarıyla güncellendi!", response.data);
-        showToast("success", t("habit_successfully_updated"));
-        navigateBack();
-      } else {
-        console.error("Alışkanlık güncelleme başarısız", response);
+      if (!response?.data?.isSuccessful) {
+        console.log("Alışkanlık güncelleme başarısız response", response);
         showToast(
           "error",
-          (response?.data?.errors ? response.data.errors[0] : null) ||
-            t("an_error_occurred_while_updating_habit")
+          response?.error &&
+            "data" in response.error &&
+            Array.isArray((response.error as any).data.errors)
+            ? (response.error as any).data.errors[0]
+            : t("an_error_occurred_while_updating_habit")
         );
+        return;
       }
+      console.log("Alışkanlık başarıyla güncellendi!", response.data);
+      showToast("success", t("habit_successfully_updated"));
+      navigateBack();
     } catch (error) {
-      console.error("Alışkanlık güncelleme başarısız", error);
+      console.log("Alışkanlık güncelleme başarısız", error);
       showToast("error", t("an_error_occurred_while_updating_habit"));
     }
   };
