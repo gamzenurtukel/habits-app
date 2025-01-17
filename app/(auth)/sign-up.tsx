@@ -25,7 +25,6 @@ const SignUpScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
   const [register] = useRegisterMutation();
 
   const router = useRouter();
@@ -40,15 +39,7 @@ const SignUpScreen = () => {
 
       if (!resultValidation.success) {
         resultValidation.error.issues.forEach((issue) => {
-          console.log("issue", issue.message);
-          Toast.show({
-            type: "error",
-            position: "top",
-            text1: issue.message,
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
+          showToast("error", t(issue.message));
         });
         return;
       }
@@ -57,46 +48,36 @@ const SignUpScreen = () => {
         password,
         name,
         surname,
-        countryId: 1,
-      })
-        .then((res) => {
-          console.log("result", result);
-          console.log("Kayıt başarılı:", res);
-
-          Toast.show({
-            type: "success",
-            position: "top",
-            text1: t("sign_up_success"),
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
-          setTimeout(() => {
-            router.push("/(auth)/sign-in");
-          }, 2000);
-        })
-        .catch((error) => {
-          console.error("Kayıt sırasında hata oluştu:", error);
-          Toast.show({
-            type: "error",
-            position: "bottom",
-            text1: t("an_error_occurred_while_sign_up"),
-            visibilityTime: 3000,
-            autoHide: true,
-            bottomOffset: 50,
-          });
-        });
+      });
+      if (!result.data?.isSuccessful) {
+        const errorMessage =
+          result?.error &&
+          "data" in result.error &&
+          Array.isArray((result.error as any).data.errors)
+            ? (result.error as any).data.errors[0]
+            : t("an_error_occurred_while_sign_up");
+        showToast("error", errorMessage);
+        return;
+      }
+      showToast("success", t("sign_up_success"));
+      setTimeout(() => {
+        router.push("/(auth)/sign-in");
+      }, 2000);
     } catch (error) {
       console.error("Kayıt sırasında hata oluştu:", error);
-      Toast.show({
-        type: "error",
-        position: "bottom",
-        text1: t("an_error_occurred_while_sign_up"),
-        visibilityTime: 3000,
-        autoHide: true,
-        bottomOffset: 50,
-      });
+      showToast("error", t("an_error_occurred_while_sign_up"));
     }
+  };
+
+  const showToast = (type: "success" | "error", message: string) => {
+    Toast.show({
+      type,
+      position: "bottom",
+      text1: message,
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 50,
+    });
   };
 
   return (
