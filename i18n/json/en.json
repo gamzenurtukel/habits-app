@@ -398,5 +398,14 @@
   "an_error_occurred_while_sign_out": "An error occurred while signing out!",
   "email_invalid": "Email is invalid or already in use",
   "password_min_length_6": "Your password must be at least 6 characters",
-  "password_max_length_20": "Your password must be at most 20 characters"
+  "password_max_length_20": "Your password must be at most 20 characters",
+  "confirm_email": "Confirm Email",
+  "confirm_email_description": "Please click on the confirm button to confirm your email address.",
+  "confirm_email_success": "Email Confirmation Success!",
+  "an_error_occurred_while_confirm_email": "An error occurred while confirming email!",
+  "email_already_confirmed": "Email is already confirmed!",
+  "email_not_confirmed": "Email is not confirmed!",
+  "email_confirmation_expired": "Email confirmation has expired!",
+  "resend_email_confirmation": "Resend Email Confirmation",
+  "confirm": "Confirm"
 }
