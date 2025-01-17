@@ -1,6 +1,6 @@
 import { IServerResponse } from "@/types/server";
 import { api } from "./api";
-import { ILogin, IRegister } from "@/types/auth";
+import { IConfirmEmail, ILogin, IRegister } from "@/types/auth";
 
 const authApi = api.injectEndpoints({
   endpoints: (build) => ({
@@ -31,6 +31,13 @@ const authApi = api.injectEndpoints({
         body: body,
       }),
     }),
+    confirmEmail: build.mutation<IServerResponse<any>, IConfirmEmail>({
+      query: (body) => ({
+        method: "POST",
+        url: "/Nexus/Api/User/ConfirmEmail",
+        body: body,
+      }),
+    }),
   }),
 });
 
@@ -39,7 +46,8 @@ export const {
   useLogoutMutation,
   useForgotPasswordMutation,
   useRegisterMutation,
+  useConfirmEmailMutation,
 } = authApi;
 export const {
-  endpoints: { login, logout, forgotPassword },
+  endpoints: { login, logout, forgotPassword, register, confirmEmail },
 } = authApi;
