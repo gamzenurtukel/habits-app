@@ -403,5 +403,7 @@
   "email_not_confirmed": "E-posta adresi onaylanmadı!",
   "email_confirmation_expired": "E-posta onay süresi doldu!",
   "resend_email_confirmation": "E-posta Onayını Tekrar Gönder",
-  "confirm": "Onayla"
+  "confirm": "Onayla",
+  "name_min_3_characters": "Adınız en az 3 karakter olmalıdır",
+  "surname_min_3_characters": "Soyadınız en az 3 karakter olmalıdır"
 }

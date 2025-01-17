@@ -407,5 +407,7 @@
   "email_not_confirmed": "Email is not confirmed!",
   "email_confirmation_expired": "Email confirmation has expired!",
   "resend_email_confirmation": "Resend Email Confirmation",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "name_min_3_characters": "Your name must be at least 3 characters",
+  "surname_min_3_characters": "Your surname must be at least 3 characters"
 }
