@@ -8,6 +8,10 @@ export interface IRegister {
   name: string;
   surname: string;
   email: string;
-  countryId: number;
   password: string;
+}
+
+export interface IConfirmEmail {
+  token: string;
+  email: string;
 }
