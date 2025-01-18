@@ -12,10 +12,11 @@
       "supportsTablet": true,
       "CFBundleAllowMixedLocalizations": true,
       "bundleIdentifier": "com.habitzpro.habittracker",
-      "associatedDomains": [
-        "applinks:habitz.pro"
-      ],
-      "teamID": "CX7WP93J6C"
+      "associatedDomains": ["applinks:habitz.pro"],
+      "teamID": "CX7WP93J6C",
+      "infoPlist": {
+        "NSUserTrackingUsageDescription": "Bildirimler alarak uygulama deneyiminizi geliştirebilirsiniz."
+      }
     },
     "android": {
       "package": "com.habitzpro.habittracker",
@@ -34,10 +35,7 @@
             }
           ],
           "action": "VIEW",
-          "category": [
-            "BROWSABLE",
-            "DEFAULT"
-          ]
+          "category": ["BROWSABLE", "DEFAULT"]
         }
       ]
     },
@@ -55,6 +53,10 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        },
+        "onesignal-expo-plugin",
+        {
+          "mode": "development"
         }
       ],
       "expo-font",
