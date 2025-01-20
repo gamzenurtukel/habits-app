@@ -4,11 +4,12 @@
     "slug": "habits-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/habitz_logo.png",
     "scheme": "habitzapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
+      "icon": "./assets/images/habitz_logo.png",
       "supportsTablet": true,
       "CFBundleAllowMixedLocalizations": true,
       "bundleIdentifier": "com.habitzpro.habittracker",
@@ -49,14 +50,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/habitz_logo.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
-        },
-        "onesignal-expo-plugin",
-        {
-          "mode": "development"
         }
       ],
       "expo-font",
