@@ -54,6 +54,10 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        },
+        "onesignal-expo-plugin",
+        {
+          "mode": "development"
         }
       ],
       "expo-font",
