@@ -19,6 +19,7 @@ const AuthLayout = () => {
           headerShown: false,
         }}
       />
+
       <Stack.Screen
         name="forgot-password"
         options={{
@@ -27,6 +28,12 @@ const AuthLayout = () => {
       />
       <Stack.Screen
         name="reset-password"
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="sign-in-with-google-apple"
         options={{
           headerShown: false,
         }}
