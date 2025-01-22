@@ -409,5 +409,12 @@
   "resend_email_confirmation": "Resend Email Confirmation",
   "confirm": "Confirm",
   "name_min_3_characters": "Your name must be at least 3 characters",
-  "surname_min_3_characters": "Your surname must be at least 3 characters"
+  "surname_min_3_characters": "Your surname must be at least 3 characters",
+  "welcome_to_habitz": "Welcome to Habitz",
+  "Sign_in_to_discover_what_you_can_do_on_habitz": "Sign in to discover what you can do on Habitz",
+  "continue_with_google": "Continue with Google",
+  "continue_with_apple": "Continue with Apple",
+  "create_account": "Create Account",
+  "by_signing_up_you_agree_to_the_terms_of_service_and_privacy_policy_including_cookie_use": "By signing up, you agree to the Terms of Service and Privacy Policy, including Cookie Use.",
+  "or": "Or"
 }

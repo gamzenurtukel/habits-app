@@ -405,5 +405,12 @@
   "resend_email_confirmation": "E-posta Onayını Tekrar Gönder",
   "confirm": "Onayla",
   "name_min_3_characters": "Adınız en az 3 karakter olmalıdır",
-  "surname_min_3_characters": "Soyadınız en az 3 karakter olmalıdır"
+  "surname_min_3_characters": "Soyadınız en az 3 karakter olmalıdır",
+  "welcome_to_habitz": "Habitz'e Hoş Geldiniz",
+  "Sign_in_to_discover_what_you_can_do_on_habitz": "Habitz'te neler yapabileceğinizi keşfetmek için giriş yapın!",
+  "continue_with_google": "Google ile devam et",
+  "continue_with_apple": "Apple ile devam et",
+  "create_account": "Hesap Oluştur",
+  "by_signing_up_you_agree_to_the_terms_of_service_and_privacy_policy_including_cookie_use": "Kaydolarak Hizmet Şartları ve Gizlilik Politikasını, Çerez Kullanımını kabul edersiniz.",
+  "or": "veya"
 }
