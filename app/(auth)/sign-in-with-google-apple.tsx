@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -7,19 +7,164 @@ import {
   ActivityIndicator,
   Image,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import * as WebBrowser from "expo-web-browser";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Link, Stack } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
+import * as WebBrowser from "expo-web-browser";
+import * as AppleAuthentication from "expo-apple-authentication";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { useAppleWithSignInMutation } from "@/redux/services/auth";
+import Toast from "react-native-toast-message";
 
 export default function SignInWithGoogleAppleScreen() {
   const [loading, setLoading] = useState(false);
   const [currentButton, setCurrentButton] = useState(null);
 
   const { t } = useTranslation();
+
+  const [appleWithSignIn] = useAppleWithSignInMutation();
+
+  const validateWithBackend = async (credential: any, type: string) => {
+    try {
+      let payload: any = {};
+
+      if (type === "apple") {
+        payload = {
+          identityToken: credential.identityToken,
+          authorizationCode: credential.authorizationCode,
+        };
+
+        if (credential.fullName?.familyName || credential.fullName?.givenName) {
+          payload.appleName = `${credential.fullName?.givenName || ""} ${
+            credential.fullName?.familyName || ""
+          }`.trim();
+        }
+      } else if (type === "google") {
+        payload = {
+          idToken: credential.idToken,
+          user: {
+            email: credential.user.email,
+            name: credential.user.name,
+          },
+        };
+      }
+
+      // Detaylı log
+      console.log(`\n=== ${type.toUpperCase()} SIGN IN DATA ===`);
+      console.log("Credential:", credential);
+      console.log("\n=== REQUEST PAYLOAD ===");
+      console.log(JSON.stringify(payload, null, 2));
+      console.log("\n========================");
+
+      try {
+        if (payload) {
+          const response = await appleWithSignIn(payload);
+
+          if (!response.data?.isSuccessful) {
+            showToast("error", t("an_error_occurred_while_signing_in"));
+            return;
+          }
+          showToast("success", t("sign_in_success"));
+        } else {
+          console.log("Payload is empty.");
+          showToast("error", "Payload is empty.");
+        }
+      } catch (error) {
+        console.error("Backend validation error:", error);
+        showToast("error", "Backend validation error.");
+        throw error;
+      }
+    } catch (error) {
+      console.error("Backend validation error:", error);
+      showToast("error", "Backend validation error.");
+      throw error;
+    }
+  };
+
+  const handleAppleSignIn = async () => {
+    try {
+      setLoading(true);
+      setCurrentButton("apple" as any);
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+      const validationResult = await validateWithBackend(credential, "apple");
+      console.log("Validation result:", validationResult);
+    } catch (error) {
+      if ((error as any).code === "ERR_REQUEST_CANCELED") {
+        console.log("User canceled Apple Sign In");
+        showToast("error", "User canceled Apple Sign In");
+      } else {
+        console.log("Apple Sign In error:", error);
+        showToast("error", "Apple Sign In error");
+      }
+    } finally {
+      setLoading(false);
+      setCurrentButton(null);
+    }
+  };
+
+  // const handleGoogleSignIn = async () => {
+
+  //   try {
+  //     setLoading(true);
+  //     setCurrentButton("google");
+
+  //     await GoogleSignin.hasPlayServices();
+  //     await GoogleSignin.signIn();
+  //     const tokens = await GoogleSignin.getTokens();
+
+  //     // Detaylı Google Sign In logları
+  //     console.log("\n=== GOOGLE SIGN IN DETAILS ===");
+  //     console.log("ID Token:", tokens.idToken);
+  //     console.log("Access Token:", tokens.accessToken);
+
+  //     const currentUser = await GoogleSignin.getCurrentUser();
+  //     console.log("User Info:", {
+  //       email: currentUser?.email,
+  //       name: currentUser?.name,
+  //       familyName: currentUser?.familyName,
+  //       givenName: currentUser?.givenName,
+  //       id: currentUser?.id,
+  //       photo: currentUser?.photo,
+  //     });
+  //     console.log("\n========================");
+
+  //     const validationResult = await validateWithBackend(
+  //       {
+  //         idToken: tokens.idToken,
+  //         user: currentUser,
+  //       },
+  //       "google"
+  //     );
+  //     console.log("Validation result:", validationResult);
+  //   } catch (error) {
+  //     if (error.code === "SIGN_IN_CANCELLED") {
+  //       console.log("User canceled Google Sign In");
+  //     } else {
+  //       console.log("Google Sign In error:", error);
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //     setCurrentButton(null);
+  //   }
+  // };
+
+  const showToast = (type: "success" | "error", message: string) => {
+    Toast.show({
+      type,
+      position: "bottom",
+      text1: message,
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 50,
+    });
+  };
 
   return (
     <SafeAreaView
@@ -71,9 +216,7 @@ export default function SignInWithGoogleAppleScreen() {
           >
             <TouchableOpacity
               style={[styles.button]}
-              onPress={() => {
-                router.push("/(auth)/sign-up");
-              }}
+              onPress={handleAppleSignIn}
               disabled={loading}
             >
               {loading && currentButton === "apple" ? (
