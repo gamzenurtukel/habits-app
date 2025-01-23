@@ -88,7 +88,7 @@ export default function SettingsScreen() {
         return;
       }
       showToast("success", t("sign_out_success"));
-      router.push("/(auth)/sign-in");
+      router.push("/(auth)/sign-in-with-google-apple");
     } catch (error) {
       console.log("error sign out", error);
       showToast("error", t("an_error_occurred_while_sign_out"));
