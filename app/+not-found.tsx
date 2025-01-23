@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function NotFoundScreen() {
   const { t } = useTranslation();
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Stack.Screen options={{ title: t("page_not_found") }} />
       <View style={styles.container}>
         <View style={styles.iconContainer}>
