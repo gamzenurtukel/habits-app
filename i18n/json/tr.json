@@ -413,5 +413,13 @@
   "create_account": "Hesap Oluştur",
   "by_signing_up_you_agree_to_the_terms_of_service_and_privacy_policy_including_cookie_use": "Kaydolarak Hizmet Şartları ve Gizlilik Politikasını, Çerez Kullanımını kabul edersiniz.",
   "or": "veya",
-  "return_to_settings": "Ayarlar'a geri dön"
+  "return_to_settings": "Ayarlar'a geri dön",
+  "change_password_description": "Şifrenizi değiştirmek için mevcut şifrenizi ve yeni şifrenizi girin",
+  "current_password": "Mevcut Şifre",
+  "current_password_enter": "Mevcut şifrenizi giriniz",
+  "new_password": "Yeni Şifre",
+  "new_password_enter": "Yeni şifrenizi giriniz",
+  "confirm_new_password": "Yeni Şifreyi Onayla",
+  "change_password_success": "Şifre Değiştirme Başarılı!",
+  "an_error_occurred_while_change_password": "Şifre değiştirilirken bir hata oluştu!"
 }
