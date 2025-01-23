@@ -2,6 +2,7 @@ import { IServerResponse } from "@/types/server";
 import { api } from "./api";
 import {
   IAppleWithSignIn,
+  IChangePassword,
   IConfirmEmail,
   ILogin,
   IRegister,
@@ -50,6 +51,13 @@ const authApi = api.injectEndpoints({
         body: body,
       }),
     }),
+    changePassword: build.mutation<IServerResponse<any>, IChangePassword>({
+      query: (body) => ({
+        method: "POST",
+        url: "/Nexus/Api/User/ChangePassword",
+        body: body,
+      }),
+    }),
   }),
 });
 
@@ -60,6 +68,7 @@ export const {
   useRegisterMutation,
   useConfirmEmailMutation,
   useAppleWithSignInMutation,
+  useChangePasswordMutation,
 } = authApi;
 export const {
   endpoints: {
@@ -69,5 +78,6 @@ export const {
     register,
     confirmEmail,
     appleWithSignIn,
+    changePassword,
   },
 } = authApi;
