@@ -13,7 +13,8 @@ export default function TabLayout() {
   const { t } = useTranslation();
 
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  if (!isAuthenticated) return <Redirect href="/(auth)/sign-in" />;
+  if (!isAuthenticated)
+    return <Redirect href="/(auth)/sign-in-with-google-apple" />;
 
   return (
     <Tabs
