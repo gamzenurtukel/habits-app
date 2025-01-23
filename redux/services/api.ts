@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../app/store";
+import Constants from "expo-constants";
 
 // Create our baseQuery instance
 export const baseQuery = fetchBaseQuery({
-  baseUrl: "https://development.habitz.pro",
+  baseUrl: Constants.expoConfig?.extra?.baseUrl || "http://localhost:3000",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.token;
 
