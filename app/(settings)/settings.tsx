@@ -134,13 +134,22 @@ export default function SettingsScreen() {
                 {setting.title}
               </Text>
               {setting.data.map((item, index) => (
-                <View
+                <TouchableOpacity
                   key={index}
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "space-between",
                     marginVertical: 10,
+                  }}
+                  onPress={() => {
+                    if (
+                      item.title === t("about") ||
+                      item.title === t("terms_of_use") ||
+                      item.title === t("privacy_policy")
+                    ) {
+                      router.push("/(settings)/web-view");
+                    }
                   }}
                 >
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -156,7 +165,7 @@ export default function SettingsScreen() {
                     size={24}
                     color="#588157"
                   />
-                </View>
+                </TouchableOpacity>
               ))}
             </View>
           ))}
