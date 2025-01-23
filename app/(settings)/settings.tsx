@@ -149,6 +149,8 @@ export default function SettingsScreen() {
                       item.title === t("privacy_policy")
                     ) {
                       router.push("/(settings)/web-view");
+                    } else if (item.title === t("change_password")) {
+                      router.push("/(settings)/change-password");
                     }
                   }}
                 >
@@ -180,13 +182,11 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#E8F5E9",
-    // flex: 1,
+    backgroundColor: "#ffffff",
     height: "100%",
-    // padding: 10,
   },
   header: {
-    backgroundColor: "#E8F5E9",
+    backgroundColor: "#ffffff",
     shadowColor: "#000",
     shadowOpacity: 0.09,
     shadowRadius: 3.84,
