@@ -4,6 +4,7 @@ import {
   IAppleWithSignIn,
   IChangePassword,
   IConfirmEmail,
+  ICurrentUser,
   ILogin,
   IRegister,
 } from "@/types/auth";
@@ -58,6 +59,12 @@ const authApi = api.injectEndpoints({
         body: body,
       }),
     }),
+    getCurrentUser: build.query<IServerResponse<ICurrentUser>, void>({
+      query: () => ({
+        method: "GET",
+        url: "/Nexus/Api/User/GetCurrentUser",
+      }),
+    }),
   }),
 });
 
@@ -69,6 +76,7 @@ export const {
   useConfirmEmailMutation,
   useAppleWithSignInMutation,
   useChangePasswordMutation,
+  useGetCurrentUserQuery,
 } = authApi;
 export const {
   endpoints: {
@@ -79,5 +87,6 @@ export const {
     confirmEmail,
     appleWithSignIn,
     changePassword,
+    getCurrentUser,
   },
 } = authApi;
