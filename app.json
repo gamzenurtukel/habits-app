@@ -13,10 +13,15 @@
       "supportsTablet": true,
       "CFBundleAllowMixedLocalizations": true,
       "bundleIdentifier": "com.habitzpro.habittracker",
-      "associatedDomains": ["applinks:habitz.pro"],
       "teamID": "CX7WP93J6C",
       "infoPlist": {
         "NSUserTrackingUsageDescription": "Bildirimler alarak uygulama deneyiminizi geliştirebilirsiniz."
+      },
+      "config": {
+        "usesAppleSignIn": true,
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.218999374494-uukisnfh3eal4p45kj1ak29cdda3divl"
+        }
       }
     },
     "android": {
@@ -51,11 +56,18 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/habitz_logo.png",
-          "imageWidth": 200,
+          "imageWidth": "100%",
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
       ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.218999374494-uukisnfh3eal4p45kj1ak29cdda3divl"
+        }
+      ],
+      ["expo-apple-authentication"],
       "expo-font",
       "expo-localization"
     ],
