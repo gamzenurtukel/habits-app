@@ -31,3 +31,20 @@ export interface IChangePassword {
   currentPassword: string;
   newPassword: string;
 }
+
+export interface ICurrentUser {
+  dateOfBirth: string | null;
+  email: string | null;
+  emailConfirmed: boolean;
+  gender: number | null;
+  id: string;
+  name: string | null;
+  phoneCountryId: number;
+  phoneNumber: string | null;
+  phoneNumberConfirmed: boolean;
+  profilePictureUrl: string | null;
+  selectedLanguage: string;
+  subscriptionStatus: number;
+  surname: string | null;
+  twoFactorEnabled: boolean;
+}
