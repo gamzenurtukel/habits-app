@@ -22,6 +22,7 @@ export default function ProfileScreen() {
     <SafeAreaView
       style={{
         height: "100%",
+        backgroundColor: "#ffffff",
       }}
     >
       {getProfileInfoIsLoading ? (
@@ -142,7 +143,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#E8F5E9",
+    // backgroundColor: "#E8F5E9",
     padding: 20,
   },
   profileCard: {
