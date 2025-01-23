@@ -26,3 +26,8 @@ export interface IGoogleWithSignIn {
   accessToken: string;
   googleName?: string;
 }
+
+export interface IChangePassword {
+  currentPassword: string;
+  newPassword: string;
+}
