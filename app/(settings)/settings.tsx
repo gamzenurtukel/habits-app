@@ -151,6 +151,8 @@ export default function SettingsScreen() {
                       router.push("/(settings)/web-view");
                     } else if (item.title === t("change_password")) {
                       router.push("/(settings)/change-password");
+                    } else if (item.title === t("profile")) {
+                      router.push("/(settings)/profile");
                     }
                   }}
                 >
