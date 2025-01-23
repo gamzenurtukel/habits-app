@@ -38,7 +38,8 @@ const StartScreen = () => {
     OneSignal.Location.requestPermission();
   }, []);
 
-  if (!isAuthenticated) return <Redirect href="/(auth)/sign-in" />;
+  if (!isAuthenticated)
+    return <Redirect href="/(auth)/sign-in-with-google-apple" />;
 
   return <Redirect href="/(tabs)" />;
 };
