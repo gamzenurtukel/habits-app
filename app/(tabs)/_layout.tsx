@@ -11,10 +11,13 @@ import { selectIsAuthenticated } from "@/redux/reducers/auth-reducer";
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
+  const isSubscribed = false;
 
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   if (!isAuthenticated)
     return <Redirect href="/(auth)/sign-in-with-google-apple" />;
+
+  // if (isAuthenticated && !isSubscribed) return <Redirect href="/adapty" />;
 
   return (
     <Tabs
