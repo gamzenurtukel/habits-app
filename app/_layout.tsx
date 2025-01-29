@@ -114,6 +114,7 @@ export default function RootLayout() {
                   }}
                 />
                 <Stack.Screen name="+not-found" />
+                <Stack.Screen name="adapty" />
                 <Stack.Screen
                   name="modal"
                   options={{
