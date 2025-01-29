@@ -8,10 +8,12 @@ import i18nextConfig from "@/i18n/i18nextConfig";
 
 // TODO Bunları daha sonra kaldırıp başka yere taşıyabiliriz.
 import { adapty } from "react-native-adapty";
+
 adapty.activate("public_live_4Hlw9dpe.NMnoQYBjNTLQofLN5fDy");
 
 const StartScreen = () => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
   const i18n = i18nextConfig;
 
   console.log("language", i18n.language);
