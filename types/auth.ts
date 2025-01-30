@@ -48,3 +48,11 @@ export interface ICurrentUser {
   surname: string | null;
   twoFactorEnabled: boolean;
 }
+
+export interface ICurrentUserUpdate {
+  name: string;
+  surname: string;
+  gender: number;
+  dateOfBirth: string;
+  selectedLanguage: string;
+}
