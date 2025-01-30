@@ -7,17 +7,32 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { useTranslation } from "react-i18next";
 import { useAppSelector } from "@/redux/app/hooks";
 import { selectIsAuthenticated } from "@/redux/reducers/auth-reducer";
+import { useGetCurrentUserQuery } from "@/redux/services/auth";
+import UserAnimated from "@/components/animated/user-animated";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { t } = useTranslation();
   const isSubscribed = false;
 
+  useGetCurrentUserQuery();
+
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   if (!isAuthenticated)
     return <Redirect href="/(auth)/sign-in-with-google-apple" />;
 
   // if (isAuthenticated && !isSubscribed) return <Redirect href="/adapty" />;
+
+  const currentUser = useAppSelector((state) => state.auth.curentUser);
+
+  if (
+    currentUser.name === null ||
+    currentUser.surname === null ||
+    currentUser.gender === null ||
+    currentUser.birthDate === null
+  ) {
+    return UserAnimated();
+  }
 
   return (
     <Tabs
