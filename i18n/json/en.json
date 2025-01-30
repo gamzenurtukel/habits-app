@@ -425,5 +425,17 @@
   "current_password_enter": "Enter your current password",
   "new_password": "New Password",
   "new_password_enter": "Enter your new password",
-  "confirm_new_password": "Confirm New Password"
+  "confirm_new_password": "Confirm New Password",
+  "set_your_name": "Set your name",
+  "set_your_surname": "Set your surname",
+  "select_your_gender": "Select your gender",
+  "male": "Male",
+  "female": "Female",
+  "select_your_birthday": "Select your birthday",
+  "an_error_occurred_while_completing_user_info": "An error occurred while completing user info!",
+  "user_info_completed_successfully": "User info completed successfully!",
+  "preverius_step": "Preverius Step",
+  "next_step": "Next Step",
+  "submit": "Submit",
+  "complete_info": "Complete Info"
 }

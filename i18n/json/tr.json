@@ -421,5 +421,17 @@
   "new_password_enter": "Yeni şifrenizi giriniz",
   "confirm_new_password": "Yeni Şifreyi Onayla",
   "change_password_success": "Şifre Değiştirme Başarılı!",
-  "an_error_occurred_while_change_password": "Şifre değiştirilirken bir hata oluştu!"
+  "an_error_occurred_while_change_password": "Şifre değiştirilirken bir hata oluştu!",
+  "set_your_name": "Adınızı belirleyin",
+  "set_your_surname": "Soyadınızı belirleyin",
+  "select_your_gender": "Cinsiyetinizi  seçin",
+  "male": "Erkek",
+  "female": "Kadın",
+  "select_your_birthday": "Doğum tarihinizi seçin",
+  "an_error_occurred_while_completing_user_info": "Kullanıcı bilgileri tamamlanırken bir hata oluştu!",
+  "user_info_completed_successfully": "Kullanıcı Bilgileri Başarıyla Tamamlandı!",
+  "preverius_step": "Önceki Adım",
+  "next_step": "Sonraki Adım",
+  "submit": "Kaydet",
+  "complete_info": "Bilgileri Tamamla"
 }
