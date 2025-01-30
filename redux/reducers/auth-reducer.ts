@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { login, logout } from "../services/auth";
+import { login, logout, getCurrentUser } from "../services/auth";
 import { RootState } from "../app/store";
 
 const initialState: any = {
@@ -7,6 +7,7 @@ const initialState: any = {
   token: "",
   isAuthenticated: false,
   onBoarding: false,
+  curentUser: {},
 };
 
 export const authSlice = createSlice({
@@ -28,6 +29,9 @@ export const authSlice = createSlice({
     setOnboarding(state, action: PayloadAction<boolean>) {
       state.onBoarding = action.payload;
     },
+    setCurrentUser(state, action) {
+      state.curentUser = action.payload;
+    },
   },
 
   extraReducers: (builder) => {
@@ -36,13 +40,15 @@ export const authSlice = createSlice({
       state.isAuthenticated = true;
       state.user = action.payload.data.refreshToken;
       state.turmobToken = true;
-
     });
     builder.addMatcher(logout.matchFulfilled, (state, action) => {
       state.user = "";
       state.token = "";
       state.isAuthenticated = false;
       state.turmobToken = false;
+    });
+    builder.addMatcher(getCurrentUser.matchFulfilled, (state, action) => {
+      state.curentUser = action.payload.data;
     });
   },
 });
@@ -51,10 +57,18 @@ function authSessionClear(state: any) {
   state.user = "";
   state.token = "";
   state.isAuthenticated = false;
+  state.onBoarding = false;
+  state.curentUser = {};
 }
 
-export const { setAuth, setToken, setUser, resetAuth, setOnboarding } =
-  authSlice.actions;
+export const {
+  setAuth,
+  setToken,
+  setUser,
+  resetAuth,
+  setOnboarding,
+  setCurrentUser,
+} = authSlice.actions;
 
 export const selectUserCredentials = (state: RootState) => state.auth;
 
@@ -66,5 +80,7 @@ export const selectIsAuthenticated = (state: RootState) =>
   state.auth.isAuthenticated;
 
 export const selectOnBoarding = (state: RootState) => state.auth.onBoarding;
+
+export const currentUserInfo = (state: RootState) => state.auth.curentUser;
 
 export default authSlice.reducer;
