@@ -11,7 +11,11 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { useGetCurrentUserQuery } from "@/redux/services/auth";
+import {
+  useCurrentUserUpdateMutation,
+  useEmailUpdateMutation,
+  useGetCurrentUserQuery,
+} from "@/redux/services/auth";
 import {
   BottomSheetModal,
   BottomSheetView,
@@ -22,11 +26,14 @@ import {
   TextInput,
 } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
-import { set } from "zod";
+import Toast from "react-native-toast-message";
 
 const ProfileSettingsScreen = () => {
   const { t } = useTranslation();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
+
+  const [emailUpdate] = useEmailUpdateMutation();
+  const [currentUserUpdate] = useCurrentUserUpdateMutation();
 
   const {
     data: getProfileInfo,
@@ -74,6 +81,8 @@ const ProfileSettingsScreen = () => {
       console.log("error", error);
     }
   };
+
+  console.log("profile ınfo", getProfileInfo);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
@@ -173,11 +182,77 @@ const ProfileSettingsScreen = () => {
     }
   };
 
+  const handleEmailUpdate = async (newEmail: string) => {
+    try {
+      const result = await emailUpdate({ newEmail });
+
+      if (!result.data?.isSuccessful) {
+        const errorMessage =
+          result?.error &&
+          "data" in result.error &&
+          Array.isArray((result.error as any).data.errors)
+            ? (result.error as any).data.errors[0]
+            : t("an_error_occurred_while_updating_email");
+        showToast("error", errorMessage);
+        return;
+      }
+
+      showToast("success", t("email_updated_successfully"));
+    } catch (error) {
+      console.log("error", error);
+      showToast("error", t("an_error_occurred_while_updating_email"));
+    }
+  };
+
+  const handleProfileInfoUpdate = async () => {
+    try {
+      const result = await currentUserUpdate({
+        name: profile.name,
+        surname: profile.surname,
+        gender: profile.gender as number,
+        dateOfBirth: profile.birthday,
+        selectedLanguage: getProfileInfo?.data?.selectedLanguage || "en",
+      });
+
+      if (!result.data?.isSuccessful) {
+        const errorMessage =
+          result?.error &&
+          "data" in result.error &&
+          Array.isArray((result.error as any).data.errors)
+            ? (result.error as any).data.errors[0]
+            : t("an_error_occurred_while_updating_profile");
+        showToast("error", errorMessage);
+        return;
+      }
+
+      showToast("success", t("profile_updated_successfully"));
+    } catch (error) {
+      console.log("error", error);
+      showToast("error", t("an_error_occurred_while_updating_profile"));
+    }
+  };
+
   const handleProfileUpdatePress = async () => {
     try {
+      if (bottomSheetContent !== "email") {
+        await handleProfileInfoUpdate();
+        return;
+      }
+      handleEmailUpdate(profile.email);
     } catch (error) {
       console.log("error", error);
     }
+  };
+
+  const showToast = (type: "success" | "error", message: string) => {
+    Toast.show({
+      type,
+      position: "bottom",
+      text1: message,
+      visibilityTime: 3000,
+      autoHide: true,
+      bottomOffset: 50,
+    });
   };
 
   return (
@@ -311,7 +386,12 @@ const ProfileSettingsScreen = () => {
                   style={styles.applyButton}
                   key={"save"}
                 >
-                  <Text style={styles.applyText}>{t("save")}</Text>
+                  <Text
+                    style={styles.applyText}
+                    onPress={handleProfileUpdatePress}
+                  >
+                    {t("save")}
+                  </Text>
                 </LinearGradient>
               </TouchableOpacity>
             </BottomSheetView>
