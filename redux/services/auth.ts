@@ -75,6 +75,18 @@ const authApi = api.injectEndpoints({
         }),
       }
     ),
+    emailUpdate: build.mutation<
+      IServerResponse<any>,
+      {
+        newEmail: string;
+      }
+    >({
+      query: (body) => ({
+        method: "POST",
+        url: "/Nexus/Api/User/EmailUpdate",
+        body: body,
+      }),
+    }),
   }),
 });
 
@@ -88,6 +100,7 @@ export const {
   useChangePasswordMutation,
   useGetCurrentUserQuery,
   useCurrentUserUpdateMutation,
+  useEmailUpdateMutation,
 } = authApi;
 export const {
   endpoints: {
@@ -100,5 +113,6 @@ export const {
     changePassword,
     getCurrentUser,
     currentUserUpdate,
+    emailUpdate,
   },
 } = authApi;
