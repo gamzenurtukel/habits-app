@@ -3469,13 +3469,18 @@ const CustomModal = () => {
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.key}
-          // scrollEnabled={form.name !== ""}
-          scrollEnabled={params.id ? true : false}
+          scrollEnabled={!params.id}
           onScroll={handleScroll}
           scrollEventThrottle={16}
-          renderItem={({ index }) =>
-            index === 1 || params.id ? stageTwo() : stageOne()
-          }
+          // renderItem={({ index }) =>
+          //   index === 1 || params.id ? stageTwo() : stageOne()
+          // }
+          renderItem={({ index }) => {
+            const isEditMode = Boolean(params.id);
+            const isStageTwo = index === 1 || isEditMode;
+
+            return isStageTwo ? stageTwo() : stageOne();
+          }}
         />
 
         <BottomSheetModal
