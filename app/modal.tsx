@@ -1786,8 +1786,6 @@ const CustomModal = () => {
     },
   ];
 
-  console.log("params", params.id);
-
   const {
     data: habitGetById,
     error: errorHabitGetById,
@@ -1802,52 +1800,60 @@ const CustomModal = () => {
 
   const selectedHabitgetById = async (id: string) => {
     try {
-      console.log("selectedHabitgetById içine girdi");
-
       const response = await refetchHabitGetById();
 
-      console.log("response", response);
-
       if (response?.data?.statusCode === 200) {
-        console.log("statusCode 200 içine girdi");
         const habitData = response.data.data;
+
+        setActiveTabSheetDuration(
+          habitData?.details.endTime !== null ? "timeRange" : "startTime"
+        );
+
+        setActiveTabSheetRepetition(
+          habitData.details.periodType === 1
+            ? "daily"
+            : habitData.details.periodType === 2
+            ? "weekly"
+            : "monthly"
+        );
+
         setForm({
-          name: habitData.name || "",
-          description: habitData.description || "",
-          isReminder: habitData.isReminder || false,
+          name: habitData.name ?? "",
+          description: habitData.description ?? "",
+          isReminder: habitData.isReminder ?? false,
           icon: habitData.details.icon,
           color: habitData.details.color,
-          periodType: habitData.details.periodType || 1,
-          periodCount: habitData.details.periodCount || 1,
+          periodType: habitData.details.periodType ?? 1,
+          periodCount: habitData.details.periodCount ?? 1,
           startTime: {
-            hour: habitData.details.startTime?.split(":")[0] || "00",
-            minute: habitData.details.startTime?.split(":")[1] || "00",
+            hour: habitData.details.startTime?.split(":")[0] ?? "00",
+            minute: habitData.details.startTime?.split(":")[1] ?? "00",
           },
           endTime: {
-            hour: habitData.details.endTime?.split(":")[0] || "00",
-            minute: habitData.details.endTime?.split(":")[1] || "00",
+            hour: habitData.details.endTime?.split(":")[0] ?? "00",
+            minute: habitData.details.endTime?.split(":")[1] ?? "00",
           },
-          daysOfWeeks: habitData.details.daysOfWeeks || [],
-          daysOfMonthly: habitData.details.daysOfMonthly || [],
+          daysOfWeeks: habitData.details.daysOfWeeks ?? [],
+          daysOfMonthly: habitData.details.daysOfMonthly ?? [],
         });
         setDraft({
-          name: habitData.name || "",
-          description: habitData.description || "",
-          isReminder: habitData.isReminder || false,
+          name: habitData.name ?? "",
+          description: habitData.description ?? "",
+          isReminder: habitData.isReminder ?? false,
           icon: habitData.details.icon,
           color: habitData.details.color,
-          periodType: habitData.details.periodType || 1,
-          periodCount: habitData.details.periodCount || 1,
+          periodType: habitData.details.periodType ?? 1,
+          periodCount: habitData.details.periodCount ?? 1,
           startTime: {
-            hour: habitData.details.startTime?.split(":")[0] || "00",
-            minute: habitData.details.startTime?.split(":")[1] || "00",
+            hour: habitData.details.startTime?.split(":")[0] ?? "00",
+            minute: habitData.details.startTime?.split(":")[1] ?? "00",
           },
           endTime: {
-            hour: habitData.details.endTime?.split(":")[0] || "00",
-            minute: habitData.details.endTime?.split(":")[1] || "00",
+            hour: habitData.details.endTime?.split(":")[0] ?? "00",
+            minute: habitData.details.endTime?.split(":")[1] ?? "00",
           },
-          daysOfWeeks: habitData.details.daysOfWeeks || [],
-          daysOfMonthly: habitData.details.daysOfMonthly || [],
+          daysOfWeeks: habitData.details.daysOfWeeks ?? [],
+          daysOfMonthly: habitData.details.daysOfMonthly ?? [],
         });
       }
     } catch (error) {
@@ -1862,7 +1868,6 @@ const CustomModal = () => {
 
   useEffect(() => {
     if (params.id) {
-      console.log("use effect içine girdi");
       handleTabPress(1);
       selectedHabitgetById(params.id as string);
     }
@@ -1919,7 +1924,6 @@ const CustomModal = () => {
 
   const handleSaveChanges = async () => {
     try {
-      console.log("token", token);
       const habitData: IHabitCreate | IHabitUpdate = {
         name: form.name,
         description: form.description,
@@ -1950,8 +1954,6 @@ const CustomModal = () => {
       if (params.id) {
         (habitData as IHabitUpdate).id = params.id as string;
       }
-
-      console.log("habitData", JSON.stringify(habitData));
 
       params.id
         ? await handleHabitUpdate(habitData as IHabitUpdate)
@@ -2280,7 +2282,6 @@ const CustomModal = () => {
   }, []);
 
   const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
     // setDraft(form);
   }, []);
 
