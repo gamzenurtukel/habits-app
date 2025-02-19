@@ -14,6 +14,7 @@ import {
   NativeScrollEvent,
   Pressable,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -38,6 +39,8 @@ import { useTranslation } from "react-i18next";
 import { LinearGradient } from "expo-linear-gradient";
 import { dayOfWeek, IHabitCreate, IHabitUpdate } from "@/types/habit";
 import { useLocalSearchParams } from "expo-router";
+import { set } from "zod";
+import { use } from "i18next";
 
 const { width } = Dimensions.get("screen");
 
@@ -52,6 +55,8 @@ const CustomModal = () => {
     useState("daily");
   const [activeTabSheetDuration, setActiveTabSheetDuration] =
     useState("startTime");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -1966,12 +1971,22 @@ const CustomModal = () => {
 
   const handleHabitCreate = async (habitData: IHabitCreate) => {
     try {
+      setIsLoading(true);
       const response = await createHabit(habitData);
 
       if (!response?.data?.isSuccessful) {
-        console.error("Alışkanlık oluşturma başarısız", response);
+        // console.error("Alışkanlık oluşturma başarısız", response);
+
         showToast(
           "error",
+          response?.error &&
+            "data" in response.error &&
+            Array.isArray((response.error as any).data.errors)
+            ? (response.error as any).data.errors[0]
+            : t("an_error_occurred_while_creating_habit")
+        );
+        setIsLoading(false);
+        setErrorMessage(
           response?.error &&
             "data" in response.error &&
             Array.isArray((response.error as any).data.errors)
@@ -1986,17 +2001,28 @@ const CustomModal = () => {
     } catch (error) {
       console.error("Alışkanlık oluşturma başarısız", error);
       showToast("error", t("an_error_occurred_while_creating_habit"));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleHabitUpdate = async (habitData: IHabitUpdate) => {
     try {
+      setIsLoading(true);
       const response = await updateHabit(habitData);
 
       if (!response?.data?.isSuccessful) {
         console.log("Alışkanlık güncelleme başarısız response", response);
         showToast(
           "error",
+          response?.error &&
+            "data" in response.error &&
+            Array.isArray((response.error as any).data.errors)
+            ? (response.error as any).data.errors[0]
+            : t("an_error_occurred_while_updating_habit")
+        );
+        setIsLoading(false);
+        setErrorMessage(
           response?.error &&
             "data" in response.error &&
             Array.isArray((response.error as any).data.errors)
@@ -2011,10 +2037,13 @@ const CustomModal = () => {
     } catch (error) {
       console.log("Alışkanlık güncelleme başarısız", error);
       showToast("error", t("an_error_occurred_while_updating_habit"));
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const showToast = (type: string, message: string) => {
+    console.log("toast", type, message);
     Toast.show({
       type,
       position: "bottom",
@@ -2027,7 +2056,7 @@ const CustomModal = () => {
 
   const navigateBack = () => {
     setTimeout(() => {
-      router.back();
+      router.push("/(tabs)");
     }, 2000);
   };
 
@@ -2284,6 +2313,14 @@ const CustomModal = () => {
   const handleSheetChanges = useCallback((index: number) => {
     // setDraft(form);
   }, []);
+
+  useEffect(() => {
+    if (errorMessage) {
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 10000);
+    }
+  }, [errorMessage]);
 
   const stageTwo = () => {
     return (
@@ -2663,12 +2700,40 @@ const CustomModal = () => {
                   gap: 10,
                 }}
               >
-                <MaterialIcons name="check" size={24} color="#FFFFFF" />
-                <Text style={styles.applyText}>
-                  {params.id ? t("update") : t("save")}
-                </Text>
+                {isLoading ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <>
+                    <MaterialIcons name="check" size={24} color="#FFFFFF" />
+                    <Text style={styles.applyText}>
+                      {params.id ? t("update") : t("save")}
+                    </Text>
+                  </>
+                )}
               </TouchableOpacity>
             </LinearGradient>
+            {/* error message */}
+            {errorMessage && (
+              <View
+                style={{
+                  gap: 5,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingHorizontal: 20,
+                }}
+              >
+                <MaterialIcons name="warning-amber" size={24} color="red" />
+                <Text
+                  style={{
+                    color: "red",
+                    textAlign: "center",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {errorMessage}
+                </Text>
+              </View>
+            )}
           </ScrollView>
         </LinearGradient>
       </View>
